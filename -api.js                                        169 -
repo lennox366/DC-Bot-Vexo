@@ -1,0 +1,59 @@
+ .../Buerger-Vorschlag-System.js                    |  1497 [31m--[m
+ Buerger-Vorschlag-System/README.md                 |   220 [31m-[m
+ Dashboard/app.js                                   |   293 [31m-[m
+ Dashboard/index.html                               |   105 [31m-[m
+ Dashboard/server.js                                |   269 [31m-[m
+ Dashboard/style.css                                |   139 [31m-[m
+ Deploy-Music-Commands.js                           |    90 [31m-[m
+ Dev-Aufgaben-System/Dev-Aufgaben-System.js         |   742 [31m-[m
+ Dev-Aufgaben-System/dev-tasks-data.json            |    68 [31m-[m
+ Gang-System.js                                     |  1406 [31m--[m
+ Gang-System/.gitkeep                               |     1 [31m-[m
+ Gang-System/Gang-System.js                         |  1406 [31m--[m
+ Gang-System/gang-lists.json                        |     7 [31m-[m
+ Gang-System/gangs.json                             |    26 [31m-[m
+ KI-Chat-Memory.json                                |     6 [31m-[m
+ KI-Chat-Setup.js                                   |   303 [31m-[m
+ KI-Chat-Technik.js                                 |   135 [31m-[m
+ KI-Chat.js                                         |   227 [31m-[m
+ KI-Chat.json                                       |    25 [31m-[m
+ KI-Chatbot/KI-Chat-Memory.json                     |     6 [31m-[m
+ KI-Chatbot/KI-Chat-Setup.js                        |   303 [31m-[m
+ KI-Chatbot/KI-Chat-Technik.js                      |   135 [31m-[m
+ KI-Chatbot/KI-Chat.js                              |   227 [31m-[m
+ KI-Chatbot/KI-Chat.json                            |    25 [31m-[m
+ KI-Chatbot/test.txt                                |     1 [31m-[m
+ Music-System.js                                    |   585 [31m-[m
+ Music-System/Deploy-Music-Commands.js              |    90 [31m-[m
+ Music-System/Music-System.js                       |   585 [31m-[m
+ Privatnachricht-System/Privatnachricht-System.js   |   661 [31m-[m
+ README.md                                          |     1 [31m-[m
+ RP-Logs-System.js                                  |   762 [31m-[m
+ RP-Logs-System/RP-Logs-System.js                   |   762 [31m-[m
+ RP-Logs-System/Rp logs api.js                      |   145 [31m-[m
+ RP-Logs-System/Rp logs storage.js                  |   121 [31m-[m
+ RP-Logs-System/Rp logs system.JS                   |   437 [31m-[m
+ RP-Logs-System/Rp logs templates.jS                |   131 [31m-[m
+ RP-Logs-System/Rp-logs-api.js                      |   169 [31m-[m
+ RP-Logs-System/Rp-logs-storage.js                  |   195 [31m-[m
+ RP-Logs-System/Rp-logs-templates.js                |    86 [31m-[m
+ RP-Logs-System/rp-logs-storage.js                  |     1 [31m-[m
+ RP-Logs-System/rp-logs-templates.js                |     1 [31m-[m
+ Rp-logs-api.js                                     |   169 [31m-[m
+ Rp-logs-storage.js                                 |   195 [31m-[m
+ Rp-logs-templates.js                               |    86 [31m-[m
+ app.js                                             |   293 [31m-[m
+ data/data/suggestion-channels.json                 |     1 [31m-[m
+ data/data/suggestion-panels.json                   |     1 [31m-[m
+ data/suggestion-channels.json                      |     1 [31m-[m
+ data/suggestion-panels.json                        |     1 [31m-[m
+ data/suggestions.json                              |     1 [31m-[m
+ gang-lists.json                                    |     7 [31m-[m
+ gangs.json                                         |    26 [31m-[m
+ index.js                                           | 16155 [31m-------------------[m
+ logger.js                                          |    22 [31m-[m
+ package-lock.json                                  |  2581 [31m---[m
+ package.json                                       |    23 [31m-[m
+ server.js                                          |   269 [31m-[m
+ style.css                                          |   139 [31m-[m
+ 58 files changed, 32364 deletions(-)
