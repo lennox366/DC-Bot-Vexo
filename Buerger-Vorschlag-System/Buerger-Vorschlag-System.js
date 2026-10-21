@@ -813,6 +813,83 @@ function initializeBuergerVorschlagSystem(client, options = {}) {
     // =====================================================
 
     client.on("interactionCreate", async (interaction) => {
+        if (interaction.isChatInputCommand()) {
+            try {
+            if (interaction.__slashCommandPermissionDenied) return;
+            if (!interaction.guild || !interaction.channel?.isTextBased()) {
+                return interaction.reply({
+                    content: "❌ Dieser Befehl funktioniert nur in einem Server-Textkanal.",
+                    flags: MessageFlags.Ephemeral
+                });
+            }
+
+            if (interaction.commandName === "vorschläge") {
+                if (interaction.options.getString("typ") !== "bürger") {
+                    return interaction.reply({
+                        content: "❌ Bitte wähle als Typ „Bürger“ aus.",
+                        flags: MessageFlags.Ephemeral
+                    });
+                }
+                if (!hasPanelPermission(interaction.member)) {
+                    return interaction.reply({
+                        content: "❌ Du hast keine Berechtigung, dieses Panel zu erstellen.",
+                        flags: MessageFlags.Ephemeral
+                    });
+                }
+
+                const panelMessage = await interaction.channel.send({
+                    embeds: [createSuggestionPanelEmbed()],
+                    components: [createPanelButtons()]
+                });
+                savePanel(interaction.guild.id, interaction.channel.id, panelMessage.id, "suggestion");
+                return interaction.reply({
+                    content: "✅ Bürger-Vorschlags-Panel wurde erstellt.",
+                    flags: MessageFlags.Ephemeral
+                });
+            }
+
+            if (interaction.commandName === "bürgertext") {
+                if (!hasPanelPermission(interaction.member)) {
+                    return interaction.reply({
+                        content: "❌ Du hast keine Berechtigung, diesen Kanal als Vorschlags-Kanal festzulegen.",
+                        flags: MessageFlags.Ephemeral
+                    });
+                }
+
+                setSuggestionChannelId(interaction.guild.id, interaction.channel.id);
+                const embed = new EmbedBuilder()
+                    .setColor(0x5865F2)
+                    .setTitle("📋 Bürger-Vorschlags-Kanal")
+                    .setDescription(
+                        "Dieser Kanal wurde als Bürger-Vorschlags-Kanal festgelegt.\n\n" +
+                        "Alle neuen Vorschläge werden automatisch hier veröffentlicht."
+                    )
+                    .addFields(
+                        { name: "Kanal", value: `<#${interaction.channel.id}>`, inline: true },
+                        { name: "Server", value: interaction.guild.name, inline: true }
+                    )
+                    .setFooter({ text: "Bürger-Vorschlagssystem ✧ Vexo RP" });
+
+                await interaction.channel.send({ embeds: [embed] });
+                return interaction.reply({
+                    content: "✅ Dieser Kanal wurde als Bürger-Vorschlags-Kanal festgelegt.",
+                    flags: MessageFlags.Ephemeral
+                });
+            }
+
+            return;
+            } catch (error) {
+                console.error("❌ Fehler bei Bürger-Vorschlag-Slash-Befehl:", error);
+                if (!interaction.replied && !interaction.deferred) {
+                    await interaction.reply({
+                        content: "❌ Der Befehl konnte nicht abgeschlossen werden.",
+                        flags: MessageFlags.Ephemeral
+                    });
+                }
+                return;
+            }
+        }
+
         if (!interaction.isMessageComponent() && !interaction.isModalSubmit()) return;
 
         const guild = interaction.guild;

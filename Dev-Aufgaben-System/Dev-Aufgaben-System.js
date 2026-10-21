@@ -403,7 +403,7 @@ function initializeDevTaskSystem(client, options = {}) {
 
                 if (!channelId) {
                     return message.reply(
-                        "❌ Es wurde noch kein Dev-Aufgaben-Kanal konfiguriert. Ein Teammitglied kann dies mit `!dev-kanal` einrichten."
+                        "❌ Es wurde noch kein Dev-Aufgaben-Kanal konfiguriert. Ein Developer kann ihn mit `/dev-kanal` festlegen."
                     );
                 }
 
@@ -411,7 +411,7 @@ function initializeDevTaskSystem(client, options = {}) {
 
                 if (!targetChannel) {
                     return message.reply(
-                        "❌ Der konfigurierte Dev-Aufgaben-Kanal existiert nicht mehr. Bitte mit `!dev-kanal` neu einrichten."
+                        "❌ Der konfigurierte Dev-Aufgaben-Kanal existiert nicht mehr. Bitte mit `/dev-kanal` neu einrichten."
                     );
                 }
 
@@ -430,7 +430,7 @@ function initializeDevTaskSystem(client, options = {}) {
                         if (result.reason === "empty") {
                             return message.reply("❌ Deine Aufgabe darf nicht leer sein.");
                         }
-                        return message.reply("❌ Der Dev-Aufgaben-Kanal ist nicht mehr erreichbar. Bitte mit `!dev-kanal` neu einrichten.");
+                        return message.reply("❌ Der Dev-Aufgaben-Kanal ist nicht mehr erreichbar. Bitte mit `/dev-kanal` neu einrichten.");
                     }
 
                     return message.reply(`✅ Deine Dev-Aufgabe wurde erfolgreich eingereicht! (Aufgabe #${result.task.id})`);
@@ -468,7 +468,7 @@ function initializeDevTaskSystem(client, options = {}) {
                 collector.on("end", collected => {
                     pendingSubmissions.delete(message.author.id);
                     if (collected.size === 0) {
-                        message.reply("⏱️ Zeit abgelaufen. Bitte führe `!dev-aufgaben` erneut aus.").catch(() => {});
+                        message.reply("⏱️ Zeit abgelaufen. Bitte führe `/dev-aufgaben` erneut aus.").catch(() => {});
                     }
                 });
 
@@ -517,6 +517,120 @@ function initializeDevTaskSystem(client, options = {}) {
     // -------------------------------------------------
     client.on("interactionCreate", async interaction => {
         try {
+            if (interaction.isChatInputCommand()) {
+                if (interaction.__slashCommandPermissionDenied) return;
+                if (!interaction.guild) {
+                    return interaction.reply({
+                        content: "❌ Dieser Befehl funktioniert nur auf einem Server.",
+                        flags: MessageFlags.Ephemeral
+                    });
+                }
+
+                if (interaction.commandName === "dev-kanal") {
+                    if (!isDeveloper(interaction.member, DEVELOPER_ROLE_ID, BOT_OWNER_ID)) {
+                        return interaction.reply({
+                            content: "❌ Du hast keine Berechtigung, den Dev-Aufgaben-Kanal zu konfigurieren.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    }
+
+                    const channel = interaction.options.getChannel("kanal", true);
+                    if (!channel.isTextBased() || !channel.guild) {
+                        return interaction.reply({
+                            content: "❌ Bitte wähle einen Textkanal auf diesem Server.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    }
+
+                    setGuildChannelId(interaction.guild.id, channel.id);
+                    return interaction.reply({
+                        content: `✅ Dev-Aufgaben werden ab sofort in ${channel} veröffentlicht.`,
+                        flags: MessageFlags.Ephemeral
+                    });
+                }
+
+                if (interaction.commandName === "dev-aufgaben-panel") {
+                    if (!isDeveloper(interaction.member, DEVELOPER_ROLE_ID, BOT_OWNER_ID)) {
+                        return interaction.reply({
+                            content: "❌ Du hast keine Berechtigung, ein Dev-Aufgaben-Panel zu erstellen.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    }
+
+                    await interaction.channel.send({
+                        embeds: [buildPanelEmbed()],
+                        components: [buildPanelButtons()]
+                    });
+                    return interaction.reply({
+                        content: "✅ Das Dev-Aufgaben-Panel wurde erstellt.",
+                        flags: MessageFlags.Ephemeral
+                    });
+                }
+
+                if (interaction.commandName === "dev-aufgaben") {
+                    const result = await createAndPostTask({
+                        client,
+                        guild: interaction.guild,
+                        developerRoleId: DEVELOPER_ROLE_ID,
+                        guildId: interaction.guild.id,
+                        userId: interaction.user.id,
+                        userTag: interaction.user.tag,
+                        rawText: interaction.options.getString("aufgabe", true)
+                    });
+
+                    if (!result.ok) {
+                        const messages = {
+                            "no-channel": "❌ Es wurde noch kein Dev-Aufgaben-Kanal konfiguriert. Ein Developer kann ihn mit `/dev-kanal` festlegen.",
+                            "channel-missing": "❌ Der konfigurierte Dev-Aufgaben-Kanal existiert nicht mehr. Bitte mit `/dev-kanal` neu einrichten.",
+                            empty: "❌ Deine Aufgabe darf nicht leer sein."
+                        };
+                        return interaction.reply({
+                            content: messages[result.reason] || "❌ Die Dev-Aufgabe konnte nicht eingereicht werden.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    }
+
+                    return interaction.reply({
+                        content: `✅ Deine Dev-Aufgabe wurde eingereicht! (Aufgabe #${result.task.id})`,
+                        flags: MessageFlags.Ephemeral
+                    });
+                }
+
+                if (interaction.commandName === "dev-antwort") {
+                    if (!isDeveloper(interaction.member, DEVELOPER_ROLE_ID, BOT_OWNER_ID)) {
+                        return interaction.reply({
+                            content: "❌ Nur Developer dürfen auf Dev-Aufgaben antworten.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    }
+
+                    const openTasks = getOpenTasks(interaction.guild.id);
+                    if (openTasks.length === 0) {
+                        return interaction.reply({
+                            content: "📭 Es gibt aktuell keine offenen Dev-Aufgaben.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    }
+
+                    const select = new StringSelectMenuBuilder()
+                        .setCustomId("devtask_answer_select")
+                        .setPlaceholder("Wähle eine offene Dev-Aufgabe aus...")
+                        .addOptions(openTasks.slice(0, 25).map(task => ({
+                            label: `Aufgabe #${task.id} — ${task.userTag}`.slice(0, 100),
+                            description: task.task.slice(0, 90),
+                            value: task.id
+                        })));
+
+                    return interaction.reply({
+                        content: "💬 Wähle die Dev-Aufgabe aus, auf die du antworten möchtest:",
+                        components: [new ActionRowBuilder().addComponents(select)],
+                        flags: MessageFlags.Ephemeral
+                    });
+                }
+
+                return;
+            }
+
             // ============== BUTTON: ✅ ERLEDIGT ==============
             if (interaction.isButton() && interaction.customId.startsWith("devtask_done_")) {
                 const taskId = interaction.customId.replace("devtask_done_", "");
@@ -733,6 +847,12 @@ function initializeDevTaskSystem(client, options = {}) {
             }
         } catch (error) {
             console.error("❌ Fehler im Dev-Aufgaben-System (interactionCreate):", error);
+            if (interaction.isChatInputCommand() && !interaction.replied && !interaction.deferred) {
+                await interaction.reply({
+                    content: "❌ Der Dev-Aufgaben-Befehl konnte nicht abgeschlossen werden.",
+                    flags: MessageFlags.Ephemeral
+                });
+            }
         }
     });
 

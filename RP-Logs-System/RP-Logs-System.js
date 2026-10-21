@@ -16,7 +16,8 @@ const {
     StringSelectMenuOptionBuilder,
     ChannelType,
     WebhookClient,
-    PermissionsBitField
+    PermissionsBitField,
+    MessageFlags
 } = require("discord.js");
 
 const storage = require("./Rp-logs-storage");
@@ -306,7 +307,7 @@ function buildStatusEmbed(guildId) {
     if (!hasWebhook) {
         embed.addFields({
             name: "🔴 RP-Webhook",
-            value: "Nicht eingerichtet – erstelle ihn über `!rp-logs-einstellungen` → \"RP-Webhook erstellen\".",
+            value: "Nicht eingerichtet – erstelle ihn über `/rp-logs-einstellungen` → „RP-Webhook erstellen“.",
             inline: false
         });
         return embed;
@@ -356,7 +357,7 @@ async function handleWebLogsCommand(message) {
         : message.channel;
 
     if (!targetChannel) {
-        return message.reply("❌ Der eingestellte Log-Kanal wurde nicht gefunden. Bitte stelle ihn erneut über `!rp-logs-einstellungen` ein.");
+        return message.reply("❌ Der eingestellte Log-Kanal wurde nicht gefunden. Bitte stelle ihn erneut über `/rp-logs-einstellungen` ein.");
     }
 
     // Bestehendes Panel wiederverwenden, falls vorhanden
@@ -625,7 +626,7 @@ async function handleTestCommand(message) {
     if (!storage.hasRpWebhook(guildId)) {
         return message.reply(
             "❌ Es ist noch kein eigener RP-Webhook eingerichtet. " +
-            "Erstelle ihn zuerst über `!rp-logs-einstellungen` → \"RP-Webhook erstellen\"."
+            "Erstelle ihn zuerst über `/rp-logs-einstellungen` → „RP-Webhook erstellen“."
         );
     }
 
@@ -642,7 +643,7 @@ async function handleTestCommand(message) {
         console.error(`❌ [RP-Logs] Test-Log fehlgeschlagen (Guild ${guildId}):`, error);
         return message.reply(
             "❌ Der Test-Log konnte nicht gesendet werden. Bitte überprüfe den RP-Webhook über " +
-            "`!rp-logs-einstellungen` (ggf. \"RP-Webhook entfernen\" und neu erstellen)."
+            "`/rp-logs-einstellungen` (ggf. „RP-Webhook entfernen“ und neu erstellen)."
         );
     }
 }
@@ -746,9 +747,47 @@ function initializeRPLogsSystem(client, options = {}) {
 
     client.on("interactionCreate", async interaction => {
         try {
+            if (interaction.isChatInputCommand()) {
+                if (interaction.__slashCommandPermissionDenied) return;
+                if (interaction.__slashCommandPermissionDenied) return;
+                if (!interaction.guild) {
+                    return interaction.reply({
+                        content: "❌ Dieser Befehl funktioniert nur auf einem Server.",
+                        flags: MessageFlags.Ephemeral
+                    });
+                }
+
+                const commandHandlers = {
+                    "rp-logs-einstellungen": handleSettingsCommand,
+                    "web-logs": handleWebLogsCommand,
+                    "rp-logs-test": handleTestCommand
+                };
+                const handler = commandHandlers[interaction.commandName];
+                if (!handler) return;
+
+                const messageAdapter = {
+                    guild: interaction.guild,
+                    member: interaction.member,
+                    channel: interaction.channel,
+                    reply: payload => interaction.reply(
+                        typeof payload === "string"
+                            ? { content: payload, flags: MessageFlags.Ephemeral }
+                            : { ...payload, flags: payload.flags ?? MessageFlags.Ephemeral }
+                    )
+                };
+                await handler(messageAdapter);
+                return;
+            }
+
             await handleInteraction(interaction);
         } catch (error) {
             console.error("❌ [RP-Logs] Fehler bei interactionCreate:", error);
+            if (interaction.isChatInputCommand() && !interaction.replied && !interaction.deferred) {
+                await interaction.reply({
+                    content: "❌ Der RP-Logs-Befehl konnte nicht abgeschlossen werden.",
+                    flags: MessageFlags.Ephemeral
+                });
+            }
         }
     });
 

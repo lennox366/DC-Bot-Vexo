@@ -11,6 +11,7 @@ const {
 
 const WAITING_VOICE_CHANNEL_ID = "1559659271329808421";
 const SUPPORT_PINGS_CHANNEL_ID = "1559659271329808420";
+const SUPPORT_LOG_CHANNEL_ID = process.env.SUPPORT_LOG_CHANNEL_ID?.trim() || "1559659271329808420";
 const SUPPORT_PING_ROLE_ID = "1559659267219390595";
 const SUPPORT_STATE_FILE = path.join(__dirname, "..", "support-tickets.json");
 const TEAM_ROLES_CONFIG_FILE = path.join(__dirname, "..", "team-roles-config.json");
@@ -65,6 +66,63 @@ function formatDuration(seconds) {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return minutes > 0 ? `${minutes} Min. ${remainingSeconds} Sek.` : `${remainingSeconds} Sek.`;
+}
+
+async function sendSupportActionLog(guild, ticket, interaction, action) {
+    if (!SUPPORT_LOG_CHANNEL_ID) {
+        throw new Error("SUPPORT_LOG_CHANNEL_ID ist nicht konfiguriert.");
+    }
+
+    const channel = await guild.channels.fetch(SUPPORT_LOG_CHANNEL_ID);
+    if (!channel?.isTextBased() || channel.guildId !== guild.id) {
+        throw new Error(`Support-Log-Kanal ${SUPPORT_LOG_CHANNEL_ID} fehlt oder ist kein Textkanal dieses Servers.`);
+    }
+
+    const botMember = guild.members.me || await guild.members.fetchMe();
+    const permissions = channel.permissionsFor(botMember);
+    const missingPermissions = [
+        ["Nachrichten senden", PermissionFlagsBits.SendMessages],
+        ["Embeds senden", PermissionFlagsBits.EmbedLinks]
+    ].filter(([, permission]) => !permissions?.has(permission));
+    if (missingPermissions.length > 0) {
+        throw new Error(`Dem Bot fehlen im Support-Log-Kanal Rechte: ${missingPermissions.map(([name]) => name).join(", ")}.`);
+    }
+
+    const isClose = action === "close";
+    const reason = typeof ticket.reason === "string" && ticket.reason.trim()
+        ? ticket.reason.trim().slice(0, 1024)
+        : "Im Ticket wurde kein separater Grund erfasst.";
+    const embed = new EmbedBuilder()
+        .setColor(isClose ? 0xED4245 : 0x57F287)
+        .setTitle(isClose ? "🔴 Support-Fall geschlossen" : "🟢 Support-Fall angenommen")
+        .addFields(
+            { name: "Betroffenes Mitglied", value: `<@${ticket.userId}>`, inline: true },
+            { name: "Bearbeiter", value: `${interaction.user}\n${interaction.user.tag}`, inline: true },
+            { name: "Grund / Anmerkung", value: reason, inline: false },
+            {
+                name: "Support-Call",
+                value: ticket.supportChannelId ? `<#${ticket.supportChannelId}>` : "Nicht verfügbar",
+                inline: true
+            },
+            { name: "Zeitpunkt", value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: true }
+        )
+        .setTimestamp();
+
+    await channel.send({ embeds: [embed] });
+}
+
+async function logSupportAction(interaction, ticket, action) {
+    try {
+        await sendSupportActionLog(interaction.guild, ticket, interaction, action);
+    } catch (error) {
+        console.error("❌ Support-Aktion wurde ausgeführt, aber das Support-Log konnte nicht gesendet werden:", error);
+        await interaction.followUp({
+            content: `⚠️ Die Support-Aktion wurde ausgeführt, aber das Support-Log ist fehlgeschlagen: ${error.message}`,
+            flags: MessageFlags.Ephemeral
+        }).catch(followUpError => {
+            console.error("❌ Hinweis zum fehlgeschlagenen Support-Log konnte nicht angezeigt werden:", followUpError);
+        });
+    }
 }
 
 function createTicketEmbed(ticket, status) {
@@ -272,27 +330,9 @@ function initializeSupportSystem(client) {
                 return;
             }
 
-            const ticketKey = `${newState.guild.id}:${member.id}`;
-            const ticket = tickets[ticketKey];
-
             if (newState.channelId === WAITING_VOICE_CHANNEL_ID) {
-                if (ticket?.status === "closed") {
-                    console.log(`ℹ️ ${member.user.tag} ist nach einem geschlossenen Support-Fall erneut im Wartekanal. Es wird kein neuer Support-Ping erstellt.`);
-                    return;
-                }
-
                 console.log(`ℹ️ ${member.user.tag} ist dem Support-Wartekanal auf ${newState.guild.name} beigetreten.`);
                 await createSupportRequest(member, { forceNew: true });
-                return;
-            }
-
-            if (
-                newState.channelId &&
-                ticket?.blockedCallChannelIds?.includes(newState.channelId) &&
-                (ticket.status !== "accepted" || ticket.supportChannelId !== newState.channelId) &&
-                oldState.channelId !== WAITING_VOICE_CHANNEL_ID
-            ) {
-                await member.voice.disconnect("Bitte betrete zuerst erneut den Support-Wartekanal und lass den Support-Fall übernehmen.");
             }
         } catch (error) {
             console.error("❌ Fehler beim Verarbeiten des Support-Voice-Status:", error);
@@ -382,6 +422,7 @@ function initializeSupportSystem(client) {
                     throw error;
                 }
 
+                await logSupportAction(interaction, ticket, action);
                 await interaction.message.edit({
                     embeds: [createTicketEmbed(ticket)],
                     components: createTicketComponents(ticket)
@@ -407,6 +448,7 @@ function initializeSupportSystem(client) {
                 ];
                 saveSupportTickets(tickets);
 
+                await logSupportAction(interaction, ticket, action);
                 if (applicant?.voice.channelId === ticket.supportChannelId) {
                     await applicant.voice.disconnect("Support-Fall geschlossen. Für neuen Support erneut dem Wartekanal beitreten.");
                 }

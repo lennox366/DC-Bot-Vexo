@@ -54,6 +54,16 @@ const slashCommands = [
         .setDescription("Erstellt das Bewerbungspanel mit dem Fragenformular"),
 
     new SlashCommandBuilder()
+        .setName("teambewerbungtext")
+        .setDescription("Erstellt das Panel und setzt den Kanal für neue Bewerbungen")
+        .addChannelOption(option =>
+            option
+                .setName("kanal")
+                .setDescription("Textkanal für Panel und neue Bewerbungen (standardmäßig dieser Kanal)")
+                .setRequired(false)
+        ),
+
+    new SlashCommandBuilder()
         .setName("codes")
         .setDescription("Bearbeitet die Codes für Server 1 und Server 2"),
 
@@ -63,11 +73,77 @@ const slashCommands = [
 
     new SlashCommandBuilder()
         .setName("logs")
-        .setDescription("Zeigt die Logs des Servers (nur mit Berechtigung)"),
+        .setDescription("Konfiguriert und testet den Bot-Log-Kanal")
+        .addStringOption(option =>
+            option
+                .setName("aktion")
+                .setDescription("Die auszuführende Log-Aktion")
+                .setRequired(false)
+                .addChoices(
+                    { name: "Kanal setzen", value: "set" },
+                    { name: "Aktuellen Kanal anzeigen", value: "channel" },
+                    { name: "Test-Log senden", value: "test" },
+                    { name: "Auf Standard zurücksetzen", value: "reset" }
+                )
+        )
+        .addChannelOption(option =>
+            option
+                .setName("kanal")
+                .setDescription("Textkanal für die Aktion „Kanal setzen“")
+                .setRequired(false)
+        ),
 
     new SlashCommandBuilder()
         .setName("häuser-panel")
         .setDescription("Erstellt oder aktualisiert das Häuser-Panel"),
+
+    new SlashCommandBuilder()
+        .setName("häuserliste")
+        .setDescription("Zeigt die Häuserliste an"),
+
+    new SlashCommandBuilder()
+        .setName("rp-panel")
+        .setDescription("Erstellt das RP-Start-/Stopp-Panel"),
+
+    new SlashCommandBuilder()
+        .setName("giveaway")
+        .setDescription("Öffnet das Giveaway-Einrichtungspanel"),
+
+    new SlashCommandBuilder()
+        .setName("team-panel")
+        .setDescription("Erstellt das Team-Panel"),
+
+    new SlashCommandBuilder()
+        .setName("name-tag-set")
+        .setDescription("Aktualisiert Nicknames passend zu Team-Rollen"),
+
+    new SlashCommandBuilder()
+        .setName("nickname-aktualisieren")
+        .setDescription("Aktualisiert alle Nicknames anhand der aktuellen Rollen"),
+
+    new SlashCommandBuilder()
+        .setName("text-sende")
+        .setDescription("Öffnet das Panel zum Senden einer Nachricht"),
+
+    new SlashCommandBuilder()
+        .setName("verify")
+        .setDescription("Erstellt das Verifizierungs-Panel"),
+
+    new SlashCommandBuilder()
+        .setName("rp-nachricht")
+        .setDescription("Öffnet das RP-Kanal-Konfigurationspanel"),
+
+    new SlashCommandBuilder()
+        .setName("befehle")
+        .setDescription("Zeigt alle verfügbaren Slash-Befehle an"),
+
+    new SlashCommandBuilder()
+        .setName("neustart")
+        .setDescription("Startet den Bot neu (nur berechtigte Teammitglieder)"),
+
+    new SlashCommandBuilder()
+        .setName("herunterfahren")
+        .setDescription("Fährt den Bot herunter (nur Bot-Owner)"),
 
     new SlashCommandBuilder()
         .setName("teampanel")
@@ -76,6 +152,22 @@ const slashCommands = [
     new SlashCommandBuilder()
         .setName("teamliste")
         .setDescription("Zeigt die Teamliste an"),
+
+    new SlashCommandBuilder()
+        .setName("teamliste-update-start")
+        .setDescription("Startet automatische Teamlisten-Updates"),
+
+    new SlashCommandBuilder()
+        .setName("teamliste-update-stop")
+        .setDescription("Stoppt automatische Teamlisten-Updates"),
+
+    new SlashCommandBuilder()
+        .setName("teamstatistik")
+        .setDescription("Zeigt Teamstatistik und Mitgliedsdetails an"),
+
+    new SlashCommandBuilder()
+        .setName("team-bewerbungen")
+        .setDescription("Zeigt gespeicherte Teambewerbungen an"),
 
     // =====================================================
     // GANG-SYSTEM BEFEHLE
@@ -100,7 +192,7 @@ const slashCommands = [
             option
                 .setName("typ")
                 .setDescription("Typ des Vorschlags")
-                .setRequired(false)
+                .setRequired(true)
                 .addChoices(
                     { name: "Bürger", value: "bürger" }
                 )
@@ -140,13 +232,7 @@ const slashCommands = [
 
     new SlashCommandBuilder()
         .setName("dev-antwort")
-        .setDescription("Developer wählt offene Aufgabe aus (nur Developer)")
-        .addStringOption(option =>
-            option
-                .setName("aufgaben-id")
-                .setDescription("ID der Aufgabe")
-                .setRequired(true)
-        ),
+        .setDescription("Developer wählt eine offene Aufgabe aus (nur Developer)"),
 
     // =====================================================
     // RP-LOGS-SYSTEM BEFEHLE
@@ -170,23 +256,42 @@ const slashCommands = [
 
     new SlashCommandBuilder()
         .setName("privatnachricht")
-        .setDescription("Sendet eine Privatnachricht an einen User")
-        .addUserOption(option =>
-            option
-                .setName("user")
-                .setDescription("Der Empfänger")
-                .setRequired(true)
-        )
-        .addStringOption(option =>
-            option
-                .setName("nachricht")
-                .setDescription("Die Nachricht")
-                .setRequired(true)
-        ),
+        .setDescription("Öffnet das Privatnachrichten-Panel"),
+
+    // =====================================================
+    // UNTERHALTUNGS-SYSTEM BEFEHLE
+    // =====================================================
+    ...[
+        ["setups", "Öffnet die Entertainment-Setup-Übersicht"],
+        ["willkommen-panel", "Erstellt oder aktualisiert das Willkommens-Panel"],
+        ["film-panel", "Erstellt das Film-Panel"],
+        ["umfrage-panel", "Erstellt das Umfrage-Panel"],
+        ["spielkalender-panel", "Erstellt den Spielkalender"],
+        ["highscore-panel", "Erstellt das Highscore-Panel"],
+        ["spiele-vorschlaege-panel", "Erstellt das Spiele-Vorschläge-Panel"],
+        ["ankuendigung-panel", "Erstellt das Ankündigungs-Panel"],
+        ["event-kalender-panel", "Erstellt das Event-Kalender-Panel"],
+        ["auto-nachrichten-panel", "Erstellt das Auto-Nachrichten-Panel"],
+        ["filmabend-panel", "Erstellt das Filmabend-Panel"],
+        ["bewertung-panel", "Erstellt das Bewertungs-Panel"]
+    ].map(([name, description]) =>
+        new SlashCommandBuilder()
+            .setName(name)
+            .setDescription(description)
+    ),
 
     // =====================================================
     // KI-CHAT BEFEHLE
     // =====================================================
+    new SlashCommandBuilder()
+        .setName("ki-chat")
+        .setDescription("Legt den KI-Chat-Kanal fest")
+        .addChannelOption(option =>
+            option
+                .setName("kanal")
+                .setDescription("Der KI-Chat-Kanal (standardmäßig dieser Kanal)")
+                .setRequired(false)
+        ),
 
     new SlashCommandBuilder()
         .setName("ki-chat-setup")

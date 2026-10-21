@@ -9,7 +9,8 @@ const {
     ModalBuilder,
     TextInputBuilder,
     TextInputStyle,
-    MessageFlags
+    MessageFlags,
+    PermissionFlagsBits
 } = require("discord.js");
 
 const fs = require("fs");
@@ -37,7 +38,9 @@ function getAllRoles() {
     const allRoles = [];
     for (const category of teamRolesConfig.roleHierarchy) {
         for (const role of category.roles) {
-            allRoles.push(role);
+            if (!role.name.includes("━")) {
+                allRoles.push(role);
+            }
         }
     }
     return allRoles.sort((a, b) => a.position - b.position);
@@ -64,34 +67,83 @@ function isStaff(member) {
     return member.roles.cache.has(teamRolesConfig.staffRoleId);
 }
 
+function canManageTeam(member) {
+    if (!member) return false;
+    if (member.permissions?.has(PermissionFlagsBits.Administrator)) return true;
+
+    const authorizedRoleName = /founder|owner|developer|projektleitung|teamleitung|admin/i;
+    return (teamRolesConfig?.roleHierarchy || []).some(category =>
+        (category.roles || []).some(role =>
+            !role.name.includes("━") &&
+            authorizedRoleName.test(role.name || "") &&
+            member.roles.cache.has(role.id)
+        )
+    );
+}
+
 // =====================================================
 // ROLLE ÄNDERN
 // =====================================================
 
 async function applyRoleChange(interaction, member, newRole, action) {
     try {
-        const currentRole = getAllRoles().find(role => member.roles.cache.has(role.id));
+        const guild = interaction.guild;
+        const botMember = guild.members.me || await guild.members.fetchMe();
+        if (!botMember.permissions.has(PermissionFlagsBits.ManageRoles)) {
+            throw new Error("Dem Bot fehlt die Berechtigung „Rollen verwalten“.");
+        }
 
-        // Alle Teamrollen entfernen
-        const allRoleIds = getAllRoles().map(r => r.id);
-        await member.roles.remove(allRoleIds, `Team ${action}: Alte Rolle entfernt`).catch(() => {});
+        const assignableRole = await guild.roles.fetch(newRole.id).catch(() => null);
+        if (!assignableRole || !findRoleById(assignableRole.id) || assignableRole.name.includes("━")) {
+            throw new Error("Die ausgewählte Rolle ist keine gültige Teamrolle.");
+        }
 
-        // Neue Rolle hinzufügen
-        await member.roles.add(newRole.id, `Team ${action}: Neue Rolle hinzugefügt`);
+        const teamRolesToRemove = getAllRoles()
+            .filter(role =>
+                role.id !== "1559659267257270313" &&
+                role.id !== assignableRole.id &&
+                member.roles.cache.has(role.id)
+            )
+            .map(role => guild.roles.cache.get(role.id))
+            .filter(Boolean);
+        const managedRoles = [...teamRolesToRemove, assignableRole];
+        const blockedRole = managedRoles.find(role =>
+            botMember.roles.highest.position <= role.position
+        );
+        if (blockedRole) {
+            throw new Error(`Die Teamrolle „${blockedRole.name}“ steht auf oder über der höchsten Bot-Rolle.`);
+        }
+
+        const alreadyHadRole = member.roles.cache.has(assignableRole.id);
+        if (!alreadyHadRole) {
+            await member.roles.add(assignableRole, `Team ${action}: Neue Rolle hinzugefügt`);
+        }
+        try {
+            if (teamRolesToRemove.length > 0) {
+                await member.roles.remove(teamRolesToRemove, `Team ${action}: Alte Teamrollen entfernt`);
+            }
+        } catch (error) {
+            if (!alreadyHadRole) {
+                await member.roles.remove(assignableRole, "Rangänderung fehlgeschlagen; Änderung zurückgerollt").catch(rollbackError =>
+                    console.error("❌ Neue Teamrolle konnte nach fehlgeschlagener Rangänderung nicht zurückgerollt werden:", rollbackError)
+                );
+            }
+            throw error;
+        }
 
         const actionText = action === "uprank" ? "befördert" : "degradiert";
 
         await interaction.update({
-            content: `✅ ${member.user.tag} wurde erfolgreich ${actionText} zu **${newRole.name}**!`,
+            content: `✅ ${member.user.tag} wurde erfolgreich ${actionText} zu **${assignableRole.name}**!`,
             embeds: [],
             components: []
         });
 
-        console.log(`✅ ${member.user.tag} wurde ${actionText} zu ${newRole.name}`);
+        console.log(`✅ ${member.user.tag} wurde ${actionText} zu ${assignableRole.name}`);
     } catch (error) {
         console.error("❌ Fehler beim Ändern der Rolle:", error);
         await interaction.update({
-            content: "❌ Ein Fehler ist beim Ändern der Rolle aufgetreten.",
+            content: `❌ Ein Fehler ist beim Ändern der Rolle aufgetreten: ${error.message}`,
             embeds: [],
             components: []
         });
@@ -185,11 +237,11 @@ function createTeamPanelEmbed() {
 function createTeamPanelButtons() {
     return new ActionRowBuilder().addComponents(
         new ButtonBuilder()
-            .setCustomId("team_member_manage")
+            .setCustomId("legacy_team_member_manage")
             .setLabel("👤 Teammitglied verwalten")
             .setStyle(ButtonStyle.Primary),
         new ButtonBuilder()
-            .setCustomId("team_list_show")
+            .setCustomId("legacy_team_list_show")
             .setLabel("📋 Teamliste")
             .setStyle(ButtonStyle.Secondary)
     );
@@ -209,7 +261,7 @@ function createMemberSelectEmbed() {
 
 function createMemberSelectMenu() {
     return new UserSelectMenuBuilder()
-        .setCustomId("team_member_select")
+        .setCustomId("legacy_team_member_select")
         .setPlaceholder("Teammitglied auswählen...")
         .setMinValues(1)
         .setMaxValues(1);
@@ -238,15 +290,15 @@ function createMemberManageEmbed(member) {
 function createMemberManageButtons() {
     return new ActionRowBuilder().addComponents(
         new ButtonBuilder()
-            .setCustomId("team_uprank")
+            .setCustomId("legacy_team_uprank")
             .setLabel("⬆️ Uprank")
             .setStyle(ButtonStyle.Success),
         new ButtonBuilder()
-            .setCustomId("team_downrank")
+            .setCustomId("legacy_team_downrank")
             .setLabel("⬇️ Downrank")
             .setStyle(ButtonStyle.Danger),
         new ButtonBuilder()
-            .setCustomId("team_warn_reset")
+            .setCustomId("legacy_team_warn_reset")
             .setLabel("🔄 Warn zurücksetzen")
             .setStyle(ButtonStyle.Secondary)
     );
@@ -258,7 +310,7 @@ function createMemberManageButtons() {
 
 function createRoleSelectModal(action, member) {
     const modal = new ModalBuilder()
-        .setCustomId(`team_${action}_modal`)
+        .setCustomId(`legacy_team_${action}_modal`)
         .setTitle(`${action.toUpperCase()} - Rolle auswählen`)
         .addComponents(
             new ActionRowBuilder().addComponents(
@@ -294,7 +346,7 @@ function createRoleSelectEmbed(action, member) {
 
 function createRoleSelectMenu() {
     const menu = new StringSelectMenuBuilder()
-        .setCustomId("team_role_select")
+        .setCustomId("legacy_team_role_select")
         .setPlaceholder("Teamrolle auswählen...")
         .setMinValues(1)
         .setMaxValues(1);
@@ -328,17 +380,16 @@ function initializeTeamManagement(client) {
         const command = args[0]?.toLowerCase();
 
         if (command === "teampanel") {
-            try {
-                await message.channel.send({
-                    embeds: [createTeamPanelEmbed()],
-                    components: [createTeamPanelButtons()]
-                });
-            } catch (error) {
-                console.error("❌ Fehler beim Erstellen des Team-Panels:", error);
+            if (!canManageTeam(message.member)) {
+                return message.reply("❌ Nur Teamleitungen und Administratoren dürfen die Teamverwaltung öffnen.");
             }
+            return message.reply("Die Teamverwaltung läuft über das Slash-Panel `/teampanel`.");
         }
 
         if (command === "teamliste") {
+            if (!canManageTeam(message.member)) {
+                return message.reply("❌ Nur Teamleitungen und Administratoren dürfen die Teamliste öffnen.");
+            }
             try {
                 await message.channel.send({ content: "⏳ Teamliste wird geladen..." });
                 const listEmbed = await createTeamListEmbed(message.guild);
@@ -352,125 +403,34 @@ function initializeTeamManagement(client) {
     // InteractionCreate Handler für Buttons und Selects
     client.on("interactionCreate", async (interaction) => {
         if (!interaction.isMessageComponent() && !interaction.isModalSubmit()) return;
+        if (!interaction.customId?.startsWith("legacy_team_")) return;
+
+        if (!canManageTeam(interaction.member)) {
+            return interaction.reply({
+                content: "❌ Nur Teamleitungen und Administratoren dürfen Teamaktionen ausführen.",
+                flags: MessageFlags.Ephemeral
+            });
+        }
+
+        if (interaction.customId !== "legacy_team_list_show") {
+            return interaction.reply({
+                content: "Dieses alte Team-Panel ist deaktiviert. Bitte verwende `/teampanel`.",
+                flags: MessageFlags.Ephemeral
+            });
+        }
 
         try {
-            // Team-Panel Buttons
-            if (interaction.isButton() && interaction.customId === "team_member_manage") {
-                await interaction.reply({
-                    embeds: [createMemberSelectEmbed()],
-                    components: [new ActionRowBuilder().addComponents(createMemberSelectMenu())],
-                    ephemeral: true
-                });
-            }
-
-            if (interaction.isButton() && interaction.customId === "team_list_show") {
-                await interaction.deferReply();
-                const listEmbed = await createTeamListEmbed(interaction.guild);
-                await interaction.editReply({ embeds: [listEmbed] });
-            }
-
-            // Mitglied auswählen
-            if (interaction.isUserSelectMenu() && interaction.customId === "team_member_select") {
-                const memberId = interaction.values[0];
-                const member = await interaction.guild.members.fetch(memberId).catch(() => null);
-
-                if (!member) {
-                    return interaction.update({ content: "❌ Mitglied nicht gefunden.", embeds: [], components: [] });
-                }
-
-                await interaction.update({
-                    embeds: [createMemberManageEmbed(member)],
-                    components: [createMemberManageButtons()]
-                });
-            }
-
-            // Uprank Button
-            if (interaction.isButton() && interaction.customId === "team_uprank") {
-                const member = interaction.message.mentions.members.first();
-                if (!member) return;
-
-                if (!isStaff(member)) {
-                    return interaction.reply({
-                        content: "❌ Dieses Mitglied hat keine Staffler-Teamrolle und kann nicht upranked werden.",
-                        flags: MessageFlags.Ephemeral
-                    });
-                }
-
-                await interaction.showModal(createRoleSelectModal("uprank", member));
-            }
-
-            // Downrank Button
-            if (interaction.isButton() && interaction.customId === "team_downrank") {
-                const member = interaction.message.mentions.members.first();
-                if (!member) return;
-
-                if (!isStaff(member)) {
-                    return interaction.reply({
-                        content: "❌ Dieses Mitglied hat keine Staffler-Teamrolle und kann nicht downranked werden.",
-                        flags: MessageFlags.Ephemeral
-                    });
-                }
-
-                await interaction.showModal(createRoleSelectModal("downrank", member));
-            }
-
-            // Warn zurücksetzen
-            if (interaction.isButton() && interaction.customId === "team_warn_reset") {
-                await interaction.reply({
-                    content: "⚠️ Warn-Zurücksetzen ist noch nicht implementiert.",
-                    flags: MessageFlags.Ephemeral
-                });
-            }
-
-            // Modal Submit (Uprank/Downrank)
-            if (interaction.isModalSubmit()) {
-                if (interaction.customId === "team_uprank_modal" || interaction.customId === "team_downrank_modal") {
-                    const action = interaction.customId.replace("team_", "").replace("_modal", "");
-                    const roleSearch = interaction.fields.getTextInputValue("role_search");
-
-                    const member = interaction.message.mentions.members.first();
-                    if (!member) return;
-
-                    if (roleSearch && roleSearch.trim()) {
-                        // Rolle per Name suchen
-                        const foundRole = findRoleByName(roleSearch.trim());
-                        if (foundRole) {
-                            await applyRoleChange(interaction, member, foundRole, action);
-                        } else {
-                            await interaction.reply({
-                                content: `❌ Rolle "${roleSearch}" nicht gefunden. Bitte versuche es erneut.`,
-                                flags: MessageFlags.Ephemeral
-                            });
-                        }
-                    } else {
-                        // Dropdown anzeigen
-                        await interaction.reply({
-                            embeds: [createRoleSelectEmbed(action, member)],
-                            components: [new ActionRowBuilder().addComponents(createRoleSelectMenu())],
-                            ephemeral: true
-                        });
-                    }
-                }
-            }
-
-            // Rolle aus Dropdown auswählen
-            if (interaction.isStringSelectMenu() && interaction.customId === "team_role_select") {
-                const roleId = interaction.values[0];
-                const role = findRoleById(roleId);
-                const member = interaction.message.mentions.members.first();
-
-                if (!role || !member) {
-                    return interaction.update({ content: "❌ Fehler beim Auswählen der Rolle.", embeds: [], components: [] });
-                }
-
-                const action = interaction.message.embeds[0].title.includes("UPRANK") ? "uprank" : "downrank";
-                await applyRoleChange(interaction, member, role, action);
-            }
-
+            await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+            const listEmbed = await createTeamListEmbed(interaction.guild);
+            await interaction.editReply({ embeds: [listEmbed] });
         } catch (error) {
             console.error("❌ Fehler im Team-Management:", error);
             if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({ content: "❌ Ein Fehler ist aufgetreten.", flags: MessageFlags.Ephemeral });
+                await interaction.reply({ content: `❌ Teamliste konnte nicht geladen werden: ${error.message}`, flags: MessageFlags.Ephemeral });
+            } else {
+                await interaction.editReply({ content: `❌ Teamliste konnte nicht geladen werden: ${error.message}`, embeds: [] }).catch(editError =>
+                    console.error("❌ Fehler beim Anzeigen des Teamlisten-Fehlers:", editError)
+                );
             }
         }
     });

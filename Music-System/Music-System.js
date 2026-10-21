@@ -26,14 +26,12 @@ const {
     MessageFlags
 } = require("discord.js");
 
-const { DisTube, Events: DisTubeEvents } = require("distube");
+const { DisTube, Events: DisTubeEvents, Playlist, Song } = require("distube");
 
-// @distube/youtube (ytsr + ytdl-core) ist veraltet und bricht regel-
-// mäßig, weil YouTube seine Such-Antwortformate und internen Signatur-
-// Mechanismen ändert. YtDlpPlugin nutzt stattdessen das externe Tool
-// "yt-dlp", das sehr häufig aktualisiert wird und genau solche
-// YouTube-Änderungen zuverlässig abfängt - deshalb hier bevorzugt.
-const { YtDlpPlugin } = require("@distube/yt-dlp");
+// yt-dlp übernimmt sowohl die YouTube-Suche als auch die Stream-Auflösung.
+// Der Wrapper-Plugin-Typ von @distube/yt-dlp kann standardmäßig nicht suchen;
+// SearchableYtDlpPlugin ergänzt die Suche über yt-dlp selbst.
+const { YtDlpPlugin, json: ytDlpJson } = require("@distube/yt-dlp");
 
 // ffmpeg-static liefert einen fertigen ffmpeg-Binary-Pfad mit. DisTube
 // liest diesen NICHT automatisch aus process.env.FFMPEG_PATH, sondern
@@ -61,6 +59,8 @@ const MUSIC_EMPTY_COOLDOWN_SECONDS =
     Number(process.env.MUSIC_EMPTY_COOLDOWN_SECONDS) > 0
         ? Number(process.env.MUSIC_EMPTY_COOLDOWN_SECONDS)
         : 60;
+
+const YTDLP_OPERATION_TIMEOUT_MS = 30_000;
 
 // Maximale Anzahl an Songs, die im /queue-Embed aufgelistet werden.
 const QUEUE_DISPLAY_LIMIT = 10;
@@ -93,6 +93,7 @@ const musicCommandDefinitions = [
             option
                 .setName("query")
                 .setDescription("Suchbegriff oder Link (z. B. WAD)")
+                .setMinLength(1)
                 .setRequired(true)
         ),
 
@@ -210,16 +211,139 @@ function scheduleIdleLeave(distube, guildId) {
     idleLeaveTimers.set(guildId, timer);
 }
 
+async function runYtDlpJson(url, flags, operation) {
+    const startedAt = Date.now();
+
+    try {
+        const result = await ytDlpJson(url, flags, {
+            timeout: YTDLP_OPERATION_TIMEOUT_MS
+        });
+        console.log(`✅ [Music-System] yt-dlp ${operation} abgeschlossen nach ${Date.now() - startedAt}ms.`);
+        return result;
+    } catch (error) {
+        const elapsed = Date.now() - startedAt;
+        const timedOut = elapsed >= YTDLP_OPERATION_TIMEOUT_MS - 1_000;
+        const details = error instanceof Error && error.message
+            ? error.message.slice(0, 500)
+            : "Keine weiteren Details verfügbar.";
+
+        throw new Error(
+            `yt-dlp ${operation} ${timedOut ? `nach ${Math.round(elapsed / 1_000)} Sekunden abgebrochen (Timeout)` : "fehlgeschlagen"}: ${details}`,
+            { cause: error }
+        );
+    }
+}
+
+class SearchableYtDlpPlugin extends YtDlpPlugin {
+    type = "extractor";
+
+    createSong(info, options) {
+        const source = info.extractor || info.extractor_key;
+        const url = info.webpage_url || info.original_url || info.url;
+        const name = info.title || info.fulltitle;
+
+        if (!source || !url || !name) {
+            throw new Error("yt-dlp hat unvollständige Titelinformationen zurückgegeben.");
+        }
+
+        return new Song({
+            plugin: this,
+            source,
+            playFromSource: true,
+            id: info.id ? String(info.id) : url,
+            name,
+            url,
+            isLive: info.is_live,
+            thumbnail: info.thumbnail || info.thumbnails?.[0]?.url,
+            duration: info.is_live ? 0 : info.duration,
+            uploader: {
+                name: info.uploader,
+                url: info.uploader_url
+            },
+            views: info.view_count,
+            likes: info.like_count,
+            dislikes: info.dislike_count,
+            reposts: info.repost_count,
+            ageRestricted: Boolean(info.age_limit) && info.age_limit >= 18
+        }, options);
+    }
+
+    async resolve(url, options) {
+        const info = await runYtDlpJson(url, {
+            dumpSingleJson: true,
+            noWarnings: true,
+            preferFreeFormats: true,
+            skipDownload: true,
+            simulate: true
+        }, "URL-Auflösung");
+
+        if (!Array.isArray(info.entries)) {
+            return this.createSong(info, options);
+        }
+
+        const songs = info.entries.map(entry => this.createSong(entry, options));
+        if (songs.length === 0) {
+            throw new Error("Die Playlist enthält keine abspielbaren Titel.");
+        }
+
+        return new Playlist({
+            source: info.extractor || info.extractor_key || songs[0].source,
+            songs,
+            id: String(info.id || url),
+            name: info.title || "Playlist",
+            url: info.webpage_url || url,
+            thumbnail: info.thumbnail || info.thumbnails?.[0]?.url
+        }, options);
+    }
+
+    async searchSong(query, options) {
+        const result = await runYtDlpJson(`ytsearch1:${query}`, {
+            dumpSingleJson: true,
+            noWarnings: true,
+            skipDownload: true,
+            simulate: true
+        }, "Suche");
+        const entry = result.entries?.find(song => song && (song.webpage_url || song.url));
+
+        if (!entry) {
+            return null;
+        }
+
+        if (!entry.id || !entry.title) {
+            throw new Error("yt-dlp hat ein unvollständiges Suchergebnis zurückgegeben.");
+        }
+
+        return this.createSong(entry, options);
+    }
+
+    async getStreamURL(song) {
+        if (!song.url) {
+            throw new Error("Der gefundene Titel enthält keine abspielbare URL.");
+        }
+
+        const info = await runYtDlpJson(song.url, {
+            dumpSingleJson: true,
+            noWarnings: true,
+            preferFreeFormats: true,
+            skipDownload: true,
+            simulate: true,
+            format: "ba/ba*"
+        }, "Audio-Stream-Auflösung");
+
+        if (Array.isArray(info.entries) || !info.url) {
+            throw new Error("Für diesen Titel wurde kein Audio-Stream gefunden.");
+        }
+
+        return info.url;
+    }
+}
+
 // =====================================================
 // DISTUBE-INSTANZ ERSTELLEN
 // =====================================================
 
 function createDisTubeInstance(client) {
-    // Set environment variables to use updated yt-dlp
-    process.env.YTDLP_DIR = "C:\\Users\\User\\AppData\\Local\\Python\\pythoncore-3.14-64\\Scripts";
-    process.env.YTDLP_DISABLE_DOWNLOAD = "true";
-
-   const distube = new DisTube(client, {
+    const distube = new DisTube(client, {
     emitNewSongOnly: true,
     savePreviousSongs: true,
     nsfw: false,
@@ -227,8 +351,8 @@ function createDisTubeInstance(client) {
         path: ffmpegStaticPath
     },
     plugins: [
-        new YtDlpPlugin({ 
-            update: true
+        new SearchableYtDlpPlugin({
+            update: false
         })
     ]
 });
@@ -344,6 +468,8 @@ function botHasVoicePermissions(voiceChannel, guild) {
 }
 
 async function handlePlay(interaction, distube) {
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+
     const voiceChannel = getMemberVoiceChannel(interaction);
 
     if (!voiceChannel) {
@@ -354,15 +480,17 @@ async function handlePlay(interaction, distube) {
         return replyError(interaction, `Mir fehlen die Berechtigungen **Beitreten** und/oder **Sprechen** in ${voiceChannel}.`);
     }
 
-    const query = interaction.options.getString("query", true);
-
-    await interaction.deferReply();
+    const query = interaction.options.getString("query", true).trim();
+    if (!query) {
+        return replyError(interaction, "Bitte gib einen Suchbegriff oder Link ein.");
+    }
 
     console.log(`🔎 [Music-System] /play gestartet für Query: "${query}" ...`);
     const playStartedAt = Date.now();
+    let playTimeout;
 
     try {
-        // Sicherheits-Timeout: distube.play() darf maximal 60 Sekunden
+        // Sicherheits-Timeout: distube.play() darf maximal 120 Sekunden
         // dauern. Hängt der zugrunde liegende yt-dlp-Aufruf fest (z. B.
         // durch einen hängenden Kindprozess), würde die Interaktion sonst
         // für immer bei "Denkt nach ..." stehen bleiben, ohne dass wir
@@ -373,12 +501,12 @@ async function handlePlay(interaction, distube) {
                 member: interaction.member,
                 metadata: { interactionUserId: interaction.user.id }
             }),
-            new Promise((_, reject) =>
-                setTimeout(
+            new Promise((_, reject) => {
+                playTimeout = setTimeout(
                     () => reject(new Error(`TIMEOUT nach ${Date.now() - playStartedAt}ms - distube.play() hat nicht rechtzeitig geantwortet.`)),
                     120_000
-                )
-            )
+                );
+            })
         ]);
 
         console.log(`✅ [Music-System] distube.play() abgeschlossen nach ${Date.now() - playStartedAt}ms.`);
@@ -404,6 +532,8 @@ async function handlePlay(interaction, distube) {
                 buildErrorEmbed(`Für **${query}** konnte nichts gefunden oder abgespielt werden. Bitte versuche einen anderen Suchbegriff oder Link.`)
             ]
         });
+    } finally {
+        clearTimeout(playTimeout);
     }
 }
 

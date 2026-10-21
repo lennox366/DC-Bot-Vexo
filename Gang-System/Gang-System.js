@@ -806,6 +806,51 @@ function initializeGangSystem(client, options = {}) {
 
     client.on("interactionCreate", async interaction => {
         try {
+            if (interaction.isChatInputCommand()) {
+                if (interaction.__slashCommandPermissionDenied) return;
+                if (!interaction.guild || !interaction.channel?.isTextBased()) {
+                    return interaction.reply({
+                        content: "❌ Dieser Befehl funktioniert nur in einem Server-Textkanal.",
+                        flags: MessageFlags.Ephemeral
+                    });
+                }
+
+                if (interaction.commandName === "gang-panel") {
+                    if (!hasGangManagePermission(interaction.member)) {
+                        return interaction.reply({
+                            content: errorReply("Du hast keine Berechtigung, das Gang-Panel zu verwenden.").content,
+                            flags: MessageFlags.Ephemeral
+                        });
+                    }
+
+                    await interaction.channel.send(buildGangPanelPayload(interaction.guild.id));
+                    return interaction.reply({
+                        content: "✅ Das Gang-Panel wurde erstellt.",
+                        flags: MessageFlags.Ephemeral
+                    });
+                }
+
+                if (interaction.commandName === "gang-liste") {
+                    const payload = buildGangListPayload(interaction.guild);
+                    const existing = loadAllGangLists()[interaction.guild.id]?.[interaction.channel.id];
+
+                    if (existing) {
+                        const oldMessage = await interaction.channel.messages.fetch(existing).catch(() => null);
+                        if (oldMessage) await oldMessage.delete().catch(() => null);
+                        removeGangListMessage(interaction.guild.id, interaction.channel.id);
+                    }
+
+                    const sent = await interaction.channel.send({
+                        embeds: payload.embeds,
+                        files: payload.files
+                    });
+                    registerGangListMessage(interaction.guild.id, interaction.channel.id, sent.id);
+                    return interaction.reply({
+                        content: "✅ Die Gang-Liste wurde erstellt.",
+                        flags: MessageFlags.Ephemeral
+                    });
+                }
+            }
 
             if (!interaction.guild) {
                 return;
@@ -1365,6 +1410,12 @@ function initializeGangSystem(client, options = {}) {
 
         } catch (error) {
             console.error("❌ Fehler im Gang-System (interactionCreate):", error);
+            if (interaction.isChatInputCommand() && !interaction.replied && !interaction.deferred) {
+                await interaction.reply({
+                    content: "❌ Der Gang-Befehl konnte nicht abgeschlossen werden.",
+                    flags: MessageFlags.Ephemeral
+                });
+            }
 
             const payload = errorReply("Es ist ein unerwarteter Fehler aufgetreten. Bitte versuche es erneut.");
 

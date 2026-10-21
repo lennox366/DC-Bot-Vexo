@@ -316,8 +316,31 @@ function initializePrivatnachrichtSystem(client, options = {}) {
         return modal;
     }
 
+    async function sendPrivateMessagePanel(channel, userId) {
+        const embed = new EmbedBuilder()
+            .setColor(0x5865F2)
+            .setTitle("📩 Vexo RP – Privatnachricht")
+            .setDescription(
+                "Hier kannst du einem Server-Mitglied eine private Nachricht senden.\n\n" +
+                "🔹 Mitglied auswählen\n" +
+                "🔹 Nachricht schreiben\n" +
+                "🔹 Nachricht wird anschließend per DM versendet"
+            )
+            .setFooter({ text: "Vexo RP" })
+            .setTimestamp();
+
+        const row = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+                .setCustomId(`pn_open:${userId}`)
+                .setLabel("👤 Mitglied auswählen")
+                .setStyle(ButtonStyle.Primary)
+        );
+
+        return channel.send({ embeds: [embed], components: [row] });
+    }
+
     // =====================================================
-    // BEFEHL: !privatnachricht
+    // BEFEHL: privatnachricht
     // =====================================================
 
     client.on("messageCreate", async message => {
@@ -338,26 +361,7 @@ function initializePrivatnachrichtSystem(client, options = {}) {
                 });
             }
 
-            const embed = new EmbedBuilder()
-                .setColor(0x5865F2)
-                .setTitle("📩 Vexo RP – Privatnachricht")
-                .setDescription(
-                    "Hier kannst du einem Server-Mitglied eine private Nachricht senden.\n\n" +
-                    "🔹 Mitglied auswählen\n" +
-                    "🔹 Nachricht schreiben\n" +
-                    "🔹 Nachricht wird anschließend per DM versendet"
-                )
-                .setFooter({ text: "Vexo RP" })
-                .setTimestamp();
-
-            const row = new ActionRowBuilder().addComponents(
-                new ButtonBuilder()
-                    .setCustomId(`pn_open:${message.author.id}`)
-                    .setLabel("👤 Mitglied auswählen")
-                    .setStyle(ButtonStyle.Primary)
-            );
-
-            await message.channel.send({ embeds: [embed], components: [row] });
+            await sendPrivateMessagePanel(message.channel, message.author.id);
         } catch (error) {
             console.error("❌ Fehler im Privatnachrichten-System (messageCreate):", error);
         }
@@ -369,6 +373,29 @@ function initializePrivatnachrichtSystem(client, options = {}) {
 
     client.on("interactionCreate", async interaction => {
         try {
+            if (interaction.isChatInputCommand()) {
+                if (interaction.commandName !== "privatnachricht") return;
+                if (interaction.__slashCommandPermissionDenied) return;
+                if (!interaction.guild || !interaction.channel?.isTextBased()) {
+                    return interaction.reply({
+                        content: "❌ Dieser Befehl funktioniert nur in einem Server-Textkanal.",
+                        flags: MessageFlags.Ephemeral
+                    });
+                }
+                if (!hasPermission(interaction.member)) {
+                    return interaction.reply({
+                        content: "❌ Du hast keine Berechtigung, dieses System zu verwenden.",
+                        flags: MessageFlags.Ephemeral
+                    });
+                }
+
+                await sendPrivateMessagePanel(interaction.channel, interaction.user.id);
+                return interaction.reply({
+                    content: "✅ Das Privatnachrichten-Panel wurde erstellt.",
+                    flags: MessageFlags.Ephemeral
+                });
+            }
+
             // ---------------------------------------------------
             // 👤 Mitglied-auswählen-Button (Panel öffnen)
             // ---------------------------------------------------
@@ -654,6 +681,12 @@ function initializePrivatnachrichtSystem(client, options = {}) {
             }
         } catch (error) {
             console.error("❌ Fehler im Privatnachrichten-System (interactionCreate):", error);
+            if (interaction.isChatInputCommand() && !interaction.replied && !interaction.deferred) {
+                await interaction.reply({
+                    content: "❌ Das Privatnachrichten-Panel konnte nicht erstellt werden.",
+                    flags: MessageFlags.Ephemeral
+                });
+            }
         }
     });
 }

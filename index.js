@@ -102,6 +102,9 @@ const {
 const {
     slashCommands
 } = require("./slash-commands");
+const {
+    musicCommandDefinitions
+} = require("./Music-System/Music-System");
 
 // =====================================================
 // 📋 BÜRGER-VORSCHLAG-SYSTEM
@@ -206,10 +209,14 @@ const BOT_OWNER_ID = "1322191083303731201";
 // =====================================================
 
 const AUTHORIZED_ROLE_IDS = [
-    "1559659267441819689", // Founder
-    "1559659267408134201", // Owner
-    "1559659267408134200", // Co-Owner
-    "1559659267395428541"  // Developer
+    "1559659267441819689", // 《 Server Founder
+    "1559659267408134198", // ━━Owner/Co.Owner━━
+    "1559659267395428539", // ━━Developement━━
+    "1559659267378778221", // ━━Projektleitung━━
+    "1559659267378778217", // ━━High-Ausbilder━━
+    "1559659267349553272", // ━━Direktor━━
+    "1559659267349553271", // ━━Leitung━━
+    "1559659267349553265"  // ━━Managment━━
 ];
 
 function hasSlashCommandPermission(member) {
@@ -336,6 +343,7 @@ function updateMemberNametag(member) {
                     }
                 });
             }
+
         }
     } catch (error) {
         console.error("❌ Fehler beim Aktualisieren des Nametags:", error);
@@ -530,6 +538,13 @@ async function sendTeamManagementLog(guild, type, embed) {
         return false;
     }
     return sendLog(guild, channelId, embed);
+}
+
+async function sendRequiredTeamManagementLog(guild, type, embed) {
+    const sent = await sendTeamManagementLog(guild, type, embed);
+    if (!sent) {
+        throw new Error(`Der konfigurierte Team-Log-Kanal für „${type}“ ist nicht verfügbar oder der Bot darf dort nicht senden.`);
+    }
 }
 
 // Sendet ein "🔄 Warnung geändert"-Log in den konfigurierten Warn-Kanal
@@ -825,6 +840,9 @@ const MODERATION_LOG_CHANNEL_ID = "1539990036945182810";
 const BOT_LOG_CHANNEL_ID = "1539990045174267964";
 const SECURITY_LOG_CHANNEL_ID = "1539990046705324052";
 const EDIT_LOG_CHANNEL_ID = "1539990050962538657";
+const WELCOME_CHANNEL_ID = "1559659268175826953";
+const DISCORD_RULES_CHANNEL_ID = "1560736136304009257";
+const IC_RULES_CHANNEL_ID = "1559659268494327931";
 
 // =====================================================
 // RP-PANEL
@@ -839,18 +857,27 @@ const RP_PANEL_DESCRIPTION =
 // RP START
 // =====================================================
 
-const RP_START_TITLE = "🚨 RP START – Vexo RP 🚨";
+const RP_START_TITLE = "💫 𝐕𝐄𝐗𝐎 𝐑𝐏 ┃ 𝐕𝟏";
 
-const RP_START_DESCRIPTION = `Das RP startet jetzt! 🌃
+const RP_START_DESCRIPTION = `━━━━━━━━━━━━━━━━━━━━━━
 
-Kommt auf den Server und seid dabei! 🚓🚑🚒
+🟢・**𝐃𝐀𝐒 𝐑𝐎𝐋𝐄𝐏𝐋𝐀𝐘 𝐈𝐒𝐓 𝐎𝐅𝐅𝐈𝐙𝐈𝐄𝐋𝐋 𝐆𝐄𝐒𝐓𝐀𝐑𝐓𝐄𝐓!**
 
-🎮 **Server:** Vexo RP
-🔑 **Join-Code:** \`stn1s4mj\`
+🚨 Die Stadt ist geöffnet und der RP-Betrieb hat begonnen!
 
-📢 Alle Einheiten aufsitzen – wir sehen uns im RP!
+🚓 Polizei bereit zum Einsatz
+🚑 Rettungsdienst einsatzbereit
+🚒 Feuerwehr auf Bereitschaft
+🏙️ Bürger können ins Roleplay starten
 
-🔥 Vexo RP – Deine Stadt. Dein RP. 🔥`;
+📜 Bitte beachtet die geltenden IC-Regeln und Safezones und sorgt für realistisches, faires Roleplay.
+
+🔑 **Servercode:** \`83ej67c7\`
+
+💫 Viel Spaß und ein erfolgreiches Roleplay wünscht euch die Serverleitung von Vexo RP V1!
+
+━━━━━━━━━━━━━━━━━━━━━━
+🟢 **𝐑𝐏 𝐈𝐒𝐓 𝐉𝐄𝐓𝐙𝐓 𝐎𝐅𝐅𝐄𝐍!**`;
 
 const RP_START_SUCCESS = "🚨 Das RP wurde gestartet!";
 
@@ -858,17 +885,26 @@ const RP_START_SUCCESS = "🚨 Das RP wurde gestartet!";
 // RP STOPP
 // =====================================================
 
-const RP_STOP_TITLE = "🚨 RP STOP – Vexo RP 🚨";
+const RP_STOP_TITLE = "💫 𝐕𝐄𝐗𝐎 𝐑𝐏 ┃ 𝐕𝟏";
 
-const RP_STOP_DESCRIPTION = `Das RP ist hiermit beendet! 🌃🛑
+const RP_STOP_DESCRIPTION = `━━━━━━━━━━━━━━━━━━━━━━
 
-Vielen Dank an alle, die heute dabei waren und das RP mitgestaltet haben! ❤️
+🔴・**𝐃𝐀𝐒 𝐑𝐎𝐋𝐄𝐏𝐋𝐀𝐘 𝐈𝐒𝐓 𝐎𝐅𝐅𝐈𝐙𝐈𝐄𝐋𝐋 𝐁𝐄𝐄𝐍𝐃𝐄𝐓!**
 
-Alle Einheiten können ihre Einsätze beenden und sich vom Dienst abmelden. 🚓🚑🚒
+🚨 Achtung, liebe Community!
 
-📢 RP-STOP – Bitte keine weiteren Einsätze mehr starten.
+Der offizielle RP-Betrieb für heute ist beendet. Bitte startet keine neuen RP-Situationen mehr und beendet laufende Situationen nach Möglichkeit geordnet.
 
-🔥 Vexo RP – Deine Stadt. Dein RP. 🔥`;
+🤝 Vielen Dank an alle Spieler, Einsatzkräfte und Teammitglieder, die heute dabei waren und für spannende RP-Momente gesorgt haben!
+
+📌 Weitere Informationen zum nächsten RP-Start werden rechtzeitig bekannt gegeben.
+
+🔑 Server-Code und weitere Informationen findet ihr in <#1559659269190586413>.
+
+💫 Wir freuen uns, euch beim nächsten Mal wieder in Vexo RP V1 begrüßen zu dürfen!
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔴 **𝐑𝐏 𝐈𝐒𝐓 𝐅Ü𝐑 𝐇𝐄𝐔𝐓𝐄 𝐁𝐄𝐄𝐍𝐃𝐄𝐓!**`;
 
 const RP_STOP_SUCCESS = "🚨 Das RP wurde gestoppt!";
 
@@ -887,7 +923,6 @@ const TEXT_SENDE_TITLE = "📨 Text senden";
 const TEXT_SENDE_DESCRIPTION =
     "Wähle einen Discord-Kanal aus und sende anschließend eine Nachricht.";
 
-const ALL_USERS_CAN_USE_TEAM = true;
 
 const TEAM_ROLE_IDS = ["1539991249254355014"];
 const ADMIN_ROLE_IDS = [];
@@ -906,11 +941,8 @@ const TEAM_APPLICATION_FILE = path.join(__dirname, "team-applications.json");
 const TEAM_APPLICATION_QUESTIONS_FILE = path.join(__dirname, "team-application-questions.json");
 const SERVER_CODES_CHANNEL_ID = "1559659269190586413";
 const SERVER_CODES_MESSAGE_FILE = path.join(__dirname, "server-codes-message.json");
-const APPLICATION_REVIEW_CHANNEL_ID = process.env.APPLICATION_REVIEW_CHANNEL_ID || "";
-const APPLICATION_SUBMITTED_ROLE_ID = "1539991288642805830";
-// Rolle, die AUSSCHLIESSLICH beim Klick auf "Annehmen" vergeben wird.
-// Fest verdrahtet auf Wunsch - keine andere Rolle darf hierdurch vergeben werden.
-const APPLICATION_ACCEPTED_ROLE_ID = "1539991288642805830";
+const APPLICATION_REVIEW_CHANNEL_ID = "1559659273351602287";
+const APPLICATION_ACCEPTED_ROLE_ID = "1559659267269595146";
 const APPLICATION_TEAM_ROLE_IDS = (process.env.APPLICATION_TEAM_ROLE_IDS || TEAM_ROLE_IDS.join(","))
     .split(",")
     .map(roleId => roleId.trim())
@@ -1087,32 +1119,17 @@ function deleteTeamApplication(guildId, userId) {
 }
 
 // -----------------------------------------------------
-// BEWERBUNGS-ZIELKANAL (teamApplicationChannelId)
+// BEWERBUNGS-ZIELKANAL
 // -----------------------------------------------------
-// Wird AUSSCHLIESSLICH durch "!teambewerbung" (ohne "text") gesetzt.
-// Bestimmt, wohin fertig abgeschickte Bewerbungen gepostet werden.
-// Persistiert pro Server in team-applications.json.
+// Fertig abgeschickte Bewerbungen gehen in den festgelegten Review-Kanal.
 //
-// Das ist etwas KOMPLETT ANDERES als das Bewerbungs-Panel
-// (siehe "!teambewerbung text" / TEAM_APPLICATIONS.panels weiter
-// unten und application.teamApplicationPanelChannelId). Das Panel
-// ist nur eine Nachricht mit einem Button, in dem Kanal, in dem
-// "!teambewerbung text" ausgeführt wurde - es hat NIEMALS Einfluss
-// auf teamApplicationChannelId und wird NIEMALS zum Versenden von
-// fertigen Bewerbungen verwendet.
+// Panel und Review-Kanal sind standardmäßig getrennt. /teambewerbungtext
+// setzt den Review-Kanal ausdrücklich auf den gewählten Kanal; die Einstellung
+// wird separat gespeichert und nicht aus application.teamApplicationPanelChannelId
+// abgeleitet.
 
 function getTeamApplicationChannelId(guildId) {
-    const stored = TEAM_APPLICATIONS.teamApplicationChannelIds[guildId];
-    if (!stored && !APPLICATION_REVIEW_CHANNEL_ID) {
-        console.log(`ℹ️ getTeamApplicationChannelId(${guildId}): kein Wert in TEAM_APPLICATIONS.teamApplicationChannelIds gefunden und kein APPLICATION_REVIEW_CHANNEL_ID als Default gesetzt.`);
-    }
-    return stored || APPLICATION_REVIEW_CHANNEL_ID || null;
-}
-
-function setTeamApplicationChannelId(guildId, channelId) {
-    TEAM_APPLICATIONS.teamApplicationChannelIds[guildId] = channelId;
-    const saved = saveTeamApplications();
-    console.log(`💾 teamApplicationChannelId für Server ${guildId} auf ${channelId} gesetzt. Speichern in ${TEAM_APPLICATION_FILE}: ${saved ? "erfolgreich" : "FEHLGESCHLAGEN"}.`);
+    return TEAM_APPLICATIONS.teamApplicationChannelIds[guildId] || APPLICATION_REVIEW_CHANNEL_ID;
 }
 
 function splitApplicationText(text, maxLength = 1900) {
@@ -1178,17 +1195,13 @@ function createApplicationManagementButtons(guildId, userId) {
 }
 
 async function sendApplicationReview(guild, application) {
-    // WICHTIG: Diese Funktion darf AUSSCHLIESSLICH die per
-    // "!teambewerbung" gespeicherte teamApplicationChannelId
-    // verwenden. Es gibt hier absichtlich KEINEN Fallback auf
-    // - application.teamApplicationPanelChannelId (Panel-Kanal von "!teambewerbung text")
-    // - den Kanal, in dem der Bewerber das Formular ausgefüllt hat
-    // - irgendeinen anderen temporär bekannten Kanal
-    // Ist kein Zielkanal gesetzt, wird NICHTS gesendet.
+    // Ausschließlich den explizit konfigurierten Review-Kanal verwenden.
+    // /teambewerbungtext kann ihn auf den Kanal des Panels setzen; der
+    // Kanal aus der einzelnen Bewerbung dient nicht als impliziter Fallback.
     const teamApplicationChannelId = getTeamApplicationChannelId(guild?.id);
 
     if (!guild || !teamApplicationChannelId) {
-        console.error(`❌ Kein Bewerbungs-Zielkanal (teamApplicationChannelId) für Server ${guild?.id || "unbekannt"} festgelegt. Bitte zuerst !teambewerbung in dem gewünschten Kanal ausführen.`);
+        console.error(`❌ Kein Bewerbungs-Server oder Zielkanal ${teamApplicationChannelId} verfügbar.`);
         return false;
     }
 
@@ -1215,7 +1228,7 @@ async function sendApplicationReview(guild, application) {
 
     const applicationEmbed = new EmbedBuilder()
         .setTitle("📋 Teambewerbung")
-        .setColor(0x2ecc71)
+        .setColor(0xFF69B4)
         .setDescription(`👤 **${displayName}**\n\n**User-Informationen**\n**Name:** ${displayName}\n**Profil:** <@${application.userId}>\n**User-ID:** ${application.userId}\n**Username:** ${username}\n**Erwähnung:** <@${application.userId}>\n**Serverbeitritt:** ${joinedAt}\n**Bewerbung: **${formatGermanTime(new Date(application.submittedAt))}`)
         .addFields(applicationFields)
         .setTimestamp(new Date(application.submittedAt));
@@ -1235,6 +1248,87 @@ async function sendApplicationReview(guild, application) {
     application.reviewMessageId = controlMessage.id;
     setTeamApplication(application);
     return true;
+}
+
+async function createTeamApplicationPanelForInteraction(interaction, configureReviewChannel = false) {
+    if (!hasTeamPermission(interaction.member)) {
+        return interaction.reply({
+            content: errorMessage("Du hast keine Berechtigung, diesen Befehl zu verwenden."),
+            flags: MessageFlags.Ephemeral
+        });
+    }
+
+    if (!interaction.guild || !interaction.channel?.isTextBased()) {
+        return interaction.reply({
+            content: "❌ Das Bewerbungspanel kann nur in einem Server-Textkanal erstellt werden.",
+            flags: MessageFlags.Ephemeral
+        });
+    }
+
+    const targetChannel = configureReviewChannel
+        ? (interaction.options.getChannel("kanal") || interaction.channel)
+        : interaction.channel;
+
+    if (
+        !targetChannel.isTextBased() ||
+        targetChannel.guildId !== interaction.guild.id
+    ) {
+        return interaction.reply({
+            content: "❌ Bitte wähle einen Textkanal dieses Servers aus.",
+            flags: MessageFlags.Ephemeral
+        });
+    }
+
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+
+    let panelMessage;
+    try {
+        panelMessage = await targetChannel.send(createTeamApplicationPanel());
+
+        const panels = TEAM_APPLICATIONS.panels[interaction.guild.id] || [];
+        const previousChannelId = TEAM_APPLICATIONS.teamApplicationChannelIds[interaction.guild.id];
+        panels.push({
+            channelId: panelMessage.channel.id,
+            messageId: panelMessage.id
+        });
+        TEAM_APPLICATIONS.panels[interaction.guild.id] = panels;
+
+        if (configureReviewChannel) {
+            TEAM_APPLICATIONS.teamApplicationChannelIds[interaction.guild.id] = targetChannel.id;
+        }
+
+        if (!saveTeamApplications()) {
+            panels.pop();
+            if (panels.length === 0) {
+                delete TEAM_APPLICATIONS.panels[interaction.guild.id];
+            }
+            if (configureReviewChannel) {
+                if (previousChannelId) {
+                    TEAM_APPLICATIONS.teamApplicationChannelIds[interaction.guild.id] = previousChannelId;
+                } else {
+                    delete TEAM_APPLICATIONS.teamApplicationChannelIds[interaction.guild.id];
+                }
+            }
+            await panelMessage.delete().catch(error => {
+                console.error("❌ Nicht gespeichertes Bewerbungspanel konnte nicht entfernt werden:", error);
+            });
+            throw new Error("Bewerbungspanel oder Bewerbungskanal konnte nicht gespeichert werden.");
+        }
+
+        const successText = configureReviewChannel
+            ? `✅ Das Bewerbungspanel wurde in ${targetChannel} erstellt. Neue Bewerbungen werden ab jetzt dort eingereicht.`
+            : "✅ Das Bewerbungspanel wurde erstellt. Bewerber können über den Button das Fragenformular starten.";
+        return interaction.editReply({ content: successText });
+    } catch (error) {
+        console.error(`❌ Fehler bei /${interaction.commandName}:`, error);
+        const response = { content: "❌ Das Bewerbungspanel oder der Bewerbungskanal konnte nicht eingerichtet werden. Prüfe meine Kanalberechtigungen und versuche es erneut." };
+        if (panelMessage && !TEAM_APPLICATIONS.panels[interaction.guild.id]?.some(panel => panel.messageId === panelMessage.id)) {
+            await panelMessage.delete().catch(deleteError => {
+                console.error("❌ Teilweise erstelltes Bewerbungspanel konnte nicht entfernt werden:", deleteError);
+            });
+        }
+        return interaction.editReply(response);
+    }
 }
 
 async function assignApplicationRole(guild, userId, roleId) {
@@ -1287,12 +1381,14 @@ async function handleTeamApplicationDM(message) {
     application.submittedAt = new Date().toISOString();
     setTeamApplication(application);
 
-    await message.channel.send("Du hast alles ausgefüllt, deine Bewerbung wurde jetzt abgeschickt. Ein Teammitglied wird sich bald um deine Bewerbung kümmern.");
     const guild = client.guilds.cache.get(application.guildId);
-    await sendApplicationReview(guild, application);
-    if (guild) {
-        await assignApplicationRole(guild, application.userId, APPLICATION_SUBMITTED_ROLE_ID);
-    } else {
+    const reviewSent = await sendApplicationReview(guild, application);
+    await message.channel.send(
+        reviewSent
+            ? "Du hast alles ausgefüllt, deine Bewerbung wurde abgeschickt. Ein Teammitglied wird sich bald um deine Bewerbung kümmern."
+            : "Deine Bewerbung wurde gespeichert, konnte aber nicht an das Team weitergeleitet werden. Bitte informiere die Serverleitung."
+    );
+    if (!guild) {
         console.error(`❌ Guild ${application.guildId} ist nach dem Neustart nicht verfügbar.`);
     }
     return true;
@@ -1396,15 +1492,13 @@ function acquireBotInstanceLock() {
 acquireBotInstanceLock();
 
 const RP_CITIZEN_ROLE_ID = "1559659267257270313";
-const RP_ANNOUNCEMENT_CHANNEL_ID = "1559659269190586414";
+const RP_ANNOUNCEMENT_CHANNEL_ID = "1559659269190586411"; // Kanal für RP-Start/Stop Nachrichten
 let RP_PING_ROLE_ID = RP_CITIZEN_ROLE_ID;
 
 // =====================================================
 // TEAM-ROLLEN
 // =====================================================
 
-const UPRANK_DOWNRANK_ROLE_ID = "1539989969576394803";
-const UPRANK_DOWNRANK_ROLE_IDS = [UPRANK_DOWNRANK_ROLE_ID, "1539991249254355014"];
 const TEAM_ONE_ROLE_ID = "1539989971820216400";
 const TEAM_KICK_LOG_CHANNEL_ID = "1539999973220986961";
 
@@ -1641,7 +1735,11 @@ const SPECIAL_NICKNAME_ROLES = [
 // WARN
 // =====================================================
 
-const WARN_ROLE_ID = "1539991249254355014";
+const WARN_LEVEL_ROLE_IDS = [
+    "1559659267219390592",
+    "1559659267219390591",
+    "1559659267219390590"
+];
 
 // =====================================================
 // WARN-SPEICHERSYSTEM (Team-Panel Erweiterung)
@@ -1721,7 +1819,10 @@ function addWarnEntry(guildId, userId, entry) {
         ...entry
     };
     warns.push(warn);
-    saveWarnStorage();
+    if (!saveWarnStorage()) {
+        warns.pop();
+        throw new Error("Die Verwarnung konnte nicht dauerhaft gespeichert werden.");
+    }
     return warn;
 }
 
@@ -1953,6 +2054,19 @@ function buildTeamStatistikMemberEmbed(guild, member) {
 // Speichert temporär den Grund einer Warnung zwischen Modal-Eingabe
 // und finaler Bestätigung (Schlüssel: moderatorId_targetId)
 const pendingWarnReasons = new Map();
+const processedTeamActionInteractions = new Set();
+
+function claimTeamActionInteraction(interaction) {
+    if (processedTeamActionInteractions.has(interaction.id)) {
+        return false;
+    }
+    processedTeamActionInteractions.add(interaction.id);
+    const cleanupTimer = setTimeout(() => {
+        processedTeamActionInteractions.delete(interaction.id);
+    }, 5 * 60 * 1000);
+    cleanupTimer.unref?.();
+    return true;
+}
 
 // Speichert temporär den Grund eines Down-Ranks zwischen Modal-Eingabe
 // und finaler Bestätigung (Schlüssel: moderatorId_targetId)
@@ -1967,24 +2081,48 @@ const pendingUprankReasons = new Map();
 // =====================================================
 
 async function syncWarnRoleForMember(member) {
-    try {
-        const guildId = member.guild.id;
-        const activeWarns = getUserWarns(guildId, member.id).filter(warn =>
-            isWarnPermanent(warn) || new Date(warn.expiresAt).getTime() > Date.now()
+    const activeWarnCount = Math.min(getActiveWarns(member.guild.id, member.id).length, MAX_ACTIVE_WARNS);
+    const desiredRoleId = activeWarnCount > 0
+        ? WARN_LEVEL_ROLE_IDS[activeWarnCount - 1]
+        : null;
+    const allWarnRoleIds = WARN_LEVEL_ROLE_IDS;
+    const warnRole = desiredRoleId
+        ? await member.guild.roles.fetch(desiredRoleId).catch(() => null)
+        : null;
+    if (desiredRoleId && !warnRole) {
+        throw new Error(`Warnrolle ${desiredRoleId} wurde auf dem Server nicht gefunden.`);
+    }
+
+    const rolesToRemove = allWarnRoleIds.filter(roleId =>
+        roleId !== desiredRoleId && member.roles.cache.has(roleId)
+    );
+
+    if (rolesToRemove.length > 0 || (warnRole && !member.roles.cache.has(warnRole.id))) {
+        const botMember = member.guild.members.me || await member.guild.members.fetchMe();
+        if (!botMember.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
+            throw new Error("Dem Bot fehlt die Berechtigung „Rollen verwalten“.");
+        }
+
+        const managedRoles = rolesToRemove
+            .map(roleId => member.guild.roles.cache.get(roleId))
+            .filter(Boolean);
+        if (warnRole) {
+            managedRoles.push(warnRole);
+        }
+        const blockedRole = managedRoles.find(role =>
+            botMember.roles.highest.position <= role.position
         );
-
-        const warnRole = member.guild.roles.cache.get(WARN_ROLE_ID);
-        if (!warnRole) {
-            return;
+        if (blockedRole) {
+            throw new Error(`Die Warnrolle „${blockedRole.name}“ steht auf oder über der höchsten Bot-Rolle.`);
         }
+    }
 
-        if (activeWarns.length > 0 && !member.roles.cache.has(WARN_ROLE_ID)) {
-            await member.roles.add(warnRole, "Aktive Verwarnung(en) vorhanden").catch(() => {});
-        } else if (activeWarns.length === 0 && member.roles.cache.has(WARN_ROLE_ID)) {
-            await member.roles.remove(warnRole, "Keine aktiven Verwarnungen mehr").catch(() => {});
-        }
-    } catch (error) {
-        console.error("❌ Fehler beim Synchronisieren der Warn-Rolle:", error);
+    if (rolesToRemove.length > 0) {
+        await member.roles.remove(rolesToRemove, "Warnstufe aktualisieren");
+    }
+
+    if (desiredRoleId && !member.roles.cache.has(desiredRoleId)) {
+        await member.roles.add(warnRole, "Warnstufe aktualisieren");
     }
 }
 
@@ -2132,12 +2270,7 @@ function hasNameTagSetPermission(member) {
 }
 
 function hasUprankDownrankPermission(member) {
-    return (
-        isBotOwner(member) ||
-        UPRANK_DOWNRANK_ROLE_IDS.some(roleId =>
-            member?.roles?.cache?.has(roleId)
-        )
-    );
+    return hasTeamPermission(member);
 }
 
 function hasProtectedCommandPermission(member) {
@@ -2150,7 +2283,28 @@ function hasProtectedCommandPermission(member) {
 }
 
 function hasTeamPermission(member) {
-    return ALL_USERS_CAN_USE_TEAM;
+    if (!member) {
+        return false;
+    }
+
+    if (
+        isBotOwner(member) ||
+        member.permissions?.has(PermissionsBitField.Flags.Administrator)
+    ) {
+        return true;
+    }
+
+    const authorizedRoleName = /founder|owner|developer|projektleitung|teamleitung|admin/i;
+    return CONFIGURED_TEAM_NICKNAME_ROLES.some(entry =>
+        authorizedRoleName.test(entry.roleName) &&
+        member.roles?.cache?.has(entry.roleId)
+    );
+}
+
+function hasConfiguredTeamRole(member) {
+    return getAllTeamNicknameRoles().some(entry =>
+        member?.roles?.cache?.has(entry.roleId)
+    );
 }
 
 // =====================================================
@@ -3100,7 +3254,8 @@ function getHighestNicknameRoleEntry(member) {
 }
 
 async function syncNickname(
-    member
+    member,
+    onError
 ) {
     try {
         if (
@@ -3159,8 +3314,12 @@ async function syncNickname(
 
         return false;
 
-    } catch {
-        // Fehlende Berechtigung o. Ä. darf den Bot nicht stoppen.
+    } catch (error) {
+        console.error(
+            `❌ Nickname konnte für Mitglied ${member?.id || "unbekannt"} nicht aktualisiert werden:`,
+            error
+        );
+        onError?.(error);
         return false;
     }
 }
@@ -3173,18 +3332,25 @@ async function updateAllNicknames(
 
         let updated = 0;
         let skipped = 0;
+        let failed = 0;
 
         for (
             const [, member] of
             guild.members.cache
         ) {
+            let memberFailed = false;
             const changed =
                 await syncNickname(
-                    member
+                    member,
+                    () => {
+                        memberFailed = true;
+                    }
                 );
 
             if (changed) {
                 updated++;
+            } else if (memberFailed) {
+                failed++;
             } else {
                 skipped++;
             }
@@ -3192,7 +3358,8 @@ async function updateAllNicknames(
 
         return {
             updated,
-            skipped
+            skipped,
+            failed
         };
 
     } catch (error) {
@@ -3203,7 +3370,9 @@ async function updateAllNicknames(
 
         return {
             updated: 0,
-            skipped: 0
+            skipped: 0,
+            failed: 0,
+            error
         };
     }
 }
@@ -4697,275 +4866,104 @@ async function createTeamListEmbeds(
         console.error("❌ Mitglieder konnten für die Teamliste nicht vollständig geladen werden (guild.members.fetch()):", error);
     }
 
-    const teamRanks =
-        Object.keys(
-            TEAM_ROLES
-        );
-
-    const highTeamRanks =
-        teamRanks.slice(
-            0,
-            15
-        );
-
-    const lowTeamRanks =
-        teamRanks.slice(
-            15
-        );
-
-    let totalMembers = 0;
-    let highTeamCount = 0;
-    let lowTeamCount = 0;
-    let onlineCount = 0;
-    let offlineCount = 0;
-
-    const highTeamEmbed =
-        new EmbedBuilder()
-            .setColor(
-                0x5865F2
-            )
-            .setTitle(
-                "👥 TEAMLISTE"
-            )
-            .setDescription(
-                "Vexo RP ✧ 𝙑𝘾 RP-VC | HIGH TEAM"
-            )
-            .setTimestamp()
-            .setFooter({
-                text:
-                    "Teamliste"
-            });
-
-    for (
-        const rankName of highTeamRanks
-    ) {
-        const roleId =
-            TEAM_ROLES[
-                rankName
-            ];
-
-        const members =
-            guild.members.cache.filter(
-                member =>
-                    member.roles.cache.has(
-                        roleId
-                    )
-            );
-
-        totalMembers +=
-            members.size;
-
-        highTeamCount +=
-            members.size;
-
-        for (
-            const member of
-            members.values()
-        ) {
-            const status =
-                member.presence?.status;
-
-            if (
-                status === "online" ||
-                status === "idle" ||
-                status === "dnd"
-            ) {
-                onlineCount++;
-            } else {
-                offlineCount++;
-            }
-        }
-
-        const emoji =
-            TEAM_RANK_EMOJIS[
-                rankName
-            ] || "📋";
-
-        const memberList =
-            members.size >
-                0
-                ? [...members.values()]
-                    .map(
-                        member =>
-                            `<@${member.id}>`
-                    )
-                    .join(
-                        "\n"
-                    )
-                : "— Keine Mitglieder —";
-
-        highTeamEmbed.addFields({
-            name:
-                `${emoji} ${rankName} [${members.size}]`,
-            value:
-                memberList,
-            inline:
-                false
-        });
+    const { roleHierarchy } = require("./team-roles-config.json");
+    if (!Array.isArray(roleHierarchy)) {
+        throw new Error("team-roles-config.json enthält keine gültige roleHierarchy.");
     }
 
-    embeds.push(
-        highTeamEmbed
-    );
+    const highTeamCategories = new Set([
+        "Founder",
+        "Owner",
+        "Co.Owner",
+        "Developer",
+        "Projektleitung",
+        "High-Ausbilder",
+        "Direktor",
+        "Management",
+        "Supervisor",
+        "Teamleitung"
+    ]);
+    const roleEmojis = {
+        ...TEAM_RANK_EMOJIS,
+        "Co-Owner": "🛡️",
+        "Developer": "💻",
+        "High Ausbilder": "🎓",
+        "Leitender Supervisor": "🛡️",
+        "Supervisor": "🛡️",
+        "Stellvertretender Supervisor": "🛡️",
+        "Low Ausbilder": "🎓",
+        "Stellvertretender Low Ausbilder": "📚",
+        "Head Supporter": "🎧",
+        "Senior Supporter": "🎧",
+        "Supporter": "🎧",
+        "Test Supporter": "🧪"
+    };
+    const roleNameAliases = {
+        "Co. Owner": "Co-Owner",
+        "Stv. Projektleitung": "Stellvertretende Projektleitung",
+        "Stv. High Ausbilder": "Stellvertretender High Ausbilder",
+        "Stv. Direktor": "Stellvertretender Direktor",
+        "Stv. Manager": "Stellvertretender Manager",
+        "Stv. Supervisor": "Stellvertretender Supervisor",
+        "Stv. Teamleitung": "Stellvertretende Teamleitung",
+        "Stv. Low Ausbilder": "Stellvertretender Low Ausbilder",
+        "Stv. Fraktionsverwaltung": "Stellvertretende Fraktionsverwaltung",
+        "Stv. Eventleitung": "Stellvertretende Eventleitung",
+        "Stv. Moderator": "Stellvertretender Moderator",
+        "Stv. Supporter": "Stellvertretender Supporter"
+    };
+    const now = new Date();
+    const updateTime = new Intl.DateTimeFormat("de-DE", {
+        hour: "2-digit",
+        minute: "2-digit"
+    }).format(now);
+    const highTeamEmbed = new EmbedBuilder()
+        .setColor(0x5865F2)
+        .setTitle("👥 TEAMLISTE")
+        .setDescription("Vexo RP ✧ 𝙑𝘾 RP-VC | HIGH TEAM")
+        .setFooter({ text: `Teamliste • heute um ${updateTime} Uhr` })
+        .setTimestamp(now);
+    const lowTeamEmbed = new EmbedBuilder()
+        .setColor(0x5865F2)
+        .setTitle("👥 TEAMLISTE")
+        .setDescription("Vexo RP ✧ 𝙑𝘾 RP-VC | LOW TEAM")
+        .setFooter({ text: `Teamliste • heute um ${updateTime} Uhr` })
+        .setTimestamp(now);
 
-    const lowTeamEmbed =
-        new EmbedBuilder()
-            .setColor(
-                0x5865F2
-            )
-            .setTitle(
-                "👥 TEAMLISTE"
-            )
-            .setDescription(
-                "BVexo RP ✧ 𝙑𝘾| LOW TEAM"
-            )
-            .setTimestamp()
-            .setFooter({
-                text:
-                    "Teamliste"
-            });
+    for (const category of roleHierarchy) {
+        const targetEmbed = highTeamCategories.has(category.category)
+            ? highTeamEmbed
+            : lowTeamEmbed;
 
-    for (
-        const rankName of lowTeamRanks
-    ) {
-        const roleId =
-            TEAM_ROLES[
-                rankName
-            ];
-
-        const members =
-            guild.members.cache.filter(
-                member =>
-                    member.roles.cache.has(
-                        roleId
-                    )
-            );
-
-        totalMembers +=
-            members.size;
-
-        lowTeamCount +=
-            members.size;
-
-        for (
-            const member of
-            members.values()
-        ) {
-            const status =
-                member.presence?.status;
-
-            if (
-                status === "online" ||
-                status === "idle" ||
-                status === "dnd"
-            ) {
-                onlineCount++;
-            } else {
-                offlineCount++;
+        for (const role of category.roles || []) {
+            if (!role.id || !role.name || role.name.includes("━")) {
+                continue;
             }
-        }
 
-        const emoji =
-            TEAM_RANK_EMOJIS[
-                rankName
-            ] || "📋";
-
-        const memberList =
-            members.size >
-                0
-                ? [...members.values()]
-                    .map(
-                        member =>
-                            `<@${member.id}>`
-                    )
-                    .join(
-                        "\n"
-                    )
+            const configuredName = (role.name.includes("✗")
+                ? role.name.split("✗").pop()
+                : role.name)
+                .trim()
+                .replace(/^[^A-Za-zÀ-ÿ0-9]+/u, "")
+                .replace(/^Server Founder$/i, "Founder");
+            const displayName = roleNameAliases[configuredName] || configuredName;
+            const members = guild.members.cache.filter(member =>
+                member.roles.cache.has(role.id)
+            );
+            const memberList = members.size > 0
+                ? [...members.values()].map(member => `<@${member.id}>`).join("\n")
                 : "— Keine Mitglieder —";
+            const emoji = roleEmojis[displayName] || "📋";
 
-        lowTeamEmbed.addFields({
-            name:
-                `${emoji} ${rankName} [${members.size}]`,
-            value:
-                memberList,
-            inline:
-                false
-        });
+            targetEmbed.addFields({
+                name: `${emoji} ${displayName} [${members.size}]`,
+                value: memberList,
+                inline: false
+            });
+        }
     }
 
-    embeds.push(
-        lowTeamEmbed
-    );
-
-    const statsEmbed =
-        new EmbedBuilder()
-            .setColor(
-                0x5865F2
-            )
-            .setTitle(
-                "📊 STATISTIK"
-            )
-            .addFields(
-                {
-                    name:
-                        "👥 Gesamt Team",
-                    value:
-                        totalMembers.toString(),
-                    inline:
-                        true
-                },
-                {
-                    name:
-                        "⭐ High Team",
-                    value:
-                        highTeamCount.toString(),
-                    inline:
-                        true
-                },
-                {
-                    name:
-                        "👤 Low Team",
-                    value:
-                        lowTeamCount.toString(),
-                    inline:
-                        true
-                },
-                {
-                    name:
-                        "🟢 Online",
-                    value:
-                        onlineCount.toString(),
-                    inline:
-                        true
-                },
-                {
-                    name:
-                        "🔴 Offline",
-                    value:
-                        offlineCount.toString(),
-                    inline:
-                        true
-                },
-                {
-                    name:
-                        "🕐 Letztes Update",
-                    value:
-                        new Date().toLocaleString(
-                            "de-DE"
-                        ),
-                    inline:
-                        false
-                }
-            )
-            .setTimestamp()
-            .setFooter({
-                text:
-                    "Vexo RP ✧ 𝙑𝘾 Teamliste"
-            });
-
-    embeds.push(
-        statsEmbed
-    );
+    embeds.push(highTeamEmbed, lowTeamEmbed);
 
     return {
         embeds
@@ -6186,52 +6184,34 @@ async function teamKickLog(
         "Kein Grund angegeben",
     removedRoleNames = []
 ) {
-    try {
-        // Bevorzugt den in der Teamverwaltung konfigurierten Team-Kick-Kanal.
-        // Ist keiner gesetzt, wird auf den ursprünglichen festen Kanal
-        // zurückgefallen, damit bestehende Server nicht ohne Log dastehen.
-        const channelId =
-            getTeamManagementChannelId(guild.id, "kick") ||
-            TEAM_KICK_LOG_CHANNEL_ID;
+    const channelId =
+        getTeamManagementChannelId(guild.id, "kick") ||
+        TEAM_KICK_LOG_CHANNEL_ID;
+    const channel = await guild.channels.fetch(channelId);
+    if (!channel?.isTextBased()) {
+        throw new Error(`Team-Kick-Log-Kanal ${channelId} fehlt oder ist kein Textkanal.`);
+    }
 
-        const channel =
-            await guild.channels.fetch(
-                channelId
-            ).catch(() => null);
-
-        if (
-            !channel ||
-            !channel.isTextBased()
-        ) {
-            return;
-        }
-
-        const kickLogDescription = [
+    const embed = new EmbedBuilder()
+        .setColor(0xED4245)
+        .setTitle("❌ TEAM KICK")
+        .setDescription([
             TEAM_LOG_DIVIDER,
-            `👤 MITGLIED: ${target}`,
+            `👤 MITGLIED: ${target} | ${target.user.tag}`,
             TEAM_LOG_DIVIDER,
-            `👮 DURCH: ${executor}`,
+            `👮 DURCH: ${executor} | ${executor.user.tag}`,
             TEAM_LOG_DIVIDER,
-            `📝 GRUND: > ${reason}`,
+            `📝 GRUND: > ${reason.slice(0, 900)}`,
+            TEAM_LOG_DIVIDER,
+            `🗑️ ENTFERNTE TEAMROLLEN: ${removedRoleNames.length ? removedRoleNames.join(", ").slice(0, 900) : "Keine"}`,
             TEAM_LOG_DIVIDER,
             `🕐 Wann: ${formatTeamLogTimestamp()}`,
             TEAM_LOG_DIVIDER
-        ].join("\n");
+        ].join("\n"))
+        .setFooter({ text: teamLogFooterText() })
+        .setTimestamp();
 
-        const embed =
-            new EmbedBuilder()
-                .setColor(0xED4245)
-                .setTitle("❌ TEAM KICK")
-                .setDescription(kickLogDescription)
-                .setFooter({
-                    text: teamLogFooterText()
-                });
-
-        await channel.send({
-            embeds: [embed]
-        });
-
-    } catch {}
+    await channel.send({ embeds: [embed] });
 }
 
 // =====================================================
@@ -6265,6 +6245,55 @@ client.on(
 
         const memberCount =
             member.guild.memberCount;
+
+        try {
+            const welcomeChannel = await member.guild.channels.fetch(WELCOME_CHANNEL_ID);
+            if (!welcomeChannel?.isTextBased()) {
+                console.warn(
+                    `⚠️ Willkommenskanal ${WELCOME_CHANNEL_ID} fehlt auf ${member.guild.name}.`
+                );
+            } else {
+                const joinedAt = member.joinedTimestamp || Date.now();
+                const welcomeEmbed = new EmbedBuilder()
+                    .setColor(0x9B59B6)
+                    .setTitle("👋 W I L L K O M M E N")
+                    .setDescription(
+                        `Hey ${member}, willkommen bei **Vexo RP**! 💜\n\n` +
+                        "Schön, dass du zu uns gefunden hast.\n" +
+                        "Nimm dir bitte etwas Zeit und schau dich in Ruhe um.\n\n" +
+                        "📌 **Wichtige Infos:**\n" +
+                        `• Lies bitte die <#${DISCORD_RULES_CHANNEL_ID}> durch.\n` +
+                        `• Lies bitte die IC-Regeln in <#${IC_RULES_CHANNEL_ID}> durch.\n\n` +
+                        "Hab viel Spaß beim Roleplay! 💗"
+                    )
+                    .addFields(
+                        {
+                            name: "📅 Beigetreten am",
+                            value: `<t:${Math.floor(joinedAt / 1000)}:F>`,
+                            inline: true
+                        },
+                        {
+                            name: "📊 Mitglieder jetzt",
+                            value: memberCount.toLocaleString("de-DE"),
+                            inline: true
+                        }
+                    )
+                    .setThumbnail(member.user.displayAvatarURL({ size: 256 }))
+                    .setFooter({ text: "Vexo RP" })
+                    .setTimestamp();
+
+                await welcomeChannel.send({
+                    content: `👋 Willkommen ${member} bei **Vexo RP**!`,
+                    embeds: [welcomeEmbed],
+                    allowedMentions: { users: [member.id] }
+                });
+            }
+        } catch (error) {
+            console.error(
+                `❌ Willkommensnachricht für ${member.user.tag} konnte nicht gesendet werden:`,
+                error
+            );
+        }
 
         const embed =
             new EmbedBuilder()
@@ -7063,16 +7092,18 @@ Ein leistungsstarker Discord-Bot für **Verwaltung, RP, Teamverwaltung und viele
 
 🚨 **RP-SYSTEM**
 
-\`!rp-panel\` → Öffnet die RP-Verwaltung
-\`!rp-nachricht\` → Verwaltet RP-Nachrichten und RP-Kanäle
+\`/rppanel\` → Öffnet die RP-Verwaltung
 
 👥 **TEAM-SYSTEM**
 
-\`!team-panel\` → Öffnet die Teamverwaltung
-\`!teamliste\` → Zeigt die aktuelle Teamliste
-\`!teamliste-update-start\` → Startet automatische Teamlisten-Updates
-\`!teamliste-update-stop\` → Stoppt automatische Teamlisten-Updates
-\`!teambewerbung\` → Öffnet die Teambewerbung
+\`/teampanel\` → Öffnet die Teamverwaltung
+\`/teamliste\` → Zeigt die aktuelle Teamliste
+\`/teamliste-update-start\` → Startet automatische Teamlisten-Updates
+\`/teamliste-update-stop\` → Stoppt automatische Teamlisten-Updates
+\`/teamstatistik\` → Zeigt Teamstatistik und Mitgliedsdetails
+\`/teambewerbung\` → Erstellt das Bewerbungspanel
+\`/teambewerbungtext\` → Erstellt das Panel und setzt den Kanal für neue Bewerbungen
+\`/team-bewerbungen\` → Zeigt gespeicherte Bewerbungen
 
 🏠 **HÄUSER-SYSTEM**
 
@@ -8207,15 +8238,14 @@ function registerCommand(name, category, description) {
 registerCommand("rp-panel", "RP-System", "RP-Verwaltungspanel zum Starten und Beenden des RP");
 registerCommand("rp-nachricht", "RP-System", "RP-Kanal konfigurieren");
 
-registerCommand("teambewerbung", "Team-System", "Bewerbungs-Zielkanal für neue Teambewerbungen festlegen");
-registerCommand("teambewerbung text", "Team-System", "Bewerbungspanel senden");
-registerCommand("team bewerbung text", "Team-System", "Bewerbungspanel erstellen");
-registerCommand("team bewerbungen", "Team-System", "Alle eingegangenen Bewerbungen anzeigen");
-registerCommand("team-panel", "Team-System", "Teamverwaltungspanel öffnen");
-registerCommand("teamliste", "Team-System", "Teammitglieder anzeigen");
-registerCommand("teamliste-update-start", "Team-System", "Automatische Teamlisten-Updates starten");
-registerCommand("teamliste-update-stop", "Team-System", "Automatische Teamlisten-Updates stoppen");
-registerCommand("teamstatistik", "Team-System", "Team-Statistik: Teammitglieder-Anzahl, Mitgliedsdetails (letzter Uprank, Warns, Team-Kick) anzeigen");
+registerCommand("/teambewerbung", "Team-System", "Bewerbungspanel erstellen; eingereichte Bewerbungen gehen in den konfigurierten Bewerbungskanal");
+registerCommand("/teambewerbungtext", "Team-System", "Bewerbungspanel und Zielkanal für neue Bewerbungen festlegen");
+registerCommand("/team-bewerbungen", "Team-System", "Gespeicherte Teambewerbungen anzeigen");
+registerCommand("/teampanel", "Team-System", "Teamverwaltungspanel öffnen");
+registerCommand("/teamliste", "Team-System", "Teammitglieder anzeigen");
+registerCommand("/teamliste-update-start", "Team-System", "Automatische Teamlisten-Updates starten");
+registerCommand("/teamliste-update-stop", "Team-System", "Automatische Teamlisten-Updates stoppen");
+registerCommand("/teamstatistik", "Team-System", "Team-Statistik und Mitgliedsdetails anzeigen");
 
 registerCommand("häuser-panel", "Haus-System", "Hausverwaltungspanel öffnen");
 registerCommand("häuserliste", "Haus-System", "Häuser anzeigen");
@@ -8262,59 +8292,17 @@ const EXTERNAL_COMMAND_REGISTRY = [
 // -----------------------------------------------------
 
 function buildCommandOverviewMessage() {
-    const grouped = new Map();
+    const lines = ["# 📋 Verfügbare Slash-Befehle"];
+    const commands = slashCommands
+        .slice()
+        .sort((a, b) => a.name.localeCompare(b.name, "de"));
 
-    const addToGroup = entry => {
-        if (!grouped.has(entry.category)) {
-            grouped.set(entry.category, []);
-        }
-        grouped.get(entry.category).push(entry);
-    };
-
-    for (const entry of COMMAND_REGISTRY.values()) {
-        addToGroup(entry);
-    }
-
-    for (const entry of EXTERNAL_COMMAND_REGISTRY) {
-        addToGroup(entry);
-    }
-
-    // Bekannte Kategorien zuerst in der festgelegten Reihenfolge,
-    // unbekannte (automatisch neu entstandene) Kategorien danach
-    // alphabetisch - so bleibt die Übersicht immer übersichtlich.
-    const categories = Array.from(grouped.keys()).sort((a, b) => {
-        const indexA = COMMAND_CATEGORY_ORDER.indexOf(a);
-        const indexB = COMMAND_CATEGORY_ORDER.indexOf(b);
-
-        if (indexA === -1 && indexB === -1) {
-            return a.localeCompare(b, "de");
-        }
-        if (indexA === -1) return 1;
-        if (indexB === -1) return -1;
-        return indexA - indexB;
-    });
-
-    const lines = ["# 📋 Bot-Befehlsübersicht"];
-
-    for (const category of categories) {
-        const emoji = COMMAND_CATEGORY_EMOJIS[category] || "📂";
-
-        lines.push(`### ${emoji} ${category}`);
-
-        const entries = grouped.get(category)
-            .slice()
-            .sort((a, b) => a.name.localeCompare(b.name, "de"));
-
-        for (const entry of entries) {
-            lines.push(`\`!${entry.name}\` – ${entry.description}`);
-        }
+    for (const command of commands) {
+        lines.push(`\`/${command.name}\` – ${command.description}`);
     }
 
     lines.push("---");
-    lines.push("### 🔐 Berechtigungen");
-    lines.push("Die meisten Befehle erfordern bestimmte Rollen oder Administratorrechte.");
-    lines.push("**Bot-Owner:** Vollzugriff auf alle Funktionen.");
-
+    lines.push("Befehle mit zusätzlichen Optionen zeigen diese direkt in Discord an.");
     return lines.join("\n");
 }
 
@@ -8896,11 +8884,8 @@ client.on(
             // =================================================
             // !TEAMBEWERBUNG
             // =================================================
-            // Legt AUSSCHLIESSLICH den Ziel-Kanal für eingehende
-            // Bewerbungen fest. Sendet NIEMALS alte Bewerbungen,
-            // Panels oder sonstige Altinhalte erneut - nur eine
-            // kurze Bestätigung. Ab sofort landen ausschließlich
-            // NEU eingereichte Bewerbungen in diesem Kanal.
+            // Zeigt den festgelegten Ziel-Kanal für eingehende
+            // Bewerbungen an; das Panel wird separat erstellt.
 
             if (
                 command === "teambewerbung"
@@ -8909,10 +8894,8 @@ client.on(
                     return message.reply("❌ Du hast dafür keine Berechtigung.");
                 }
 
-                setTeamApplicationChannelId(message.guild.id, message.channel.id);
-
-                return message.channel.send(
-                    "📋 **Teambewerbungen aktiviert!**\n\nHier werden ab sofort alle neuen Teambewerbungen reingeschickt."
+                return message.reply(
+                    `📋 Neue Teambewerbungen werden an <#${APPLICATION_REVIEW_CHANNEL_ID}> gesendet.`
                 );
             }
 
@@ -9198,9 +9181,11 @@ if (
                 return message.reply(
                     {
                         content:
-                            `✅ Nicknames wurden aktualisiert!\n\n` +
+                            `${result.error || result.failed ? "⚠️ Nicknames wurden nicht vollständig aktualisiert." : "✅ Nicknames wurden aktualisiert!"}\n\n` +
                             `👤 Geändert: **${result.updated}**\n` +
-                            `⏭️ Übersprungen: **${result.skipped}**`
+                            `⏭️ Übersprungen: **${result.skipped}**\n` +
+                            `❌ Fehlgeschlagen: **${result.failed}**` +
+                            (result.error ? `\n⚠️ Mitglieder konnten nicht vollständig geladen werden: ${result.error.message}` : "")
                     }
                 );
             }
@@ -9236,9 +9221,11 @@ if (
                 return message.reply(
                     {
                         content:
-                            `✅ Nicknames wurden für alle Mitglieder aktualisiert!\n\n` +
+                            `${nicknameUpdateResult.error || nicknameUpdateResult.failed ? "⚠️ Nicknames wurden nicht vollständig aktualisiert." : "✅ Nicknames wurden für alle Mitglieder aktualisiert!"}\n\n` +
                             `👤 Geändert: **${nicknameUpdateResult.updated}**\n` +
-                            `⏭️ Übersprungen: **${nicknameUpdateResult.skipped}**`
+                            `⏭️ Übersprungen: **${nicknameUpdateResult.skipped}**\n` +
+                            `❌ Fehlgeschlagen: **${nicknameUpdateResult.failed}**` +
+                            (nicknameUpdateResult.error ? `\n⚠️ Mitglieder konnten nicht vollständig geladen werden: ${nicknameUpdateResult.error.message}` : "")
                     }
                 );
             }
@@ -9261,7 +9248,7 @@ if (
                     const helpEmbed = new EmbedBuilder()
                         .setColor(0x8B5CF6)
                         .setTitle("📊 Log-System Befehle")
-                        .setDescription("Verwende `!logs <befehl>` um das Log-System zu steuern.")
+                        .setDescription("Verwende `/logs` und wähle eine Aktion aus.")
                         .addFields(
                             {
                                 name: "`!logs set <kanal>`",
@@ -9387,7 +9374,7 @@ if (
                     }
                 }
 
-                return message.reply("❌ Unbekannter Befehl. Verwende `!logs` für eine Übersicht der verfügbaren Befehle.");
+                return message.reply("❌ Unbekannte Aktion. Verwende `/logs` und wähle eine Aktion aus.");
             }
 
             // =================================================
@@ -10668,19 +10655,14 @@ client.on(
 
         try {
 
-            // Permission-Check für Slash-Commands (nur Owner, Co-Owner und Dev)
+            // Permission-Check für Slash-Commands (nur autorisierte Rollen)
             if (interaction.isChatInputCommand()) {
                 const member = interaction.member;
                 if (!hasSlashCommandPermission(member)) {
-                    // Ausnahme: rollen ist für alle, wenn man Bot-Owner ist
-                    if (interaction.commandName === "rollen" && interaction.user.id === BOT_OWNER_ID) {
-                        // Erlaubt
-                    } else {
-                        return interaction.reply({
-                            content: "❌ Nur Owner, Co-Owner und Developer dürfen Slash-Commands verwenden.",
-                            flags: MessageFlags.Ephemeral
-                        });
-                    }
+                    return interaction.reply({
+                        content: "❌ Nur autorisierte Rollen dürfen Slash-Commands verwenden.",
+                        flags: MessageFlags.Ephemeral
+                    });
                 }
             }
 
@@ -10688,7 +10670,7 @@ client.on(
             if (interaction.isButton() && interaction.customId === "rp_start") {
                 if (!hasSlashCommandPermission(interaction.member)) {
                     return interaction.reply({
-                        content: "❌ Nur Owner, Co-Owner und Developer dürfen RP starten.",
+                        content: "❌ Nur autorisierte Rollen dürfen RP starten.",
                         flags: MessageFlags.Ephemeral
                     });
                 }
@@ -10696,6 +10678,25 @@ client.on(
                 rpStatus.isRunning = true;
                 rpStatus.startTime = Date.now();
                 saveRPStatus();
+
+                // Sende RP Start Nachricht in den spezifizierten Kanal
+                const rpChannel = await client.channels.fetch(RP_ANNOUNCEMENT_CHANNEL_ID).catch(() => null);
+                if (rpChannel && rpChannel.isTextBased()) {
+                    const rpStartMessage = `💫 𝐕𝐄𝐗𝐎 𝐑𝐏 ┃ 𝐕𝟏
+━━━━━━━━━━━━━━━━━━━━━━
+🟢・𝐃𝐀𝐒 𝐑𝐎𝐋𝐄𝐏𝐋𝐀𝐘 𝐈𝐒𝐓 𝐎𝐅𝐅𝐈𝐙𝐈𝐄𝐋𝐋 𝐆𝐄𝐒𝐓𝐀𝐑𝐓𝐄𝐓!
+🚨 Die Stadt ist geöffnet und der RP-Betrieb hat begonnen!
+🚓 Polizei bereit zum Einsatz
+🚑 Rettungsdienst einsatzbereit
+🚒 Feuerwehr auf Bereitschaft
+🏙️ Bürger können ins Roleplay starten
+📜 Bitte beachtet die geltenden IC-Regeln und Safezones und sorgt für realistisches, faires Roleplay.
+🔑 Servercode: \`83ej67c7\`
+💫 Viel Spaß und ein erfolgreiches Roleplay wünscht euch die Serverleitung von Vexo RP V1!
+━━━━━━━━━━━━━━━━━━━━━━
+🟢 𝐑𝐏 𝐈𝐒𝐓 𝐉𝐄𝐓𝐙𝐓 𝐎𝐅𝐅𝐄𝐍!`;
+                    await rpChannel.send(rpStartMessage);
+                }
 
                 const embed = new EmbedBuilder()
                     .setColor(0x00FF00)
@@ -10732,7 +10733,7 @@ client.on(
             if (interaction.isButton() && interaction.customId === "rp_stop") {
                 if (!hasSlashCommandPermission(interaction.member)) {
                     return interaction.reply({
-                        content: "❌ Nur Owner, Co-Owner und Developer dürfen RP stoppen.",
+                        content: "❌ Nur autorisierte Rollen dürfen RP stoppen.",
                         flags: MessageFlags.Ephemeral
                     });
                 }
@@ -10740,6 +10741,24 @@ client.on(
                 rpStatus.isRunning = false;
                 rpStatus.startTime = null;
                 saveRPStatus();
+
+                // Sende RP Stop Nachricht in den spezifizierten Kanal
+                const rpChannel = await client.channels.fetch(RP_ANNOUNCEMENT_CHANNEL_ID).catch(() => null);
+                if (rpChannel && rpChannel.isTextBased()) {
+                    const rpStopMessage = `💫 𝐕𝐄𝐗𝐎 𝐑𝐏 ┃ 𝐕𝟏
+━━━━━━━━━━━━━━━━━━━━━━
+🔴・𝐃𝐀𝐒 𝐑𝐎𝐋𝐄𝐏𝐋𝐀𝐘 𝐈𝐒𝐓 𝐎𝐅𝐅𝐈𝐙𝐈𝐄𝐋𝐋 𝐁𝐄𝐄𝐍𝐃𝐄𝐓!
+🚨 Achtung, liebe Community!
+Der offizielle RP-Betrieb für heute ist beendet. Bitte startet keine neuen RP-Situationen mehr und beendet laufende Situationen nach Möglichkeit geordnet.
+🤝 Vielen Dank an alle Spieler, Einsatzkräfte und Teammitglieder, die heute dabei waren und für spannende RP-Momente gesorgt haben!
+📌 Weitere Informationen zum nächsten RP-Start werden rechtzeitig bekannt gegeben.
+🔑 Server Code
+➜ 🔗 [┃](https://discord.com/channels/1559659266737176699/1559659269190586413%E2%94%83)
+💫 Wir freuen uns, euch beim nächsten Mal wieder in Vexo RP V1 begrüßen zu dürfen!
+━━━━━━━━━━━━━━━━━━━━━━
+🔴 𝐑𝐏 𝐈𝐒𝐓 𝐅Ü𝐑 𝐇𝐄𝐔𝐓𝐄 𝐁𝐄𝐄𝐍𝐃𝐄𝐓!`;
+                    await rpChannel.send(rpStopMessage);
+                }
 
                 const embed = new EmbedBuilder()
                     .setColor(0xFF0000)
@@ -10777,7 +10796,7 @@ client.on(
             ) {
                 if (!hasSlashCommandPermission(interaction)) {
                     return interaction.reply({
-                        content: "❌ Nur Owner, Co-Owner und Developer dürfen das RP-Panel bearbeiten.",
+                        content: "❌ Nur autorisierte Rollen dürfen das RP-Panel bearbeiten.",
                         flags: MessageFlags.Ephemeral
                     });
                 }
@@ -10794,7 +10813,7 @@ client.on(
             ) {
                 if (!hasSlashCommandPermission(interaction)) {
                     return interaction.reply({
-                        content: "❌ Nur Owner, Co-Owner und Developer dürfen die Server-Codes ändern.",
+                        content: "❌ Nur autorisierte Rollen dürfen die Server-Codes ändern.",
                         flags: MessageFlags.Ephemeral
                     });
                 }
@@ -10881,7 +10900,7 @@ client.on(
                 if (!hasSlashCommandPermission(interaction)) {
                     interaction.__slashCommandPermissionDenied = true;
                     return interaction.reply({
-                        content: "❌ Slash-Commands können nur Owner, Co-Owner und Developer verwenden.",
+                        content: "❌ Slash-Commands können nur autorisierte Rollen verwenden.",
                         flags: MessageFlags.Ephemeral
                     });
                 }
@@ -10913,30 +10932,6 @@ client.on(
                             )
                         );
                     return interaction.showModal(modal);
-                }
-
-                // /rppanel
-                if (commandName === "rppanel") {
-                    if (!interaction.guild || !interaction.channel?.isTextBased()) {
-                        return interaction.reply({
-                            content: "❌ Das RP-Panel kann nur in einem Server-Textkanal erstellt werden.",
-                            flags: MessageFlags.Ephemeral
-                        });
-                    }
-
-                    try {
-                        await interaction.channel.send(createRPPanel(interaction.guild.id));
-                        return interaction.reply({
-                            content: "✅ Das RP-Start-/Stopp-Panel wurde erstellt.",
-                            flags: MessageFlags.Ephemeral
-                        });
-                    } catch (error) {
-                        console.error("❌ Fehler beim Erstellen des RP-Panels:", error);
-                        return interaction.reply({
-                            content: "❌ Das RP-Panel konnte nicht erstellt werden.",
-                            flags: MessageFlags.Ephemeral
-                        });
-                    }
                 }
 
                 // /rppanel
@@ -11170,40 +11165,52 @@ client.on(
 
                 // /teambewerbung
                 if (commandName === "teambewerbung") {
-                    if (!hasProtectedCommandPermission(interaction.member)) {
-                        return interaction.reply({ content: errorMessage("Du hast keine Berechtigung, diesen Befehl zu verwenden."), flags: MessageFlags.Ephemeral });
+                    return createTeamApplicationPanelForInteraction(interaction);
+                }
+
+                // /teambewerbungtext
+                if (commandName === "teambewerbungtext") {
+                    return createTeamApplicationPanelForInteraction(interaction, true);
+                }
+
+                if (commandName === "team-bewerbungen") {
+                    if (!hasTeamPermission(interaction.member)) {
+                        return interaction.reply({ content: "❌ Du hast dafür keine Berechtigung.", flags: MessageFlags.Ephemeral });
                     }
 
-                    if (!interaction.guild || !interaction.channel?.isTextBased()) {
-                        return interaction.reply({
-                            content: "❌ Das Bewerbungspanel kann nur in einem Server-Textkanal erstellt werden.",
-                            flags: MessageFlags.Ephemeral
-                        });
+                    const guildApplications = Object.values(TEAM_APPLICATIONS.applications)
+                        .filter(application => application.guildId === interaction.guildId)
+                        .sort((a, b) => new Date(b.startedAt || 0) - new Date(a.startedAt || 0));
+                    if (guildApplications.length === 0) {
+                        return interaction.reply({ content: "📭 Es gibt keine gespeicherten Bewerbungen für diesen Server.", flags: MessageFlags.Ephemeral });
                     }
 
-                    try {
-                        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+                    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+                    await interaction.editReply({ content: `📋 **Alle Bewerbungen (${guildApplications.length})**` });
+                    for (const [index, application] of guildApplications.entries()) {
+                        const answerCount = Array.isArray(application.answers) ? application.answers.filter(Boolean).length : 0;
+                        const submittedAt = application.submittedAt
+                            ? formatGermanTime(new Date(application.submittedAt))
+                            : "Noch nicht eingegangen";
+                        const answers = TEAM_APPLICATION_QUESTIONS
+                            .map((question, questionIndex) =>
+                                `**${questionIndex + 1}. ${question}**\nAntwort: ${application.answers?.[questionIndex] || "Keine Antwort"}`
+                            )
+                            .join("\n\n");
+                        const applicationText =
+                            `## ${index + 1}. Bewerbung von <@${application.userId}>\n` +
+                            `Status: ${getTeamApplicationStatusLabel(application.status)} | ` +
+                            `Antworten: ${answerCount}/${TEAM_APPLICATION_QUESTIONS.length} | ${submittedAt}\n\n${answers}`;
+                        const chunks = splitApplicationText(applicationText, 1800);
 
-                        const panelMessage = await interaction.channel.send(createTeamApplicationPanel());
-                        const guildPanels = TEAM_APPLICATIONS.panels[interaction.guild.id] || [];
-                        guildPanels.push({
-                            channelId: panelMessage.channel.id,
-                            messageId: panelMessage.id
-                        });
-                        TEAM_APPLICATIONS.panels[interaction.guild.id] = guildPanels;
-
-                        if (!saveTeamApplications()) {
-                            throw new Error("Bewerbungspanel konnte nicht in team-applications.json gespeichert werden.");
-                        }
-
-                        await interaction.editReply({ content: "✅ Das Bewerbungspanel wurde erstellt. Bewerber können über den Button das Fragenformular starten." });
-                    } catch (error) {
-                        console.error("❌ Fehler bei /teambewerbung:", error);
-                        const response = { content: "❌ Das Bewerbungspanel konnte nicht erstellt werden." };
-                        if (interaction.deferred || interaction.replied) {
-                            await interaction.editReply(response);
-                        } else {
-                            await interaction.reply({ ...response, flags: MessageFlags.Ephemeral });
+                        for (let chunkIndex = 0; chunkIndex < chunks.length; chunkIndex += 1) {
+                            await interaction.followUp({
+                                content: chunks[chunkIndex],
+                                components: chunkIndex === chunks.length - 1
+                                    ? [createApplicationManagementButtons(application.guildId, application.userId)]
+                                    : [],
+                                flags: MessageFlags.Ephemeral
+                            });
                         }
                     }
                     return;
@@ -11231,11 +11238,118 @@ client.on(
                         return interaction.reply({ content: errorMessage("Du hast keine Berechtigung, diesen Befehl zu verwenden."), flags: MessageFlags.Ephemeral });
                     }
 
+                    const action = interaction.options.getString("aktion");
+                    const selectedChannel = interaction.options.getChannel("kanal");
                     try {
-                        await interaction.reply({ content: "⚠️ /logs ist noch nicht als Slash-Command implementiert. Bitte verwende !logs", flags: MessageFlags.Ephemeral });
+                        if (!action) {
+                            const helpEmbed = new EmbedBuilder()
+                                .setColor(0x8B5CF6)
+                                .setTitle("📊 Log-System")
+                                .setDescription("Wähle eine Aktion über die Slash-Option `aktion`.")
+                                .addFields(
+                                    { name: "Kanal setzen", value: "`/logs aktion:Kanal setzen kanal:#kanal`" },
+                                    { name: "Kanal anzeigen", value: "`/logs aktion:Aktuellen Kanal anzeigen`" },
+                                    { name: "Test-Log", value: "`/logs aktion:Test-Log senden`" },
+                                    { name: "Zurücksetzen", value: "`/logs aktion:Auf Standard zurücksetzen`" }
+                                )
+                                .setTimestamp();
+                            return interaction.reply({ embeds: [helpEmbed], flags: MessageFlags.Ephemeral });
+                        }
+
+                        if (action === "set") {
+                            if (!selectedChannel?.isTextBased() || selectedChannel.guildId !== interaction.guildId) {
+                                return interaction.reply({
+                                    content: "❌ Bitte wähle für diese Aktion einen Textkanal dieses Servers.",
+                                    flags: MessageFlags.Ephemeral
+                                });
+                            }
+
+                            process.env.BOT_LOG_CHANNEL_ID = selectedChannel.id;
+                            await log({
+                                type: "COMMAND",
+                                action: "Log-Kanal geändert",
+                                user: interaction.user,
+                                channel: selectedChannel,
+                                guild: interaction.guild,
+                                details: `Log-Kanal wurde auf <#${selectedChannel.id}> gesetzt`,
+                                status: "Erfolgreich"
+                            });
+                            return interaction.reply({
+                                content: `✅ Log-Kanal wurde auf ${selectedChannel} gesetzt. Ein Test-Log wurde gesendet.`,
+                                flags: MessageFlags.Ephemeral
+                            });
+                        }
+
+                        if (action === "channel") {
+                            const channelId = process.env.BOT_LOG_CHANNEL_ID;
+                            if (!channelId) {
+                                return interaction.reply({
+                                    content: "❌ Es ist kein Log-Kanal konfiguriert.",
+                                    flags: MessageFlags.Ephemeral
+                                });
+                            }
+                            const channel = await client.channels.fetch(channelId).catch(() => null);
+                            if (!channel) {
+                                return interaction.reply({
+                                    content: `❌ Der konfigurierte Log-Kanal (${channelId}) konnte nicht gefunden werden.`,
+                                    flags: MessageFlags.Ephemeral
+                                });
+                            }
+                            return interaction.reply({
+                                content: `📊 Aktueller Log-Kanal: <#${channelId}> (${channel.name})`,
+                                flags: MessageFlags.Ephemeral
+                            });
+                        }
+
+                        if (action === "test") {
+                            await log({
+                                type: "COMMAND",
+                                action: "Log-Test",
+                                user: interaction.user,
+                                channel: interaction.channel,
+                                guild: interaction.guild,
+                                details: "Test-Log über den Slash-Befehl",
+                                status: "Erfolgreich"
+                            });
+                            return interaction.reply({
+                                content: "✅ Test-Log wurde gesendet.",
+                                flags: MessageFlags.Ephemeral
+                            });
+                        }
+
+                        if (action === "reset") {
+                            const defaultChannelId = "1546543785322872885";
+                            process.env.BOT_LOG_CHANNEL_ID = defaultChannelId;
+                            await log({
+                                type: "COMMAND",
+                                action: "Log-Kanal zurückgesetzt",
+                                user: interaction.user,
+                                channel: interaction.channel,
+                                guild: interaction.guild,
+                                details: `Log-Kanal wurde auf ${defaultChannelId} zurückgesetzt`,
+                                status: "Erfolgreich"
+                            });
+                            return interaction.reply({
+                                content: `✅ Log-Kanal wurde auf <#${defaultChannelId}> zurückgesetzt.`,
+                                flags: MessageFlags.Ephemeral
+                            });
+                        }
+
+                        return interaction.reply({
+                            content: "❌ Unbekannte Log-Aktion.",
+                            flags: MessageFlags.Ephemeral
+                        });
                     } catch (error) {
                         console.error("❌ Fehler bei /logs:", error);
-                        await interaction.reply({ content: "❌ Ein Fehler ist aufgetreten.", flags: MessageFlags.Ephemeral });
+                        const payload = {
+                            content: `❌ Die Log-Aktion ist fehlgeschlagen: ${error.message}`,
+                            flags: MessageFlags.Ephemeral
+                        };
+                        if (interaction.deferred || interaction.replied) {
+                            await interaction.followUp(payload);
+                        } else {
+                            await interaction.reply(payload);
+                        }
                     }
                     return;
                 }
@@ -11276,8 +11390,250 @@ client.on(
                     return;
                 }
 
+                if (commandName === "häuserliste") {
+                    if (!hasHousesPermission(interaction.member)) {
+                        return interaction.reply({
+                            content: "❌ Du hast dafür keine Berechtigung.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    }
+                    try {
+                        await sendOrUpdateHousesList(interaction.channel);
+                        return interaction.reply({
+                            content: "✅ Die Häuserliste wurde aktualisiert.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    } catch (error) {
+                        console.error("❌ Fehler bei /häuserliste:", error);
+                        return interaction.reply({
+                            content: "❌ Die Häuserliste konnte nicht erstellt werden.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    }
+                }
+
+                if (commandName === "giveaway") {
+                    if (!hasProtectedCommandPermission(interaction.member)) {
+                        return interaction.reply({
+                            content: "❌ Du hast dafür keine Berechtigung.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    }
+                    try {
+                        const draft = createGiveawayDraft(interaction.guild.id, interaction.user.id);
+                        const panelMessage = await interaction.channel.send(createGiveawayConfigPanel(draft));
+                        setGiveawayDraft(panelMessage.id, draft);
+                        return interaction.reply({
+                            content: "✅ Giveaway-Einrichtungspanel erstellt.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    } catch (error) {
+                        console.error("❌ Fehler bei /giveaway:", error);
+                        return interaction.reply({
+                            content: "❌ Das Giveaway-Panel konnte nicht erstellt werden.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    }
+                }
+
+                if (commandName === "team-panel") {
+                    if (!hasProtectedCommandPermission(interaction.member)) {
+                        return interaction.reply({
+                            content: "❌ Du hast dafür keine Berechtigung.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    }
+                    await interaction.channel.send(createTeamPanel());
+                    return interaction.reply({
+                        content: "✅ Das Team-Panel wurde erstellt.",
+                        flags: MessageFlags.Ephemeral
+                    });
+                }
+
+                if (commandName === "name-tag-set" || commandName === "nickname-aktualisieren") {
+                    const canUpdateNicknames = commandName === "name-tag-set"
+                        ? hasNameTagSetPermission(interaction.member)
+                        : hasProtectedCommandPermission(interaction.member);
+                    if (!canUpdateNicknames) {
+                        return interaction.reply({
+                            content: "❌ Du hast dafür keine Berechtigung.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    }
+
+                    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+                    try {
+                        const result = await updateAllNicknames(interaction.guild);
+                        return interaction.editReply({
+                            content: `${result.error || result.failed ? "⚠️ Nicknames wurden nicht vollständig aktualisiert." : "✅ Nicknames wurden aktualisiert."}\n\n👤 Geändert: **${result.updated}**\n⏭️ Übersprungen: **${result.skipped}**\n❌ Fehlgeschlagen: **${result.failed}**${result.error ? `\nFehler: ${result.error.message}` : ""}`
+                        });
+                    } catch (error) {
+                        console.error(`❌ Fehler bei /${commandName}:`, error);
+                        return interaction.editReply({
+                            content: "❌ Die Nicknames konnten nicht aktualisiert werden."
+                        });
+                    }
+                }
+
+                if (commandName === "text-sende") {
+                    if (!hasProtectedCommandPermission(interaction.member)) {
+                        return interaction.reply({
+                            content: "❌ Du hast dafür keine Berechtigung.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    }
+                    await interaction.channel.send(createTextSendeMainPanel());
+                    return interaction.reply({
+                        content: "✅ Das Nachrichten-Panel wurde erstellt.",
+                        flags: MessageFlags.Ephemeral
+                    });
+                }
+
+                if (commandName === "verify") {
+                    try {
+                        const result = await getVerificationPanelEmbed(interaction.guild);
+                        if (!result) {
+                            return interaction.reply({
+                                content: "❌ Verifizierungs-Panel konnte nicht erstellt werden.",
+                                flags: MessageFlags.Ephemeral
+                            });
+                        }
+                        const verifyRow = new ActionRowBuilder().addComponents(
+                            new ButtonBuilder()
+                                .setCustomId("verify_start")
+                                .setLabel("✅ Verifizieren")
+                                .setStyle(ButtonStyle.Success)
+                                .setEmoji("🔐")
+                        );
+                        const statsRow = new ActionRowBuilder().addComponents(
+                            new ButtonBuilder()
+                                .setCustomId("verify_count_verified")
+                                .setLabel(`👥 Verifiziert: ${result.verifiedCount}`)
+                                .setStyle(ButtonStyle.Secondary)
+                                .setDisabled(true),
+                            new ButtonBuilder()
+                                .setCustomId("verify_count_members")
+                                .setLabel(`📊 Mitglieder: ${result.totalMembers}`)
+                                .setStyle(ButtonStyle.Secondary)
+                                .setDisabled(true),
+                            new ButtonBuilder()
+                                .setCustomId("verify_count_security")
+                                .setLabel("🛡️ Sicherheit: Aktiv")
+                                .setStyle(ButtonStyle.Secondary)
+                                .setDisabled(true)
+                        );
+                        const panelMessage = await interaction.channel.send({
+                            embeds: [result.embed],
+                            components: [verifyRow, statsRow]
+                        });
+                        saveVerificationPanel(panelMessage.channel.id, panelMessage.id);
+                        return interaction.reply({
+                            content: "✅ Verifizierungs-Panel wurde erstellt.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    } catch (error) {
+                        console.error("❌ Fehler bei /verify:", error);
+                        return interaction.reply({
+                            content: "❌ Das Verifizierungs-Panel konnte nicht erstellt werden.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    }
+                }
+
+                if (commandName === "rp-nachricht") {
+                    if (!hasProtectedCommandPermission(interaction.member)) {
+                        return interaction.reply({
+                            content: "❌ Du hast dafür keine Berechtigung.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    }
+                    try {
+                        await interaction.channel.send(await createRPChannelPanel(interaction.guild));
+                        return interaction.reply({
+                            content: "✅ RP-Kanal-Panel wurde erstellt.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    } catch (error) {
+                        console.error("❌ Fehler bei /rp-nachricht:", error);
+                        return interaction.reply({
+                            content: "❌ Das RP-Kanal-Panel konnte nicht erstellt werden.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    }
+                }
+
+                if (commandName === "befehle") {
+                    const commandList = slashCommands
+                        .map(command => `/${command.name} — ${command.description}`)
+                        .join("\n");
+                    const chunks = [];
+                    let currentChunk = "";
+                    for (const line of commandList.split("\n")) {
+                        if (currentChunk && currentChunk.length + line.length + 1 > 1900) {
+                            chunks.push(currentChunk);
+                            currentChunk = line;
+                        } else {
+                            currentChunk += `${currentChunk ? "\n" : ""}${line}`;
+                        }
+                    }
+                    if (currentChunk) chunks.push(currentChunk);
+
+                    await interaction.reply({
+                        content: chunks[0] || "Es sind keine Slash-Befehle registriert.",
+                        flags: MessageFlags.Ephemeral
+                    });
+                    for (const chunk of chunks.slice(1)) {
+                        await interaction.followUp({
+                            content: chunk,
+                            flags: MessageFlags.Ephemeral
+                        });
+                    }
+                    return;
+                }
+
+                if (commandName === "neustart") {
+                    if (!hasRestartPermission(interaction.member)) {
+                        return interaction.reply({
+                            content: "❌ Du hast keine Berechtigung, den Bot neu zu starten.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    }
+                    if (!saveRestartChannelId(interaction.channelId)) {
+                        return interaction.reply({
+                            content: "❌ Der Neustart-Kanal konnte nicht gespeichert werden. Neustart abgebrochen.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    }
+                    await interaction.reply({
+                        content: "🔄 Der Bot wird neu gestartet.",
+                        flags: MessageFlags.Ephemeral
+                    });
+                    setTimeout(() => {
+                        restartBotProcess();
+                    }, 1000);
+                    return;
+                }
+
+                if (commandName === "herunterfahren") {
+                    if (interaction.user.id !== BOT_OWNER_ID) {
+                        return interaction.reply({
+                            content: "❌ Nur der Bot-Owner darf den Bot herunterfahren.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    }
+                    await interaction.reply({
+                        content: "🔴 Der Bot wird heruntergefahren.",
+                        flags: MessageFlags.Ephemeral
+                    });
+                    await shutdownBot({ reply: async () => undefined });
+                    return;
+                }
+
                 // /teampanel
                 if (commandName === "teampanel") {
+                    if (!hasTeamPermission(interaction.member)) {
+                        return interaction.reply({ content: "❌ Du hast dafür keine Berechtigung.", flags: MessageFlags.Ephemeral });
+                    }
                     try {
                         await interaction.reply(createTeamPanel());
                     } catch (error) {
@@ -11289,103 +11645,138 @@ client.on(
 
                 // /teamliste
                 if (commandName === "teamliste") {
+                    if (!hasTeamPermission(interaction.member)) {
+                        return interaction.reply({ content: "❌ Du hast dafür keine Berechtigung.", flags: MessageFlags.Ephemeral });
+                    }
                     try {
                         await interaction.deferReply();
-                        const { createTeamListEmbed } = require("./Team-Management/Team-Management");
-                        const listEmbed = await createTeamListEmbed(interaction.guild);
-                        await interaction.editReply({ embeds: [listEmbed] });
+                        const { embeds } = await createTeamListEmbeds(interaction.guild);
+                        const teamListMessage = await interaction.editReply({ embeds });
+                        setLastTeamListMessage(interaction.guild.id, teamListMessage.channel.id, teamListMessage.id);
                     } catch (error) {
                         console.error("❌ Fehler bei /teamliste:", error);
-                        await interaction.reply({ content: "❌ Ein Fehler ist aufgetreten.", flags: MessageFlags.Ephemeral });
+                        const errorContent = `❌ Die Teamliste konnte nicht geladen werden: ${error.message}`;
+                        if (interaction.deferred || interaction.replied) {
+                            await interaction.editReply({ content: errorContent, embeds: [] }).catch(editError =>
+                                console.error("❌ Fehler beim Anzeigen des Teamlisten-Fehlers:", editError)
+                            );
+                        } else {
+                            await interaction.reply({ content: errorContent, flags: MessageFlags.Ephemeral });
+                        }
                     }
                     return;
                 }
 
+                if (
+                    commandName === "teamliste-update-start" ||
+                    commandName === "teamliste-update-stop"
+                ) {
+                    if (!hasTeamPermission(interaction.member)) {
+                        return interaction.reply({ content: "❌ Du hast dafür keine Berechtigung.", flags: MessageFlags.Ephemeral });
+                    }
+
+                    if (commandName === "teamliste-update-start") {
+                        startAutoUpdate(interaction.guild, TEAMLIST_AUTO_UPDATE_CHANNEL_ID);
+                        return interaction.reply({ content: "✅ Automatisches Teamlisten-Update gestartet.", flags: MessageFlags.Ephemeral });
+                    }
+
+                    stopAutoUpdate();
+                    return interaction.reply({ content: "✅ Automatisches Teamlisten-Update gestoppt.", flags: MessageFlags.Ephemeral });
+                }
+
+                if (commandName === "teamstatistik") {
+                    if (!hasTeamPermission(interaction.member)) {
+                        return interaction.reply({ content: "❌ Du hast dafür keine Berechtigung.", flags: MessageFlags.Ephemeral });
+                    }
+
+                    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+                    try {
+                        await interaction.guild.members.fetch();
+                    } catch (error) {
+                        console.error("❌ Mitglieder konnten für die Teamstatistik nicht vollständig geladen werden:", error);
+                        return interaction.editReply({ content: "❌ Die Teammitglieder konnten für die Statistik nicht vollständig geladen werden." });
+                    }
+
+                    const teamRole = await interaction.guild.roles.fetch(TEAMSTATISTIK_ROLE_ID).catch(() => null);
+                    if (!teamRole) {
+                        return interaction.editReply({ content: "❌ Die konfigurierte Teammitglieder-Rolle wurde auf diesem Server nicht gefunden." });
+                    }
+
+                    const teamMembers = interaction.guild.members.cache
+                        .filter(member => member.roles.cache.has(TEAMSTATISTIK_ROLE_ID))
+                        .sort((a, b) => a.user.tag.localeCompare(b.user.tag));
+                    const statsEmbed = new EmbedBuilder()
+                        .setColor(0x5865F2)
+                        .setTitle("📊 Team-Statistik")
+                        .setDescription(`👥 **Teammitglieder:** ${teamMembers.size} (Rolle: ${teamRole})`)
+                        .setFooter({ text: teamLogFooterText() })
+                        .setTimestamp();
+                    const statsComponents = [];
+
+                    if (teamMembers.size > 0) {
+                        const memberOptions = teamMembers.first(25).map(member =>
+                            new StringSelectMenuOptionBuilder()
+                                .setLabel(member.user.tag.slice(0, 100))
+                                .setDescription(`ID: ${member.id}`)
+                                .setValue(member.id)
+                        );
+                        if (teamMembers.size > 25) {
+                            statsEmbed.addFields({
+                                name: "ℹ️ Hinweis",
+                                value: `Das Auswahlmenü zeigt die ersten 25 von ${teamMembers.size} Teammitgliedern (alphabetisch).`,
+                                inline: false
+                            });
+                        }
+                        statsComponents.push(
+                            new ActionRowBuilder().addComponents(
+                                new StringSelectMenuBuilder()
+                                    .setCustomId("teamstatistik_select")
+                                    .setPlaceholder("👤 Teammitglied auswählen")
+                                    .addOptions(memberOptions)
+                            )
+                        );
+                    }
+
+                    return interaction.editReply({ embeds: [statsEmbed], components: statsComponents });
+                }
+
                 // /gang-panel
                 if (commandName === "gang-panel") {
-                    try {
-                        await interaction.reply({ content: "⚠️ /gang-panel ist noch nicht als Slash-Command implementiert. Bitte verwende !gang-panel", flags: MessageFlags.Ephemeral });
-                    } catch (error) {
-                        console.error("❌ Fehler bei /gang-panel:", error);
-                        await interaction.reply({ content: "❌ Ein Fehler ist aufgetreten.", flags: MessageFlags.Ephemeral });
-                    }
                     return;
                 }
 
                 // /gang-liste
                 if (commandName === "gang-liste") {
-                    try {
-                        await interaction.reply({ content: "⚠️ /gang-liste ist noch nicht als Slash-Command implementiert. Bitte verwende !gang-liste", flags: MessageFlags.Ephemeral });
-                    } catch (error) {
-                        console.error("❌ Fehler bei /gang-liste:", error);
-                        await interaction.reply({ content: "❌ Ein Fehler ist aufgetreten.", flags: MessageFlags.Ephemeral });
-                    }
                     return;
                 }
 
                 // /vorschläge
                 if (commandName === "vorschläge") {
-                    try {
-                        await interaction.reply({ content: "⚠️ /vorschläge ist noch nicht als Slash-Command implementiert. Bitte verwende !vorschläge", flags: MessageFlags.Ephemeral });
-                    } catch (error) {
-                        console.error("❌ Fehler bei /vorschläge:", error);
-                        await interaction.reply({ content: "❌ Ein Fehler ist aufgetreten.", flags: MessageFlags.Ephemeral });
-                    }
                     return;
                 }
 
                 // /bürgertext
                 if (commandName === "bürgertext") {
-                    try {
-                        await interaction.reply({ content: "⚠️ /bürgertext ist noch nicht als Slash-Command implementiert. Bitte verwende !bürgertext", flags: MessageFlags.Ephemeral });
-                    } catch (error) {
-                        console.error("❌ Fehler bei /bürgertext:", error);
-                        await interaction.reply({ content: "❌ Ein Fehler ist aufgetreten.", flags: MessageFlags.Ephemeral });
-                    }
                     return;
                 }
 
                 // /dev-kanal
                 if (commandName === "dev-kanal") {
-                    try {
-                        await interaction.reply({ content: "⚠️ /dev-kanal ist noch nicht als Slash-Command implementiert. Bitte verwende !dev-kanal", flags: MessageFlags.Ephemeral });
-                    } catch (error) {
-                        console.error("❌ Fehler bei /dev-kanal:", error);
-                        await interaction.reply({ content: "❌ Ein Fehler ist aufgetreten.", flags: MessageFlags.Ephemeral });
-                    }
                     return;
                 }
 
                 // /dev-aufgaben-panel
                 if (commandName === "dev-aufgaben-panel") {
-                    try {
-                        await interaction.reply({ content: "⚠️ /dev-aufgaben-panel ist noch nicht als Slash-Command implementiert. Bitte verwende !dev-aufgaben-panel", flags: MessageFlags.Ephemeral });
-                    } catch (error) {
-                        console.error("❌ Fehler bei /dev-aufgaben-panel:", error);
-                        await interaction.reply({ content: "❌ Ein Fehler ist aufgetreten.", flags: MessageFlags.Ephemeral });
-                    }
                     return;
                 }
 
                 // /dev-aufgaben
                 if (commandName === "dev-aufgaben") {
-                    try {
-                        await interaction.reply({ content: "⚠️ /dev-aufgaben ist noch nicht als Slash-Command implementiert. Bitte verwende !dev-aufgaben", flags: MessageFlags.Ephemeral });
-                    } catch (error) {
-                        console.error("❌ Fehler bei /dev-aufgaben:", error);
-                        await interaction.reply({ content: "❌ Ein Fehler ist aufgetreten.", flags: MessageFlags.Ephemeral });
-                    }
                     return;
                 }
 
                 // /dev-antwort
                 if (commandName === "dev-antwort") {
-                    try {
-                        await interaction.reply({ content: "⚠️ /dev-antwort ist noch nicht als Slash-Command implementiert. Bitte verwende !dev-antwort", flags: MessageFlags.Ephemeral });
-                    } catch (error) {
-                        console.error("❌ Fehler bei /dev-antwort:", error);
-                        await interaction.reply({ content: "❌ Ein Fehler ist aufgetreten.", flags: MessageFlags.Ephemeral });
-                    }
                     return;
                 }
 
@@ -11407,34 +11798,41 @@ client.on(
                 const rpLogsCommands = ["rp-logs-einstellungen", "web-logs", "rp-logs-test"];
 
                 if (rpLogsCommands.includes(commandName)) {
-                    try {
-                        await interaction.reply({ content: `⚠️ /${commandName} ist noch nicht als Slash-Command implementiert. Bitte verwende !${commandName}`, flags: MessageFlags.Ephemeral });
-                    } catch (error) {
-                        console.error(`❌ Fehler bei /${commandName}:`, error);
-                        await interaction.reply({ content: "❌ Ein Fehler ist aufgetreten.", flags: MessageFlags.Ephemeral });
-                    }
                     return;
                 }
 
                 // /privatnachricht
                 if (commandName === "privatnachricht") {
-                    try {
-                        await interaction.reply({ content: "⚠️ /privatnachricht ist noch nicht als Slash-Command implementiert. Bitte verwende !privatnachricht", flags: MessageFlags.Ephemeral });
-                    } catch (error) {
-                        console.error("❌ Fehler bei /privatnachricht:", error);
-                        await interaction.reply({ content: "❌ Ein Fehler ist aufgetreten.", flags: MessageFlags.Ephemeral });
-                    }
                     return;
                 }
 
-                // /ki-chat-setup
-                if (commandName === "ki-chat-setup") {
-                    try {
-                        await interaction.reply({ content: "⚠️ /ki-chat-setup ist noch nicht als Slash-Command implementiert. Bitte verwende !ki-chat-setup", flags: MessageFlags.Ephemeral });
-                    } catch (error) {
-                        console.error("❌ Fehler bei /ki-chat-setup:", error);
-                        await interaction.reply({ content: "❌ Ein Fehler ist aufgetreten.", flags: MessageFlags.Ephemeral });
+                // /ki-chat und der bisherige /ki-chat-setup Alias
+                if (commandName === "ki-chat" || commandName === "ki-chat-setup") {
+                    if (!interaction.guild) {
+                        return interaction.reply({
+                            content: "❌ Der KI-Chat kann nur auf einem Server eingerichtet werden.",
+                            flags: MessageFlags.Ephemeral
+                        });
                     }
+
+                    const channel = interaction.options.getChannel("kanal") || interaction.channel;
+                    if (!channel?.isTextBased() || channel.guildId !== interaction.guild.id) {
+                        return interaction.reply({
+                            content: "❌ Bitte wähle einen Textkanal auf diesem Server.",
+                            flags: MessageFlags.Ephemeral
+                        });
+                    }
+
+                    const success = setKIChatChannel(interaction.guild.id, channel.id);
+                    return interaction.reply({
+                        content: success
+                            ? `✅ ${channel} wurde als KI-Chat festgelegt. Schreibe dort eine Nachricht, damit die KI antwortet.`
+                            : "❌ Der KI-Chat konnte nicht eingerichtet werden.",
+                        flags: MessageFlags.Ephemeral
+                    });
+                }
+
+                if (musicCommandDefinitions.some(command => command.name === commandName)) {
                     return;
                 }
 
@@ -14117,82 +14515,6 @@ if (
            
 
             // =================================================
-            // RP START
-            // =================================================
-
-            if (
-                interaction.isButton() &&
-                interaction.customId ===
-                    "rp_start"
-            ) {
-                if (!hasSlashCommandPermission(interaction)) {
-                    return interaction.reply({
-                        content: "❌ Nur Owner, Co-Owner und Developer dürfen den RP-Status ändern.",
-                        flags: MessageFlags.Ephemeral
-                    });
-                }
-
-                if (!interaction.deferred && !interaction.replied) {
-                    await interaction.deferUpdate();
-                }
-
-                try {
-                    await updateRPStatus(
-                        interaction.guild,
-                        "start"
-                    );
-                } catch (error) {
-                    console.error("❌ RP-Status Fehler:", error);
-                    if (!interaction.replied) {
-                        await interaction.followUp({
-                            content: "❌ Fehler beim Starten des RP-Status.",
-                            flags: MessageFlags.Ephemeral
-                        });
-                    }
-                }
-
-                return;
-            }
-
-            // =================================================
-            // RP STOPP
-            // =================================================
-
-            if (
-                interaction.isButton() &&
-                interaction.customId ===
-                    "rp_stop"
-            ) {
-                if (!hasSlashCommandPermission(interaction)) {
-                    return interaction.reply({
-                        content: "❌ Nur Owner, Co-Owner und Developer dürfen den RP-Status ändern.",
-                        flags: MessageFlags.Ephemeral
-                    });
-                }
-
-                if (!interaction.deferred && !interaction.replied) {
-                    await interaction.deferUpdate();
-                }
-
-                try {
-                    await updateRPStatus(
-                        interaction.guild,
-                        "stop"
-                    );
-                } catch (error) {
-                    console.error("❌ RP-Status Fehler:", error);
-                    if (!interaction.replied) {
-                        await interaction.followUp({
-                            content: "❌ Fehler beim Stoppen des RP-Status.",
-                            flags: MessageFlags.Ephemeral
-                        });
-                    }
-                }
-
-                return;
-            }
-
-            // =================================================
             // RP TEXT ÄNDERN START
             // =================================================
 
@@ -14462,10 +14784,8 @@ if (
                     const application = {
                         guildId: interaction.guild.id,
                         userId: interaction.user.id,
-                        // Nur zu Informations-/Debug-Zwecken, welcher Kanal das
-                        // Panel enthielt, als der Nutzer den Button gedrückt hat.
-                        // WIRD NIEMALS als Ziel-Kanal beim Versenden der fertigen
-                        // Bewerbung verwendet - siehe sendApplicationReview().
+                        // Hält fest, in welchem Kanal das Panel lag. Der Review-Kanal wird
+                        // separat pro Server konfiguriert und nicht aus diesem Feld abgeleitet.
                         teamApplicationPanelChannelId: interaction.channel.id,
                         status: "awaiting_acceptance",
                         currentQuestion: 0,
@@ -14577,7 +14897,6 @@ if (
                         const applicant = await guild.members.fetch(userId).catch(() => null);
                         if (applicant) {
                             const applicationRoleIds = [
-                                APPLICATION_SUBMITTED_ROLE_ID,
                                 ...APPLICATION_TEAM_ROLE_IDS
                             ].filter(Boolean);
                             await Promise.all(applicationRoleIds.map(roleId => (
@@ -14642,8 +14961,7 @@ if (
                     }
 
                     if (action === "team_application_accept" && guild) {
-                        // Beim Annehmen wird AUSSCHLIESSLICH APPLICATION_ACCEPTED_ROLE_ID
-                        // (1539991288642805830) vergeben. Keine weitere/andere Teamrolle.
+                        // Nur beim Annehmen wird die konfigurierte Annahme-Rolle vergeben.
                         const roleAssigned = await assignApplicationRole(guild, userId, APPLICATION_ACCEPTED_ROLE_ID);
                         if (!roleAssigned) {
                             return interaction.reply({
@@ -14659,32 +14977,20 @@ if (
                     application.decisionBy = interaction.user.id;
                     application.decidedAt = new Date().toISOString();
 
-                    // WICHTIG: Wenn APPLICATION_SUBMITTED_ROLE_ID und
-                    // APPLICATION_ACCEPTED_ROLE_ID identisch sind (aktuell
-                    // beide 1539991288642805830), darf beim Annehmen die
-                    // gerade eben vergebene Annahme-Rolle hier NICHT sofort
-                    // wieder entfernt werden. Bei Ablehnung wird die
-                    // "Eingereicht"-Rolle wie bisher entfernt.
-                    const shouldRemoveSubmittedRole =
-                        APPLICATION_SUBMITTED_ROLE_ID &&
-                        !(action === "team_application_accept" && APPLICATION_SUBMITTED_ROLE_ID === APPLICATION_ACCEPTED_ROLE_ID);
-
-                    if (guild && shouldRemoveSubmittedRole) {
-                        await guild.members.fetch(userId).then(member => {
-                            if (member.roles.cache.has(APPLICATION_SUBMITTED_ROLE_ID)) {
-                                return member.roles.remove(APPLICATION_SUBMITTED_ROLE_ID);
-                            }
-                            return null;
-                        }).catch(error => console.error("❌ Bewerbungsrolle konnte nicht entfernt werden:", error));
-                    }
-
                     setTeamApplication(application);
 
                     const decisionText = application.status === "accepted"
                         ? "✅ Bewerbung angenommen"
                         : "❌ Bewerbung abgelehnt";
+                    const decisionColor = application.status === "accepted"
+                        ? 0x2ecc71
+                        : 0xed4245;
+                    const updatedEmbeds = interaction.message.embeds.map(embed =>
+                        EmbedBuilder.from(embed).setColor(decisionColor)
+                    );
                     await interaction.update({
                         content: `${interaction.message.content}\n\n${decisionText} von <@${interaction.user.id}> am ${formatGermanTime(new Date())}`,
+                        embeds: updatedEmbeds,
                         components: []
                     });
                     if (applicant) {
@@ -15029,6 +15335,14 @@ if (
                         );
                     }
 
+                    const target = await interaction.guild.members.fetch(userId).catch(() => null);
+                    if (!target) {
+                        return interaction.reply(errorMessage("Das ausgewählte Mitglied wurde nicht gefunden."));
+                    }
+                    if (!hasConfiguredTeamRole(target)) {
+                        return interaction.reply(errorMessage("Uprank und Degradierung sind nur für Mitglieder mit einer konfigurierten Teamrolle möglich."));
+                    }
+
                     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
                     try {
@@ -15046,7 +15360,7 @@ if (
                         return interaction.editReply(
                             createTeamRoleSelectionPayload(
                                 interaction.guild,
-                                { id: userId },
+                                target,
                                 action
                             )
                         );
@@ -15078,6 +15392,10 @@ if (
                     });
                 }
 
+                if (!claimTeamActionInteraction(interaction)) {
+                    return;
+                }
+
                 // =============================================
                 // KICK (entfernt Team-/höhere Rollen, kickt NICHT
                 // mehr vom Discord-Server)
@@ -15097,12 +15415,33 @@ if (
                         );
                     }
 
-                    const botHighestPosition =
-                        interaction.guild.members.me.roles.highest.position;
-
-                    if (botHighestPosition <= target.roles.highest.position) {
+                    await refreshTeamRoleData(interaction.guild);
+                    const botMember = interaction.guild.members.me;
+                    if (!botMember?.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
                         return interaction.reply(
-                            errorMessage("Meine Bot-Rolle steht nicht über der Rolle dieses Mitglieds.")
+                            errorMessage("Dem Bot fehlt die Berechtigung „Rollen verwalten“.")
+                        );
+                    }
+
+                    const teamRolesToRemove = getAllTeamNicknameRoles()
+                        .map(entry => interaction.guild.roles.cache.get(entry.roleId))
+                        .filter(role =>
+                            role &&
+                            role.id !== BUERGER_ROLE_ID &&
+                            target.roles.cache.has(role.id)
+                        );
+                    if (teamRolesToRemove.length === 0) {
+                        return interaction.reply(
+                            errorMessage("Dieses Mitglied besitzt keine Teamrollen, die entfernt werden könnten.")
+                        );
+                    }
+
+                    const blockedTeamRole = teamRolesToRemove.find(role =>
+                        botMember.roles.highest.position <= role.position
+                    );
+                    if (blockedTeamRole) {
+                        return interaction.reply(
+                            errorMessage(`Die Teamrolle „${blockedTeamRole.name}“ steht auf oder über der höchsten Bot-Rolle.`)
                         );
                     }
 
@@ -15130,13 +15469,17 @@ if (
                         .map(roleId => interaction.guild.roles.cache.get(roleId)?.name)
                         .filter(Boolean);
 
+                    let kickLogError = null;
                     await teamKickLog(
                         interaction.guild,
                         target,
                         interaction.member,
                         `Team-Kick (Rollenentzug) durch ${interaction.user.tag}`,
                         removedRoleNames
-                    ).catch(() => {});
+                    ).catch(error => {
+                        kickLogError = error;
+                        console.error("❌ Team-Kick wurde ausgeführt, aber das Log konnte nicht gesendet werden:", error);
+                    });
 
                     // Zusätzliche, rein additive Speicherung für !teamstatistik:
                     // merkt sich, dass bei diesem Mitglied bereits ein
@@ -15156,7 +15499,8 @@ if (
 
                     return interaction.reply({
                         content:
-                            `✅ **${target.user.tag}** wurde aus dem Team entfernt. Alle Team-/höheren Rollen wurden entzogen, die Bürgerrolle bleibt bestehen.`,
+                            `✅ **${target.user.tag}** wurde aus dem Team entfernt. Alle Teamrollen wurden entzogen, die Bürgerrolle und sonstige Rollen bleiben erhalten.` +
+                            (kickLogError ? `\n⚠️ Der Vorgang wurde ausgeführt, aber das Log konnte nicht gesendet werden: ${kickLogError.message}` : ""),
                         flags:
                             MessageFlags.Ephemeral
                     });
@@ -15167,6 +15511,9 @@ if (
                 // =============================================
 
                 if (action === "warn") {
+                    if (!hasConfiguredTeamRole(target)) {
+                        return interaction.reply(errorMessage("Verwarnungen über dieses Panel sind nur für Mitglieder mit einer konfigurierten Teamrolle möglich."));
+                    }
 
                     const activeWarnCount = getActiveWarns(interaction.guild.id, target.id).length;
 
@@ -15212,45 +15559,45 @@ if (
                 // =============================================
 
                 if (action === "warnback") {
-
                     const warns = getUserWarns(interaction.guild.id, target.id);
-
-                    if (warns.length === 0) {
-                        return interaction.reply(
-                            errorMessage("Dieses Mitglied hat keine gespeicherten Warnungen.")
-                        );
+                    const previousWarns = [...warns];
+                    warns.length = 0;
+                    if (!saveWarnStorage()) {
+                        warns.push(...previousWarns);
+                        return interaction.reply(errorMessage("Die gespeicherten Warnungen konnten nicht zurückgesetzt werden."));
                     }
 
-                    const embed = new EmbedBuilder()
+                    let roleSyncError = null;
+                    try {
+                        await syncWarnRoleForMember(target);
+                    } catch (error) {
+                        roleSyncError = error;
+                        console.error("❌ Warnungen wurden zurückgesetzt, Warnrollen konnten aber nicht vollständig entfernt werden:", error);
+                    }
+
+                    const resetEmbed = new EmbedBuilder()
                         .setColor(0x5865F2)
-                        .setTitle(`⚠️ Warnungen von ${target.user.tag}`)
-                        .setDescription(
-                            warns.map((warn, index) =>
-                                `**⚠️ Warn #${index + 1}**\n` +
-                                `Grund: \`${warn.reason}\`\n` +
-                                `Erstellt: \`${formatGermanTime(new Date(warn.createdAt))}\`\n` +
-                                `Ablauf: \`${formatWarnExpiry(warn)}\`\n` +
-                                `Ausgeführt von: \`${warn.moderatorTag}\``
-                            ).join("\n\n")
-                        );
-
-                    const options = warns.slice(0, 25).map((warn, index) =>
-                        new StringSelectMenuOptionBuilder()
-                            .setLabel(`Warn #${index + 1} – ${warn.reason.slice(0, 80)}`)
-                            .setDescription(`Ablauf: ${formatWarnExpiry(warn)}`.slice(0, 100))
-                            .setValue(warn.id)
-                    );
-
-                    const row = new ActionRowBuilder().addComponents(
-                        new StringSelectMenuBuilder()
-                            .setCustomId(`team_warnback_select_${target.id}`)
-                            .setPlaceholder("⚠️ Warnung auswählen")
-                            .addOptions(options)
-                    );
+                        .setTitle("✅ TEAM-WARNUNGEN ZURÜCKGESETZT")
+                        .addFields(
+                            { name: "Mitglied", value: `${target}\n${target.user.tag}`, inline: true },
+                            { name: "Ausgeführt von", value: `${interaction.user}\n${interaction.user.tag}`, inline: true },
+                            { name: "Entfernte Verwarnungen", value: String(previousWarns.length), inline: true },
+                            { name: "Zeitpunkt", value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: false }
+                        )
+                        .setFooter({ text: teamLogFooterText() })
+                        .setTimestamp();
+                    let resetLogError = null;
+                    try {
+                        await sendRequiredTeamManagementLog(interaction.guild, "warn", resetEmbed);
+                    } catch (error) {
+                        resetLogError = error;
+                        console.error("❌ Warnungen wurden zurückgesetzt, aber das Team-Updates-Log konnte nicht gesendet werden:", error);
+                    }
 
                     return interaction.reply({
-                        embeds: [embed],
-                        components: [row],
+                        content: `✅ Alle ${previousWarns.length} gespeicherten Warnungen von **${target.user.tag}** wurden zurückgesetzt.` +
+                            (roleSyncError ? `\n⚠️ Warnrollen konnten nicht vollständig entfernt werden: ${roleSyncError.message}` : "") +
+                            (resetLogError ? `\n⚠️ Das Team-Updates-Log konnte nicht gesendet werden: ${resetLogError.message}` : ""),
                         flags: MessageFlags.Ephemeral
                     });
                 }
@@ -15311,6 +15658,9 @@ if (
                     interaction.customId.startsWith("team_degrade_role_")
                 )
             ) {
+                if (!claimTeamActionInteraction(interaction)) {
+                    return;
+                }
 
                 const isUprank = interaction.customId.startsWith("team_uprank_role_");
                 const prefix = isUprank ? "team_uprank_role_" : "team_degrade_role_";
@@ -15334,34 +15684,119 @@ if (
                     );
                 }
 
-                // Sowohl Up-Rank als auch Down-Rank verlangen zwingend einen
-                // Grund - dieser wird per Modal abgefragt, bevor die
-                // Bestätigung erscheint.
-                const modal = new ModalBuilder()
-                    .setCustomId(
-                        isUprank
-                            ? `team_uprank_reason_modal_${target.id}_${role.id}`
-                            : `team_degrade_reason_modal_${target.id}_${role.id}`
-                    )
-                    .setTitle(isUprank ? "Up-Rank – Grund" : "Down-Rank – Grund");
+                if (!hasConfiguredTeamRole(target)) {
+                    return interaction.reply(errorMessage("Das ausgewählte Mitglied hat keine konfigurierte Teamrolle mehr."));
+                }
 
-                const reasonInput = new TextInputBuilder()
-                    .setCustomId(isUprank ? "team_uprank_reason_input" : "team_degrade_reason_input")
-                    .setLabel(isUprank ? "Grund für den Up-Rank" : "Grund für den Down-Rank")
-                    .setPlaceholder(
-                        isUprank
-                            ? "Bitte gib einen Grund für die Beförderung ein."
-                            : "Bitte gib einen Grund für die Abstufung ein."
-                    )
-                    .setStyle(TextInputStyle.Paragraph)
-                    .setRequired(true)
-                    .setMaxLength(1000);
+                if (!getAllTeamNicknameRoles().some(entry => entry.roleId === role.id)) {
+                    return interaction.reply(errorMessage("Diese Rolle ist nicht als Teamrolle konfiguriert."));
+                }
 
-                modal.addComponents(
-                    new ActionRowBuilder().addComponents(reasonInput)
-                );
+                if (target.id === interaction.user.id || target.id === interaction.guild.ownerId) {
+                    return interaction.reply(errorMessage("Du kannst diese Person nicht bearbeiten."));
+                }
 
-                return interaction.showModal(modal);
+                await interaction.deferUpdate();
+                try {
+                    await refreshTeamRoleData(interaction.guild);
+                    const botMember = interaction.guild.members.me;
+                    if (!botMember?.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
+                        throw new Error("Dem Bot fehlt die Berechtigung „Rollen verwalten“.");
+                    }
+                    if (botMember.roles.highest.position <= role.position) {
+                        throw new Error("Die neue Teamrolle steht auf oder über der höchsten Bot-Rolle.");
+                    }
+
+                    const currentTeamRoles = getAllTeamNicknameRoles()
+                        .map(entry => interaction.guild.roles.cache.get(entry.roleId))
+                        .filter(currentRole =>
+                            currentRole &&
+                            currentRole.id !== role.id &&
+                            target.roles.cache.has(currentRole.id)
+                        );
+                    if (currentTeamRoles.some(currentRole =>
+                        botMember.roles.highest.position <= currentRole.position
+                    )) {
+                        throw new Error("Mindestens eine bisherige Teamrolle steht auf oder über der höchsten Bot-Rolle.");
+                    }
+
+                    const currentRole = currentTeamRoles
+                        .sort((first, second) => second.position - first.position)[0];
+                    const reason = `Rangänderung über Team-Panel durch ${interaction.user.tag}`;
+                    const alreadyHadRole = target.roles.cache.has(role.id);
+
+                    if (!alreadyHadRole) {
+                        await target.roles.add(role, reason);
+                    }
+                    try {
+                        if (currentTeamRoles.length > 0) {
+                            await target.roles.remove(currentTeamRoles, reason);
+                        }
+                    } catch (error) {
+                        if (!alreadyHadRole) {
+                            await target.roles.remove(role, "Rangänderung fehlgeschlagen; Änderung zurückgerollt").catch(rollbackError =>
+                                console.error("❌ Neue Teamrolle konnte nach fehlgeschlagener Rangänderung nicht zurückgerollt werden:", rollbackError)
+                            );
+                        }
+                        throw error;
+                    }
+
+                    const oldRoleName = currentRole?.name || "Keine bisherige Teamrolle";
+                    if (isUprank) {
+                        setLastUprank(interaction.guild.id, target.id, {
+                            roleId: role.id,
+                            roleName: role.name,
+                            reason,
+                            moderatorId: interaction.user.id,
+                            moderatorTag: interaction.user.tag,
+                            timestamp: new Date().toISOString()
+                        });
+                    }
+
+                    const logEmbed = new EmbedBuilder()
+                        .setColor(isUprank ? 0x57F287 : 0xED4245)
+                        .setTitle(isUprank ? "⏫ TEAM UPRANK" : "⏬ TEAM DEGRADIERUNG")
+                        .setDescription([
+                            TEAM_LOG_DIVIDER,
+                            `👤 MITGLIED: ${target}`,
+                            TEAM_LOG_DIVIDER,
+                            `👮 DURCH: ${interaction.user}`,
+                            TEAM_LOG_DIVIDER,
+                            "📝 RANGÄNDERUNG:",
+                            `⬇️ Von: ${currentRole ? `<@&${currentRole.id}>` : oldRoleName}`,
+                            `⬆️ Auf: <@&${role.id}>`,
+                            TEAM_LOG_DIVIDER,
+                            `📝 GRUND: > ${reason}`,
+                            TEAM_LOG_DIVIDER,
+                            `🕐 Wann: ${formatTeamLogTimestamp()}`,
+                            TEAM_LOG_DIVIDER
+                        ].join("\n"))
+                        .setFooter({ text: teamLogFooterText() })
+                        .setTimestamp();
+
+                    let rankLogError = null;
+                    try {
+                        await sendRequiredTeamManagementLog(interaction.guild, "rank", logEmbed);
+                    } catch (logError) {
+                        rankLogError = logError;
+                        console.error("❌ Rangänderung wurde durchgeführt, aber der Team-Updates-Log konnte nicht gesendet werden:", logError);
+                    }
+
+                    await updateTeamList(interaction.guild, TEAMLIST_AUTO_UPDATE_CHANNEL_ID).catch(error =>
+                        console.error("❌ Teamliste konnte nach Rangänderung nicht aktualisiert werden:", error)
+                    );
+                    return interaction.editReply({
+                        content: `✅ **${target.user.tag}** hat jetzt die Team-Hauptrolle **${role.name}**.` +
+                            (rankLogError ? `\n⚠️ Das Log konnte nicht gesendet werden: ${rankLogError.message}` : ""),
+                        components: []
+                    });
+                } catch (error) {
+                    console.error("❌ Fehler bei Uprank/Degradierung:", error);
+                    return interaction.editReply({
+                        content: `❌ Rangänderung fehlgeschlagen: ${error.message}`,
+                        components: []
+                    });
+                }
             }
 
             // =================================================
@@ -15578,13 +16013,13 @@ if (
 
                     const logDescription = [
                         TEAM_LOG_DIVIDER,
-                        `👤 MITGLIED: ${target}`,
+                        `👤 MITGLIED: ${target} | ${target.user.tag}`,
                         TEAM_LOG_DIVIDER,
-                        `👮 DURCH: ${interaction.member}`,
+                        `👮 DURCH: ${interaction.user}`,
                         TEAM_LOG_DIVIDER,
                         `📝 RANGÄNDERUNG:`,
-                        `⬇️ Von ${oldRoleName}`,
-                        `⬆️ Auf ${newRole.name}`,
+                        `⬇️ Von: ${oldRole ? `<@&${oldRole.id}>` : oldRoleName}`,
+                        `⬆️ Auf: <@&${newRole.id}>`,
                         TEAM_LOG_DIVIDER,
                         `📝 GRUND: > ${rankChangeReason}`,
                         TEAM_LOG_DIVIDER,
@@ -15688,6 +16123,9 @@ if (
                 interaction.isStringSelectMenu() &&
                 interaction.customId.startsWith("team_warn_duration_")
             ) {
+                if (!claimTeamActionInteraction(interaction)) {
+                    return;
+                }
 
                 const targetId = interaction.customId.replace("team_warn_duration_", "");
 
@@ -15723,27 +16161,95 @@ if (
                         components: []
                     });
                 }
+                if (!hasConfiguredTeamRole(target)) {
+                    pendingWarnReasons.delete(`${interaction.user.id}_${targetId}`);
+                    return interaction.update({
+                        content: "❌ Das ausgewählte Mitglied hat keine konfigurierte Teamrolle mehr.",
+                        components: []
+                    });
+                }
 
-                const row = new ActionRowBuilder().addComponents(
-                    new ButtonBuilder()
-                        .setCustomId(`team_warn_confirm_${targetId}_${durationValue}`)
-                        .setLabel("Bestätigen")
-                        .setEmoji("✅")
-                        .setStyle(ButtonStyle.Success),
-                    new ButtonBuilder()
-                        .setCustomId(`team_warn_cancel_${targetId}`)
-                        .setLabel("Abbrechen")
-                        .setEmoji("❌")
-                        .setStyle(ButtonStyle.Secondary)
+                const pendingKey = `${interaction.user.id}_${targetId}`;
+                if (getActiveWarns(interaction.guild.id, target.id).length >= MAX_ACTIVE_WARNS) {
+                    pendingWarnReasons.delete(pendingKey);
+                    return interaction.update({
+                        content: `❌ Dieses Mitglied hat bereits ${MAX_ACTIVE_WARNS}/${MAX_ACTIVE_WARNS} aktive Warnungen.`,
+                        components: []
+                    });
+                }
+
+                const now = Date.now();
+                const expiresAt = durationOption.ms === null
+                    ? null
+                    : new Date(now + durationOption.ms).toISOString();
+                let warn;
+                try {
+                    warn = addWarnEntry(interaction.guild.id, target.id, {
+                        userTag: target.user.tag,
+                        discordId: target.id,
+                        reason: pending.reason,
+                        createdAt: new Date(now).toISOString(),
+                        expiresAt,
+                        moderatorId: interaction.user.id,
+                        moderatorTag: interaction.user.tag
+                    });
+                } catch (error) {
+                    console.error("❌ Warnung konnte nicht gespeichert werden:", error);
+                    return interaction.update({
+                        content: `❌ Die Verwarnung konnte nicht gespeichert werden: ${error.message}`,
+                        components: []
+                    });
+                }
+
+                pendingWarnReasons.delete(pendingKey);
+                const activeWarnCount = Math.min(
+                    getActiveWarns(interaction.guild.id, target.id).length,
+                    MAX_ACTIVE_WARNS
                 );
+                let roleSyncError = null;
+                try {
+                    await syncWarnRoleForMember(target);
+                } catch (error) {
+                    roleSyncError = error;
+                    console.error("❌ Verwarnung gespeichert, aber Warnrolle konnte nicht synchronisiert werden:", error);
+                }
+
+                const warnLogEmbed = new EmbedBuilder()
+                    .setColor(0xFEE75C)
+                    .setTitle("⚠️ TEAM WARN")
+                    .setDescription([
+                        TEAM_LOG_DIVIDER,
+                        `👤 MITGLIED: ${target}`,
+                        TEAM_LOG_DIVIDER,
+                        `👮 DURCH: ${interaction.user}`,
+                        TEAM_LOG_DIVIDER,
+                        `📊 WARNUNGEN: ${activeWarnCount}/${MAX_ACTIVE_WARNS}`,
+                        TEAM_LOG_DIVIDER,
+                        `⏳ DAUER: ${durationOption.label}`,
+                        TEAM_LOG_DIVIDER,
+                        `📝 GRUND: > ${warn.reason.slice(0, 900)}`,
+                        TEAM_LOG_DIVIDER,
+                        `🕐 Wann: ${formatTeamLogTimestamp(new Date(now))}`,
+                        TEAM_LOG_DIVIDER
+                    ].join("\n"))
+                    .setFooter({ text: teamLogFooterText() })
+                    .setTimestamp(new Date(now));
+                let warnLogError = null;
+                try {
+                    await sendRequiredTeamManagementLog(interaction.guild, "warn", warnLogEmbed);
+                } catch (error) {
+                    warnLogError = error;
+                    console.error("❌ Warnung wurde gespeichert, aber das Warn-Log konnte nicht gesendet werden:", error);
+                }
 
                 return interaction.update({
                     content:
-                        `**Verwarnung bestätigen**\n` +
-                        `Benutzer: **${target.user.tag}**\n` +
-                        `Grund: \`${pending.reason}\`\n` +
-                        `Dauer: **${durationOption.label}**`,
-                    components: [row]
+                        `✅ **${target.user.tag}** wurde verwarnt (${activeWarnCount}/${MAX_ACTIVE_WARNS}).\n` +
+                        `Grund: \`${warn.reason}\`\n` +
+                        `Ablauf: \`${formatWarnExpiry(warn)}\`` +
+                        (roleSyncError ? `\n⚠️ Die Warnung ist gespeichert, aber die Warnrolle konnte nicht vergeben werden: ${roleSyncError.message}` : "") +
+                        (warnLogError ? `\n⚠️ Das Warn-Log konnte nicht gesendet werden: ${warnLogError.message}` : ""),
+                    components: []
                 });
             }
 
@@ -15785,6 +16291,13 @@ if (
                         components: []
                     });
                 }
+                if (!hasConfiguredTeamRole(target)) {
+                    pendingWarnReasons.delete(pendingKey);
+                    return interaction.update({
+                        content: "❌ Das ausgewählte Mitglied hat keine konfigurierte Teamrolle mehr.",
+                        components: []
+                    });
+                }
 
                 // Sicherheitsprüfung gegen die Obergrenze aktiver Warnungen,
                 // falls sich der Bestand zwischen Schritt 1 und der
@@ -15821,9 +16334,9 @@ if (
 
                 const warnLogDescription = [
                     TEAM_LOG_DIVIDER,
-                    ` 👤 MITGLIED: ${target}`,
+                    `👤 MITGLIED: ${target} | ${target.user.tag}`,
                     TEAM_LOG_DIVIDER,
-                    ` 👮 DURCH: ${interaction.member}`,
+                    `👮 DURCH: ${interaction.user}`,
                     TEAM_LOG_DIVIDER,
                     ` ⚠️ WARNUNGEN: ${activeWarnCount}/${MAX_ACTIVE_WARNS}`,
                     TEAM_LOG_DIVIDER,
@@ -17951,6 +18464,23 @@ if (!process.env.BOT_TOKEN) {
 
     process.exit(1);
 }
+
+// =====================================================
+// NAMETAG EVENT HANDLER
+// =====================================================
+
+// Role Add Event - Wenn jemand eine Rolle bekommt
+client.on("guildMemberUpdate", (oldMember, newMember) => {
+    try {
+        // Prüfe ob Rollen hinzugefügt wurden
+        const addedRoles = newMember.roles.cache.filter(role => !oldMember.roles.cache.has(role.id));
+        if (addedRoles.size > 0) {
+            updateMemberNametag(newMember);
+        }
+    } catch (error) {
+        console.error("❌ Fehler im guildMemberUpdate Event:", error);
+    }
+});
 
 client.login(
     process.env.BOT_TOKEN
