@@ -1,7 +1,9 @@
+
 const {
     SlashCommandBuilder,
     PermissionsBitField
 } = require("discord.js");
+
 const { musicCommandDefinitions } = require("./Music-System/Music-System");
 
 // =====================================================
@@ -9,6 +11,18 @@ const { musicCommandDefinitions } = require("./Music-System/Music-System");
 // =====================================================
 
 const slashCommands = [
+
+    // =====================================================
+    // TICKET-SYSTEM
+    // =====================================================
+
+    new SlashCommandBuilder()
+        .setName("ticketsystem")
+        .setDescription("Erstellt das Ticket-Panel im aktuellen Kanal")
+        .setDefaultMemberPermissions(
+            PermissionsBitField.Flags.ManageGuild
+        ),
+
     // =====================================================
     // INDEX.JS BEFEHLE
     // =====================================================
@@ -19,7 +33,7 @@ const slashCommands = [
         .addStringOption(option =>
             option
                 .setName("server")
-                .setDescription("Server-ID (optional, standardmäßig aktueller Server)")
+                .setDescription("Server-ID (optional, standardmäßig aktuellen Server)")
                 .setRequired(false)
         ),
 
@@ -47,6 +61,84 @@ const slashCommands = [
                 .setName("rolle")
                 .setDescription("ID der zu entfernenden Rolle")
                 .setRequired(true)
+        ),
+
+    new SlashCommandBuilder()
+        .setName("gib-rolle")
+        .setDescription("Gibt eine Rolle an ALLE Mitglieder des Servers")
+        .addRoleOption(option =>
+            option
+                .setName("rolle")
+                .setDescription("Die Rolle, die verteilt werden soll")
+                .setRequired(true)
+        ),
+
+    new SlashCommandBuilder()
+        .setName("nimm-rolle")
+        .setDescription("Entfernt eine Rolle von ALLEN Mitgliedern des Servers")
+        .addRoleOption(option =>
+            option
+                .setName("rolle")
+                .setDescription("Die Rolle, die entfernt werden soll")
+                .setRequired(true)
+        ),
+
+    new SlashCommandBuilder()
+        .setName("clear")
+        .setDescription("Löscht eine bestimmte Anzahl an Nachrichten")
+        .addIntegerOption(option =>
+            option
+                .setName("anzahl")
+                .setDescription("Anzahl der zu löschenden Nachrichten (1-100)")
+                .setMinValue(1)
+                .setMaxValue(100)
+                .setRequired(true)
+        ),
+
+    new SlashCommandBuilder()
+        .setName("userinfo")
+        .setDescription("Zeigt Informationen über einen Benutzer an")
+        .addUserOption(option =>
+            option
+                .setName("nutzer")
+                .setDescription("Der Benutzer, über den du Infos möchtest")
+                .setRequired(false)
+        ),
+
+    new SlashCommandBuilder()
+        .setName("serverinfo")
+        .setDescription("Zeigt Informationen über den Server an"),
+
+    new SlashCommandBuilder()
+        .setName("kick")
+        .setDescription("Kickt ein Mitglied vom Server")
+        .addUserOption(option =>
+            option
+                .setName("nutzer")
+                .setDescription("Das zu kickende Mitglied")
+                .setRequired(true)
+        )
+        .addStringOption(option =>
+            option
+                .setName("grund")
+                .setDescription("Grund für den Kick")
+                .setRequired(false)
+        ),
+
+    new SlashCommandBuilder()
+        .setName("ban")
+        .setDescription("Bannt ein Mitglied vom Server")
+        .addUserOption(option =>
+            option
+                .setName("nutzer")
+                .setDescription("Das zu bannende Mitglied")
+                .setRequired(true)
+        )
+        .addStringOption(option =>
+            option
+                .setName("grund")
+                .setDescription("Grund für den Bann")
+                .setRequired(false)
         ),
 
     new SlashCommandBuilder()
@@ -261,6 +353,7 @@ const slashCommands = [
     // =====================================================
     // UNTERHALTUNGS-SYSTEM BEFEHLE
     // =====================================================
+
     ...[
         ["setups", "Öffnet die Entertainment-Setup-Übersicht"],
         ["willkommen-panel", "Erstellt oder aktualisiert das Willkommens-Panel"],
@@ -283,6 +376,7 @@ const slashCommands = [
     // =====================================================
     // KI-CHAT BEFEHLE
     // =====================================================
+
     new SlashCommandBuilder()
         .setName("ki-chat")
         .setDescription("Legt den KI-Chat-Kanal fest")
@@ -302,6 +396,7 @@ const slashCommands = [
                 .setDescription("Der KI-Chat-Kanal")
                 .setRequired(true)
         )
+
 ].map(command => command.toJSON());
 
 // Musikbefehle ebenfalls in die zentrale Registrierung aufnehmen.

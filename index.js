@@ -29,6 +29,14 @@ const {
 } = require("discord.js");
 
 // =====================================================
+// 💾 BACKUP / DASHBOARD / LOGGING (neue Module)
+// =====================================================
+
+const backupModule = require("./backup.js");
+const dashboardModule = require("./dashboard.js");
+const loggingModule = require("./logging.js");
+
+// =====================================================
 // 🌐 HEALTH-CHECK HTTP-SERVER (für Render Web Service)
 // =====================================================
 // Render erkennt einen "Web Service" nur, wenn innerhalb kurzer Zeit
@@ -42,14 +50,19 @@ const http = require("http");
 
 const HEALTH_CHECK_PORT = process.env.PORT || 3000;
 
-http
-    .createServer((req, res) => {
-        res.writeHead(200, { "Content-Type": "text/plain" });
-        res.end("OK - Bot läuft");
-    })
-    .listen(HEALTH_CHECK_PORT, "0.0.0.0", () => {
-        console.log(`🌐 Health-Check-Server läuft auf 0.0.0.0:${HEALTH_CHECK_PORT}`);
-    });
+// Wenn DASHBOARD_PASSWORD gesetzt ist, übernimmt dashboard.js den Port
+// (die Startseite "/" antwortet ebenfalls mit 200 -> Render ist zufrieden).
+// Zwei Server auf demselben Port würden sonst mit EADDRINUSE abstürzen.
+if (!process.env.DASHBOARD_PASSWORD) {
+    http
+        .createServer((req, res) => {
+            res.writeHead(200, { "Content-Type": "text/plain" });
+            res.end("OK - Bot läuft");
+        })
+        .listen(HEALTH_CHECK_PORT, "0.0.0.0", () => {
+            console.log(`🌐 Health-Check-Server läuft auf 0.0.0.0:${HEALTH_CHECK_PORT}`);
+        });
+}
 
 // =====================================================
 // 🤖 KI-CHAT
@@ -882,7 +895,7 @@ const RP_START_DESCRIPTION = `━━━━━━━━━━━━━━━━�
 const RP_START_SUCCESS = "🚨 Das RP wurde gestartet!";
 
 // =====================================================
-// RP STOPP
+// RP STOP
 // =====================================================
 
 const RP_STOP_TITLE = "💫 𝐕𝐄𝐗𝐎 𝐑𝐏 ┃ 𝐕𝟏";
@@ -2204,6 +2217,7 @@ function getHouseClientNumber(
 const TEAM_LOG_CHANNEL_ID = "TEAM_LOG_CHANNEL_ID";
 const TEAMLIST_AUTO_UPDATE_CHANNEL_ID = "1539989948273401999";
 
+
 // =====================================================
 // CLIENT
 // =====================================================
@@ -2215,9 +2229,19 @@ const client = new Client({
         GatewayIntentBits.DirectMessages,
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.GuildMembers,
-        GatewayIntentBits.GuildVoiceStates // Benötigt für das Musik-System (@discordjs/voice)
+        GatewayIntentBits.GuildVoiceStates,
+        GatewayIntentBits.GuildModeration
     ]
 });
+
+// =====================================================
+// TICKET-SYSTEM STARTEN
+// =====================================================
+
+const { initializeTicketSystem } = require("./Ticket-System");
+
+initializeTicketSystem(client);
+
 
 // =====================================================
 // NEXORACLOUD DASHBOARD
@@ -5758,7 +5782,7 @@ function createRPPanel(guildId) {
                         "rp_stop"
                     )
                     .setLabel(
-                        "RP Stopp"
+                        "RP Stop"
                     )
                     .setEmoji(
                         "🔴"
@@ -10717,7 +10741,7 @@ client.on(
 
                 const stopButton = new ButtonBuilder()
                     .setCustomId("rp_stop")
-                    .setLabel("⏹️ RP Stoppen")
+                    .setLabel("⏹️ RP Stopen")
                     .setStyle(ButtonStyle.Danger)
                     .setDisabled(false);
 
@@ -10733,7 +10757,7 @@ client.on(
             if (interaction.isButton() && interaction.customId === "rp_stop") {
                 if (!hasSlashCommandPermission(interaction.member)) {
                     return interaction.reply({
-                        content: "❌ Nur autorisierte Rollen dürfen RP stoppen.",
+                        content: "❌ Nur autorisierte Rollen dürfen RP stopen.",
                         flags: MessageFlags.Ephemeral
                     });
                 }
@@ -10778,7 +10802,7 @@ Der offizielle RP-Betrieb für heute ist beendet. Bitte startet keine neuen RP-S
 
                 const stopButton = new ButtonBuilder()
                     .setCustomId("rp_stop")
-                    .setLabel("⏹️ RP Stoppen")
+                    .setLabel("⏹️ RP Stopen")
                     .setStyle(ButtonStyle.Danger)
                     .setDisabled(true);
 
@@ -10959,7 +10983,7 @@ Der offizielle RP-Betrieb für heute ist beendet. Bitte startet keine neuen RP-S
 
                         const stopButton = new ButtonBuilder()
                             .setCustomId("rp_stop")
-                            .setLabel("⏹️ RP Stoppen")
+                            .setLabel("⏹️ RP Stopen")
                             .setStyle(ButtonStyle.Danger)
                             .setDisabled(!rpStatus.isRunning);
 
@@ -10981,6 +11005,210 @@ Der offizielle RP-Betrieb für heute ist beendet. Bitte startet keine neuen RP-S
                             content: "❌ Das RP-Panel konnte nicht erstellt werden.",
                             flags: MessageFlags.Ephemeral
                         });
+                    }
+                }
+
+                // /nimm-rolle
+                if (commandName === "nimm-rolle") {
+                    try {
+                        const role = interaction.options.getRole("rolle");
+                        const guild = interaction.guild;
+
+                        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+
+                        const members = await guild.members.fetch();
+                        let count = 0;
+
+                        for (const member of members.values()) {
+                            if (member.roles.cache.has(role.id)) {
+                                try {
+                                    await member.roles.remove(role);
+                                    count++;
+                                } catch (err) {
+                                    console.error(`❌ Fehler beim Entfernen der Rolle von ${member.user.tag}:`, err.message);
+                                }
+                            }
+                        }
+
+                        await interaction.editReply({
+                            content: `✅ Die Rolle **${role.name}** wurde von **${count} Mitgliedern** entfernt.`
+                        });
+
+                    } catch (error) {
+                        console.error("❌ Fehler bei /nimm-rolle:", error);
+                        await interaction.editReply({ content: "❌ Ein Fehler ist aufgetreten." });
+                    }
+                }
+
+                // /gib-rolle
+                // Mit Benutzer-Option: Rolle an diesen Benutzer. Ohne: an alle Mitglieder (Gegenstück zu /nimm-rolle).
+                if (commandName === "gib-rolle") {
+                    try {
+                        const role = interaction.options.getRole("rolle");
+                        const guild = interaction.guild;
+
+                        if (!guild || !role) {
+                            return interaction.reply({
+                                content: "❌ Bitte wähle eine Rolle auf einem Server.",
+                                flags: MessageFlags.Ephemeral
+                            });
+                        }
+
+                        const botTop = guild.members.me?.roles?.highest;
+                        if (role.managed || role.id === guild.id || (botTop && role.position >= botTop.position)) {
+                            return interaction.reply({
+                                content: "❌ Diese Rolle kann ich nicht vergeben (zu hoch in der Rollenliste, verwaltet oder @everyone). Ziehe die Bot-Rolle in den Servereinstellungen über diese Rolle.",
+                                flags: MessageFlags.Ephemeral
+                            });
+                        }
+
+                        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+
+                        const userOption = interaction.options.data.find(option => option.type === 6);
+
+                        if (userOption) {
+                            const target = await guild.members.fetch(userOption.value).catch(() => null);
+                            if (!target) {
+                                return interaction.editReply({ content: "❌ Dieser Benutzer ist nicht auf dem Server." });
+                            }
+
+                            await target.roles.add(role);
+                            return interaction.editReply({
+                                content: `✅ Die Rolle **${role.name}** wurde an ${target} vergeben.`
+                            });
+                        }
+
+                        const members = await guild.members.fetch();
+                        let count = 0;
+                        let failed = 0;
+
+                        for (const member of members.values()) {
+                            if (member.user.bot || member.roles.cache.has(role.id)) continue;
+                            try {
+                                await member.roles.add(role);
+                                count++;
+                            } catch (err) {
+                                failed++;
+                                console.error(`❌ Fehler beim Vergeben der Rolle an ${member.user.tag}:`, err.message);
+                            }
+                        }
+
+                        await interaction.editReply({
+                            content: `✅ Die Rolle **${role.name}** wurde an **${count} Mitglieder** vergeben.` +
+                                (failed ? ` (${failed} fehlgeschlagen)` : "")
+                        });
+
+                    } catch (error) {
+                        console.error("❌ Fehler bei /gib-rolle:", error);
+                        const msg = { content: "❌ Ein Fehler ist aufgetreten." };
+                        if (interaction.deferred || interaction.replied) {
+                            await interaction.editReply(msg).catch(() => {});
+                        } else {
+                            await interaction.reply({ ...msg, flags: MessageFlags.Ephemeral }).catch(() => {});
+                        }
+                    }
+                    return;
+                }
+
+                // /clear
+                if (commandName === "clear") {
+                    if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) {
+                        return interaction.reply({ content: "❌ Du hast keine Berechtigung, Nachrichten zu löschen.", flags: MessageFlags.Ephemeral });
+                    }
+
+                    const amount = interaction.options.getInteger("anzahl");
+                    try {
+                        await interaction.channel.bulkDelete(amount, true);
+                        return interaction.reply({ content: `✅ **${amount} Nachrichten** wurden gelöscht.`, flags: MessageFlags.Ephemeral });
+                    } catch (error) {
+                        console.error("❌ Fehler bei /clear:", error);
+                        return interaction.reply({ content: "❌ Nachrichten konnten nicht gelöscht werden. (Nachrichten, die älter als 14 Tage sind, können nicht gelöscht werden)", flags: MessageFlags.Ephemeral });
+                    }
+                }
+
+                // /userinfo
+                if (commandName === "userinfo") {
+                    const target = interaction.options.getUser("nutzer") || interaction.user;
+                    const member = await interaction.guild.members.fetch(target.id);
+
+                    const embed = new EmbedBuilder()
+                        .setColor(0x0099FF)
+                        .setTitle(`👤 Nutzerinformationen für ${target.tag}`)
+                        .setThumbnail(target.displayAvatarURL({ dynamic: true }))
+                        .addFields(
+                            { name: "🆔 ID", value: target.id, inline: true },
+                            { name: "📅 Beigetreten am", value: member.joinedAt.toLocaleDateString("de-DE"), inline: true },
+                            { name: "🚀 Account erstellt", value: target.createdAt.toLocaleDateString("de-DE"), inline: true },
+                            { name: "🎭 Rollen", value: member.roles.cache.map(r => r.name).join(", ") || "Keine" }
+                        )
+                        .setFooter({ text: "NeoCity • Utility" })
+                        .setTimestamp();
+
+                    return interaction.reply({ embeds: [embed] });
+                }
+
+                // /serverinfo
+                if (commandName === "serverinfo") {
+                    const { guild } = interaction;
+                    const embed = new EmbedBuilder()
+                        .setColor(0x0099FF)
+                        .setTitle(`🏰 Serverinformationen: ${guild.name}`)
+                        .setThumbnail(guild.iconURL({ dynamic: true }))
+                        .addFields(
+                            { name: "🆔 ID", value: guild.id, inline: true },
+                            { name: "👑 Inhaber", value: `<@${guild.ownerId}>`, inline: true },
+                            { name: "👥 Mitglieder", value: `${guild.memberCount}`, inline: true },
+                            { name: "🌍 Region", value: guild.preferredLocale, inline: true },
+                            { name: "📅 Erstellt am", value: guild.createdAt.toLocaleDateString("de-DE"), inline: true },
+                            { name: "🛡️ Verifizierungslevel", value: `${guild.verificationLevel}`, inline: true }
+                        )
+                        .setFooter({ text: "NeoCity • Utility" })
+                        .setTimestamp();
+
+                    return interaction.reply({ embeds: [embed] });
+                }
+
+                // /kick
+                if (commandName === "kick") {
+                    if (!interaction.member.permissions.has(PermissionsBitField.Flags.KickMembers)) {
+                        return interaction.reply({ content: "❌ Du hast keine Berechtigung, Mitglieder zu kicken.", flags: MessageFlags.Ephemeral });
+                    }
+
+                    const target = interaction.options.getMember("nutzer");
+                    const reason = interaction.options.getString("grund") || "Kein Grund angegeben";
+
+                    if (!target.kickable) {
+                        return interaction.reply({ content: "❌ Dieses Mitglied kann nicht gekickt werden.", flags: MessageFlags.Ephemeral });
+                    }
+
+                    try {
+                        await target.kick(reason);
+                        return interaction.reply({ content: `✅ **${target.user.tag}** wurde gekickt. Grund: ${reason}` });
+                    } catch (error) {
+                        console.error("❌ Fehler bei /kick:", error);
+                        return interaction.reply({ content: "❌ Fehler beim Kicken des Mitglieds.", flags: MessageFlags.Ephemeral });
+                    }
+                }
+
+                // /ban
+                if (commandName === "ban") {
+                    if (!interaction.member.permissions.has(PermissionsBitField.Flags.BanMembers)) {
+                        return interaction.reply({ content: "❌ Du hast keine Berechtigung, Mitglieder zu bannen.", flags: MessageFlags.Ephemeral });
+                    }
+
+                    const target = interaction.options.getMember("nutzer");
+                    const reason = interaction.options.getString("grund") || "Kein Grund angegeben";
+
+                    if (!target.bannable) {
+                        return interaction.reply({ content: "❌ Dieses Mitglied kann nicht gebannt werden.", flags: MessageFlags.Ephemeral });
+                    }
+
+                    try {
+                        await target.ban({ reason });
+                        return interaction.reply({ content: `✅ **${target.user.tag}** wurde gebannt. Grund: ${reason}` });
+                    } catch (error) {
+                        console.error("❌ Fehler bei /ban:", error);
+                        return interaction.reply({ content: "❌ Fehler beim Bannen des Mitglieds.", flags: MessageFlags.Ephemeral });
                     }
                 }
 
@@ -11833,6 +12061,11 @@ Der offizielle RP-Betrieb für heute ist beendet. Bitte startet keine neuen RP-S
                 }
 
                 if (musicCommandDefinitions.some(command => command.name === commandName)) {
+                    return;
+                }
+
+                // /backup wird komplett von backup.js behandelt
+                if (commandName === "backup") {
                     return;
                 }
 
@@ -14652,7 +14885,7 @@ if (
                             "rp_edit_stop_modal"
                         )
                         .setTitle(
-                            "RP Stopp Text ändern"
+                            "RP Stop Text ändern"
                         );
 
                 const titleInput =
@@ -16921,10 +17154,10 @@ if (
                         new EmbedBuilder()
                             .setColor(0x57F287)
                             .setTitle(
-                                "✅ RP Stopp Text aktualisiert"
+                                "✅ RP Stop Text aktualisiert"
                             )
                             .setDescription(
-                                "Der Text für RP Stopp wurde erfolgreich geändert."
+                                "Der Text für RP Stop wurde erfolgreich geändert."
                             )
                             .addFields(
                                 {
@@ -18415,10 +18648,30 @@ initializeMusicSystem(client);
 // =====================================================
 
 client.once("clientReady", async () => {
+    // --- NEU: Backup-, Dashboard- und Logging-Modul starten ---
+    // Die /backup-Befehle werden unten zusammen mit den eigenen Commands pro
+    // Server registriert (NICHT global, sonst erscheinen sie doppelt).
+    const allSlashCommands = [...slashCommands, ...backupModule.commands];
+
+    try {
+        global.__botCommandList = backupModule.commands.flatMap(c =>
+            (c.options || []).filter(o => o.type === 1).map(sub => ({
+                name: `backup ${sub.name}`,
+                description: sub.description
+            }))
+        );
+        backupModule.setup(client);
+        dashboardModule.setup(client);
+        loggingModule.setup(client);
+    } catch (error) {
+        console.error("❌ Fehler beim Starten von Backup/Dashboard/Logging:", error);
+    }
+    // --- ENDE NEU ---
+
     try {
         console.log("📝 Registriere Slash-Commands...");
 
-        const commandNames = slashCommands.map(command => command.name);
+        const commandNames = allSlashCommands.map(command => command.name);
         const duplicateNames = commandNames.filter(
             (name, index) => commandNames.indexOf(name) !== index
         );
@@ -18437,9 +18690,9 @@ client.once("clientReady", async () => {
 
         for (const guild of client.guilds.cache.values()) {
             try {
-                await guild.commands.set(slashCommands);
+                await guild.commands.set(allSlashCommands);
                 console.log(
-                    `✅ ${slashCommands.length} Slash-Commands für ${guild.name} (${guild.id}) registriert.`
+                    `✅ ${allSlashCommands.length} Slash-Commands für ${guild.name} (${guild.id}) registriert.`
                 );
             } catch (error) {
                 console.error(

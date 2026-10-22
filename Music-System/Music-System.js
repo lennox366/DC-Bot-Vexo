@@ -26,6 +26,17 @@ const {
     MessageFlags
 } = require("discord.js");
 
+const fs = require("fs");
+const path = require("path");
+
+// libsodium wird für die Verschlüsselung der Audio-Pakete benötigt.
+// Auf Windows hilft es oft, es explizit zu laden.
+try {
+    require("libsodium-wrappers");
+} catch (e) {
+    // Ignorieren, falls nicht vorhanden
+}
+
 const { DisTube, Events: DisTubeEvents, Playlist, Song } = require("distube");
 
 // yt-dlp übernimmt sowohl die YouTube-Suche als auch die Stream-Auflösung.
@@ -61,6 +72,10 @@ const MUSIC_EMPTY_COOLDOWN_SECONDS =
         : 60;
 
 const YTDLP_OPERATION_TIMEOUT_MS = 30_000;
+
+// Pfad zur optionalen cookies.txt Datei im Hauptverzeichnis des Bots.
+// Wird benötigt, wenn YouTube den Bot als "Bot" erkennt und eine Anmeldung fordert.
+const YTDLP_COOKIES_PATH = path.join(__dirname, "..", "cookies.txt");
 
 // Maximale Anzahl an Songs, die im /queue-Embed aufgelistet werden.
 const QUEUE_DISPLAY_LIMIT = 10;
@@ -214,6 +229,11 @@ function scheduleIdleLeave(distube, guildId) {
 async function runYtDlpJson(url, flags, operation) {
     const startedAt = Date.now();
 
+    // Automatisch Cookies hinzufügen, falls die Datei existiert
+    if (fs.existsSync(YTDLP_COOKIES_PATH)) {
+        flags = { ...flags, cookies: YTDLP_COOKIES_PATH };
+    }
+
     try {
         const result = await ytDlpJson(url, flags, {
             timeout: YTDLP_OPERATION_TIMEOUT_MS
@@ -223,9 +243,13 @@ async function runYtDlpJson(url, flags, operation) {
     } catch (error) {
         const elapsed = Date.now() - startedAt;
         const timedOut = elapsed >= YTDLP_OPERATION_TIMEOUT_MS - 1_000;
-        const details = error instanceof Error && error.message
+        let details = error instanceof Error && error.message
             ? error.message.slice(0, 500)
             : "Keine weiteren Details verfügbar.";
+
+        if (details.includes("Sign in to confirm you") || details.includes("confirm you're not a bot")) {
+            details += "\n\n💡 **Lösung:** YouTube blockiert den Bot. Bitte erstelle eine `cookies.txt` im Hauptverzeichnis des Bots.";
+        }
 
         throw new Error(
             `yt-dlp ${operation} ${timedOut ? `nach ${Math.round(elapsed / 1_000)} Sekunden abgebrochen (Timeout)` : "fehlgeschlagen"}: ${details}`,
@@ -327,7 +351,7 @@ class SearchableYtDlpPlugin extends YtDlpPlugin {
             preferFreeFormats: true,
             skipDownload: true,
             simulate: true,
-            format: "ba/ba*"
+            format: "bestaudio[ext=m4a]/bestaudio/best"
         }, "Audio-Stream-Auflösung");
 
         if (Array.isArray(info.entries) || !info.url) {
@@ -344,18 +368,18 @@ class SearchableYtDlpPlugin extends YtDlpPlugin {
 
 function createDisTubeInstance(client) {
     const distube = new DisTube(client, {
-    emitNewSongOnly: true,
-    savePreviousSongs: true,
-    nsfw: false,
-    ffmpeg: {
-        path: ffmpegStaticPath
-    },
-    plugins: [
-        new SearchableYtDlpPlugin({
-            update: false
-        })
-    ]
-});
+        emitNewSongOnly: true,
+        savePreviousSongs: true,
+        nsfw: false,
+        ffmpeg: {
+            path: ffmpegStaticPath
+        },
+        plugins: [
+            new SearchableYtDlpPlugin({
+                update: false
+            })
+        ]
+    });
 
     // =====================================================
     // EVENTS

@@ -3,6 +3,8 @@
 // Datei: KI-Chat.js
 // =====================================================
 
+const { AttachmentBuilder } = require("discord.js");
+
 const {
     isKIChatChannel,
     getKIChatChannelId
@@ -29,10 +31,72 @@ function setClient(client) {
 }
 
 // =====================================================
+// LANGE ANTWORTEN AUFTEILEN (Code-Blöcke bleiben intakt)
+// =====================================================
+
+const CHUNK_LIMIT = 1900;      // Discord erlaubt 2000
+const MAX_CHUNKS = 5;          // darüber hinaus als Datei senden
+
+function splitMessage(text, max = CHUNK_LIMIT) {
+
+    const chunks = [];
+
+    let current = "";
+    let openFence = null; // z. B. "```js"
+
+    const lines = text.split("\n");
+    const pieceSize = max - 20;
+
+    for (const rawLine of lines) {
+
+        // Extrem lange Einzelzeilen zerlegen
+        const pieces =
+            rawLine.length > pieceSize
+                ? rawLine.match(new RegExp(`[\\s\\S]{1,${pieceSize}}`, "g"))
+                : [rawLine];
+
+        for (const line of pieces) {
+
+            const reserve = openFence ? 4 : 0; // "\n```" zum Schließen
+
+            if (current.length + line.length + 1 + reserve > max) {
+
+                if (openFence) {
+                    current += "\n```";
+                }
+
+                chunks.push(current);
+
+                current = openFence ? openFence + "\n" : "";
+            }
+
+            if (current && !current.endsWith("\n")) {
+                current += "\n";
+            }
+
+            current += line;
+
+            // Code-Block-Status verfolgen
+            if (line.trim().startsWith("```")) {
+                openFence = openFence ? null : line.trim();
+            }
+        }
+    }
+
+    if (current.trim()) {
+        chunks.push(current);
+    }
+
+    return chunks;
+}
+
+// =====================================================
 // NACHRICHTEN-HANDLER
 // =====================================================
 
 async function handleKIChatMessage(message) {
+
+    let typingInterval = null;
 
     try {
 
@@ -80,10 +144,14 @@ async function handleKIChatMessage(message) {
             generateAIResponse
         } = require("./KI-Chat-Technik");
 
-        // Tippen anzeigen
+        // Tippen anzeigen (bei langen Code-Antworten regelmäßig erneuern)
         try {
             await message.channel.sendTyping();
         } catch (_) {}
+
+        typingInterval = setInterval(() => {
+            message.channel.sendTyping().catch(() => {});
+        }, 8000);
 
         // KI-Antwort erzeugen
         const response = await generateAIResponse(
@@ -92,18 +160,21 @@ async function handleKIChatMessage(message) {
                 guildId: message.guild.id,
                 channelId: message.channel.id,
                 userId: message.author.id,
-                username: message.author.username
+                username: message.author.username,
+                guild: message.guild,
+                member: message.member
             }
         );
+
+        clearInterval(typingInterval);
+        typingInterval = null;
 
         if (!response) {
             return;
         }
 
-        // Discord-Limit
-        const MAX_LENGTH = 2000;
-
-        if (response.length <= MAX_LENGTH) {
+        // Kurze Antwort
+        if (response.length <= 2000) {
 
             await message.reply({
                 content: response,
@@ -115,20 +186,27 @@ async function handleKIChatMessage(message) {
             return;
         }
 
-        // Lange Antworten aufteilen
-        const chunks = [];
+        // Lange Antwort aufteilen
+        const chunks = splitMessage(response);
 
-        for (
-            let i = 0;
-            i < response.length;
-            i += MAX_LENGTH
-        ) {
-            chunks.push(
-                response.substring(
-                    i,
-                    i + MAX_LENGTH
-                )
+        // Sehr lange Antworten (z. B. ganze Dateien) als Datei senden
+        if (chunks.length > MAX_CHUNKS) {
+
+            const file = new AttachmentBuilder(
+                Buffer.from(response, "utf8"),
+                { name: "antwort.md" }
             );
+
+            await message.reply({
+                content:
+                    "📄 Die Antwort ist sehr lang, deshalb habe ich sie als Datei angehängt.",
+                files: [file],
+                allowedMentions: {
+                    repliedUser: false
+                }
+            });
+
+            return;
         }
 
         // Erste Nachricht als Antwort
@@ -171,6 +249,12 @@ async function handleKIChatMessage(message) {
             });
 
         } catch (_) {}
+
+    } finally {
+
+        if (typingInterval) {
+            clearInterval(typingInterval);
+        }
     }
 }
 
