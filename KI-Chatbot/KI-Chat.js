@@ -4,6 +4,7 @@
 // =====================================================
 
 const { AttachmentBuilder } = require("discord.js");
+const { handleCodeMessage, registerCodeInteractions } = require("./KI-Code-Manager");
 
 const {
     isKIChatChannel,
@@ -132,6 +133,8 @@ async function handleKIChatMessage(message) {
         ) {
             return;
         }
+
+        if (await handleCodeMessage(message)) return;
 
         const userMessage = message.content.trim();
 
@@ -275,6 +278,7 @@ function initializeKIChat(client) {
     }
 
     discordClient = client;
+    registerCodeInteractions(client);
 
     client.on(
         "messageCreate",

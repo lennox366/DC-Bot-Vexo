@@ -4,13 +4,29 @@ const {
     PermissionsBitField
 } = require("discord.js");
 
-const { musicCommandDefinitions } = require("./Music-System/Music-System");
+const {
+    musicCommandDefinitions
+} = require("./Music-System/Music-System");
+
+// =====================================================
+// 💫 VEXO RP - VORLAGEN-SYSTEM
+// =====================================================
+
+const {
+    command: vorlageCommand
+} = require("./Vorlagen-System");
 
 // =====================================================
 // SLASH COMMAND DEFINITIONEN
 // =====================================================
 
 const slashCommands = [
+
+    // =====================================================
+    // VORLAGEN-SYSTEM
+    // =====================================================
+
+    vorlageCommand,
 
     // =====================================================
     // TICKET-SYSTEM
@@ -22,6 +38,36 @@ const slashCommands = [
         .setDefaultMemberPermissions(
             PermissionsBitField.Flags.ManageGuild
         ),
+
+    // =====================================================
+    // IMMOBILIEN-PANEL
+    // =====================================================
+
+    new SlashCommandBuilder()
+        .setName("immobilienpanel")
+        .setDescription("Erstellt das Immobilien-Ticket-Panel im aktuellen Kanal")
+        .setDefaultMemberPermissions(
+            PermissionsBitField.Flags.ManageGuild
+        ),
+
+    // =====================================================
+    // /ticketsetup – sämtliche Ticket-Einstellungen
+    // =====================================================
+
+    new SlashCommandBuilder()
+        .setName("ticketsetup")
+        .setDescription("Konfiguriert das Vexo RP Ticketsystem")
+        .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild)
+        .addSubcommand(sub => sub.setName("log").setDescription("Legt den Ticket-Logkanal fest")
+            .addChannelOption(opt => opt.setName("kanal").setDescription("Logkanal").setRequired(true)))
+        .addSubcommand(sub => sub.setName("bewertungen").setDescription("Legt den Feedback-Kanal fest")
+            .addChannelOption(opt => opt.setName("kanal").setDescription("Feedback-Kanal").setRequired(true)))
+        .addSubcommand(sub => sub.setName("nachtsperre").setDescription("Schaltet die Nachtsperre an oder aus")
+            .addStringOption(opt => opt.setName("status").setDescription("Nachtsperre")
+                .setRequired(true).addChoices({name:"An",value:"an"},{name:"Aus",value:"aus"})))
+        .addSubcommand(sub => sub.setName("name").setDescription("Ändert den Panelnamen")
+            .addStringOption(opt => opt.setName("text").setDescription("Neuer Panelname").setRequired(true)))
+        .addSubcommand(sub => sub.setName("status").setDescription("Zeigt die Ticket-Einstellungen")),
 
     // =====================================================
     // INDEX.JS BEFEHLE
@@ -399,9 +445,19 @@ const slashCommands = [
 
 ].map(command => command.toJSON());
 
+// =====================================================
+// MUSIKBEFEHLE REGISTRIEREN
+// =====================================================
+
 // Musikbefehle ebenfalls in die zentrale Registrierung aufnehmen.
-// Andernfalls entfernt client.application.commands.set() sie wieder.
+// Andernfalls entfernt client.application.commands.set()
+// sie bei der nächsten Registrierung wieder.
+
 slashCommands.push(...musicCommandDefinitions);
+
+// =====================================================
+// EXPORT
+// =====================================================
 
 module.exports = {
     slashCommands

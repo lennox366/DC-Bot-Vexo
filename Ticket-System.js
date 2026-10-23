@@ -12,7 +12,10 @@ const {
     StringSelectMenuBuilder,
     ChannelType,
     PermissionFlagsBits,
-    AttachmentBuilder
+    AttachmentBuilder,
+    ModalBuilder,
+    TextInputBuilder,
+    TextInputStyle
 } = require("discord.js");
 
 // =====================================================
@@ -40,8 +43,10 @@ const BOT_OWNER_USER_IDS = [
 ];
 
 
-const REMINDER_INTERVAL = 2 * 60 * 60 * 1000;
+const REMINDER_INTERVAL = 5 * 60 * 60 * 1000;
+const TICKET_MAX_AGE = 48 * 60 * 60 * 1000;
 const REMINDER_CHECK_INTERVAL = 5 * 60 * 1000;
+const FEEDBACK_FILE = path.join(__dirname, "Ticket-Feedback.json");
 
 // =====================================================
 // DISCORD-KATEGORIEN
@@ -215,55 +220,31 @@ const GLOBAL_ACCESS_ROLES = [
 
 const TICKET_TYPES = [
     {
+        id: "fragen",
+        label: "Fragen",
+        emoji: "❓",
+        description: "Allgemeine Fragen",
+        categoryId: DISCORD_CATEGORIES.allgemeinerSupport,
+        roleIds: [
+            "1559659267269595149", // Supporter
+            "1559659267269595154", // Moderator
+            "1559659267299217462", // Administrator
+            "1559659267299217467", // Eventleitung
+            "1559659267307339839"  // Fraktionsverwaltung
+        ]
+    },
+    {
         id: "entbannung",
         label: "Entbannung",
         emoji: "🔓",
         description: "Antrag auf Entbannung",
         categoryId: DISCORD_CATEGORIES.entbannungsantrag,
         roleIds: [
-            ...ROLE_GROUPS.moderation,
-            ...ROLE_GROUPS.administration
-        ]
-    },
-    {
-        id: "intern",
-        label: "Intern",
-        emoji: "🔒",
-        description: "Interne Angelegenheiten",
-        categoryId: DISCORD_CATEGORIES.highteamFragen,
-        roleIds: [
-            ...ROLE_GROUPS.leitungsebene
-        ]
-    },
-    {
-        id: "highteam",
-        label: "High Team",
-        emoji: "👑",
-        description: "Kontakt zum High Team",
-        categoryId: DISCORD_CATEGORIES.highteamFragen,
-        roleIds: [
-            ...ROLE_GROUPS.highteam
-        ]
-    },
-    {
-        id: "coowner",
-        label: "Co-Owner / Owner",
-        emoji: "🏛️",
-        description: "Kontakt zur Serverleitung",
-        categoryId: DISCORD_CATEGORIES.leitungsFragen,
-        roleIds: [
-            ROLES.coowner,
-            ROLES.owner
-        ]
-    },
-    {
-        id: "teambeschwerde",
-        label: "Team Beschwerde",
-        emoji: "📢",
-        description: "Beschwerde über Teammitglieder",
-        categoryId: DISCORD_CATEGORIES.teambeschwerden,
-        roleIds: [
-            ...ROLE_GROUPS.administration
+            "1559659267269595154", // Moderator
+            "1559659267299217462", // Administrator
+            "1559659267299217467", // Eventleitung
+            "1559659267307339839", // Fraktionsverwaltung
+            "1559659267307339843"  // Low-Ausbilder
         ]
     },
     {
@@ -273,29 +254,10 @@ const TICKET_TYPES = [
         description: "Allgemeine Anliegen",
         categoryId: DISCORD_CATEGORIES.allgemeinerSupport,
         roleIds: [
-            ...ROLE_GROUPS.support,
-            ...ROLE_GROUPS.moderation,
-            ...ROLE_GROUPS.administration
-        ]
-    },
-    {
-        id: "beschwerde",
-        label: "Generelle Beschwerden",
-        emoji: "⚠️",
-        description: "Allgemeine Beschwerden",
-        categoryId: DISCORD_CATEGORIES.allgemeinerSupport,
-        roleIds: [
-            ...ROLE_GROUPS.highteam
-        ]
-    },
-    {
-        id: "serverwechsel",
-        label: "Server Wechsel",
-        emoji: "🔄",
-        description: "Anfrage zum Serverwechsel",
-        categoryId: DISCORD_CATEGORIES.leitungsFragen,
-        roleIds: [
-            ...ROLE_GROUPS.projektleitung
+            "1559659267324256372", // High Team
+            "1559659267324256366", // Teamleitung
+            "1559659267324256373", // Supervisor
+            "1559659267349553265"  // Management
         ]
     },
     {
@@ -305,9 +267,8 @@ const TICKET_TYPES = [
         description: "Partnerschaftsanfragen",
         categoryId: DISCORD_CATEGORIES.leitungsFragen,
         roleIds: [
-            ...ROLE_GROUPS.management,
-            ...ROLE_GROUPS.moderation,
-            ...ROLE_GROUPS.administration
+            "1559659267349553265", // Management
+            "1559659267324256372"  // High Team
         ]
     },
     {
@@ -317,8 +278,16 @@ const TICKET_TYPES = [
         description: "Fraktionsanliegen",
         categoryId: DISCORD_CATEGORIES.fraktionenWaffenscheine,
         roleIds: [
-            ...ROLE_GROUPS.fraktionsverwaltung
+            "1559659267307339839"  // Fraktionsverwaltung
         ]
+    },
+    {
+        id: "immobilien",
+        label: "Immobilien-Ticket",
+        emoji: "🏠",
+        description: "Immobilien, Häuser und Grundstücke",
+        categoryId: DISCORD_CATEGORIES.fraktionenWaffenscheine,
+        roleIds: ["1559659267307339839"]
     },
     {
         id: "waffenschein",
@@ -327,7 +296,7 @@ const TICKET_TYPES = [
         description: "Waffenschein beantragen",
         categoryId: DISCORD_CATEGORIES.fraktionenWaffenscheine,
         roleIds: [
-            ...ROLE_GROUPS.fraktionsverwaltung
+            "1559659267307339839"  // Fraktionsverwaltung
         ]
     },
     {
@@ -337,17 +306,82 @@ const TICKET_TYPES = [
         description: "Content-Creator-Anfragen",
         categoryId: DISCORD_CATEGORIES.allgemeinerSupport,
         roleIds: [
-            ...ROLE_GROUPS.highteam
+            "1559659267349553271", // Leitung
+            "1559659267349553272", // Direktor
+            "1559659267378778217", // High-Ausbilder
+            "1559659267378778221"  // Projektleitung
         ]
     },
     {
-        id: "fragen",
-        label: "Fragen",
-        emoji: "❓",
-        description: "Allgemeine Fragen",
+        id: "serverwechsel",
+        label: "Server Wechsel",
+        emoji: "🔄",
+        description: "Anfrage zum Serverwechsel",
+        categoryId: DISCORD_CATEGORIES.leitungsFragen,
+        roleIds: [
+            "1559659267378778221", // Projektleitung
+            "1559659267408134198", // Owner/Co.Owner
+            "1561728076231086243"  // Founder/in
+        ]
+    },
+    {
+        id: "beschwerde",
+        label: "Generelle Beschwerden",
+        emoji: "⚠️",
+        description: "Allgemeine Beschwerden",
         categoryId: DISCORD_CATEGORIES.allgemeinerSupport,
         roleIds: [
-            ...ROLE_GROUPS.staff
+            "1559659267324256372", // High Team
+            "1559659267324256366", // Teamleitung
+            "1559659267324256373", // Supervisor
+            "1559659267349553265", // Management
+            "1559659267349553271", // Leitung
+            "1559659267349553272", // Direktor
+            "1559659267378778217"  // High-Ausbilder
+        ]
+    },
+    {
+        id: "teambeschwerde",
+        label: "Team Beschwerde",
+        emoji: "📢",
+        description: "Beschwerde über Teammitglieder",
+        categoryId: DISCORD_CATEGORIES.teambeschwerden,
+        roleIds: [
+            "1559659267324256372", // High Team
+            "1559659267349553265", // Management
+            "1559659267349553272"  // Direktor
+        ]
+    },
+    {
+        id: "coowner",
+        label: "Co-Owner / Owner",
+        emoji: "🏛️",
+        description: "Kontakt zur Serverleitung",
+        categoryId: DISCORD_CATEGORIES.leitungsFragen,
+        roleIds: [
+            "1559659267408134198"  // Owner/Co.Owner
+        ]
+    },
+    {
+        id: "intern",
+        label: "Intern",
+        emoji: "🔒",
+        description: "Interne Angelegenheiten",
+        categoryId: DISCORD_CATEGORIES.highteamFragen,
+        roleIds: [
+            "1559659267378778221", // Projektleitung
+            "1559659267408134198", // Owner/Co.Owner
+            "1561728076231086243"  // Founder/in
+        ]
+    },
+    {
+        id: "highteam",
+        label: "High Team",
+        emoji: "👑",
+        description: "Kontakt zum High Team",
+        categoryId: DISCORD_CATEGORIES.highteamFragen,
+        roleIds: [
+            "1559659267324256372"  // High Team
         ]
     }
 ];
@@ -419,6 +453,7 @@ function getGuildConfig(guildId) {
 
     return {
         logChannelId: null,
+        feedbackChannelId: "1559659271329808415",
         nightLock: true,
         name: SERVER_NAME,
         ...saved
@@ -540,73 +575,69 @@ function getDisplayName(member) {
     );
 }
 
+
 // =====================================================
-// PANEL
+// 💫 VEXO RP | V1 - PREMIUM SUPPORT PANEL
 // =====================================================
 
 function buildPanel(guild, config) {
     const name = config.name || SERVER_NAME;
 
-    const categories = TICKET_TYPES.map(type => {
-        return `${type.emoji} **${type.label}**`;
-    }).join("\n");
-
     const embed = new EmbedBuilder()
-        .setColor(COLOR)
-        .setTitle(`🎫 ${name} • Ticketsystem`)
-        .setDescription(
-            [
-                "━━━━━━━━━━━━━━━━━━━━━━━━",
-                "",
-                "## Willkommen beim Support!",
-                "",
-                "Du benötigst Hilfe oder hast ein Anliegen?",
-                "Unser Team hilft dir gerne weiter.",
-                "",
-                "**📂 Ticket-Kategorien:**",
-                "",
-                categories,
-                "",
-                "━━━━━━━━━━━━━━━━━━━━━━━━",
-                "",
-                "**🎟️ So funktioniert es:**",
-                "",
-                "1. Klicke auf **Ticket erstellen**.",
-                "2. Wähle die passende Kategorie.",
-                "3. Beschreibe dein Anliegen.",
-                "4. Das zuständige Team wird benachrichtigt.",
-                "",
-                "━━━━━━━━━━━━━━━━━━━━━━━━",
-                "",
-                config.nightLock !== false
-                    ? "🌙 Nachtsperre: 00:00–08:00 Uhr"
-                    : "🌙 Nachtsperre: Deaktiviert",
-                "",
-                "🔒 Private Support-Tickets",
-                "🔔 Automatische Team-Benachrichtigung",
-                "",
-                "━━━━━━━━━━━━━━━━━━━━━━━━"
-            ].join("\n")
-        )
+        .setColor(0x8052FF)
+        .setAuthor({
+            name: "✦ VEXO RP  |  OFFICIAL SUPPORT"
+        })
+        .setTitle("💫 VEXO SUPPORT HUB")
+        .setDescription([
+            "### ✦ DEINE COMMUNITY. UNSER SUPPORT.",
+            "",
+            "Willkommen im offiziellen Support-Center",
+            "von **Vexo RP | V1**.",
+            "",
+            "Du hast eine Frage, benötigst Hilfe oder",
+            "möchtest ein vertrauliches Anliegen klären?",
+            "",
+            "Wir verbinden dich mit dem Team,",
+            "das für dein Anliegen zuständig ist.",
+            "",
+            "╭・────────────────────・╮",
+            "　　**UNSERE SUPPORT-BEREICHE**",
+            "╰・────────────────────・╯",
+            "### 🎟️ DEIN NÄCHSTER SCHRITT",
+            "",
+            "Klicke auf **Support anfragen** und",
+            "wähle deine gewünschte Ticket-Art.",
+            "",
+            "Dein Ticket wird privat erstellt.",
+            "Die zuständigen Teamrollen erhalten",
+            "automatisch eine Benachrichtigung.",
+            "",
+            config.nightLock !== false
+                ? "🌙 **Ticketzeiten:** 08:00 – 00:00 Uhr"
+                : "🟢 **Ticket-Erstellung:** Rund um die Uhr",
+            "",
+            "🔐 **Vertraulich & rollenbasiert**"
+        ].join("\n"))
         .setFooter({
-            text: `${name} • Support`
+            text: `${name}  ✦  SUPPORT EXPERIENCE`
         })
         .setTimestamp();
 
     const button = new ButtonBuilder()
         .setCustomId("ticket_open")
-        .setLabel("Ticket erstellen")
-        .setEmoji("🎟️")
+        .setLabel("Support anfragen")
+        .setEmoji("💌")
         .setStyle(ButtonStyle.Primary);
 
     return {
         embeds: [embed],
         components: [
-            new ActionRowBuilder()
-                .addComponents(button)
+            new ActionRowBuilder().addComponents(button)
         ]
     };
 }
+
 
 // =====================================================
 // KATEGORIE-AUSWAHL
@@ -663,6 +694,13 @@ function ticketButtons(claimed = false) {
                 .setEmoji("🙋")
                 .setStyle(ButtonStyle.Success)
                 .setDisabled(claimed),
+
+            new ButtonBuilder()
+                .setCustomId("ticket_release")
+                .setLabel("Freigeben")
+                .setEmoji("🔓")
+                .setStyle(ButtonStyle.Secondary)
+                .setDisabled(!claimed),
 
             new ButtonBuilder()
                 .setCustomId("ticket_close")
@@ -1133,6 +1171,214 @@ async function buildTranscript(channel) {
 }
 
 // =====================================================
+// TICKET ABSCHLIESSEN, DM + FEEDBACK + TRANSCRIPT
+// =====================================================
+
+const closingTickets = new Set();
+
+async function closeTicketWithFeedback(channel, ticket, reason, closedBy) {
+    if (!channel || closingTickets.has(channel.id)) return false;
+    closingTickets.add(channel.id);
+    try {
+        const config = getGuildConfig(channel.guild.id);
+        const typeName = getTicketType(ticket.type)?.label || ticket.type;
+        const user = await channel.client.users.fetch(ticket.userId).catch(() => null);
+
+        // Die DM enthält fünf Stern-Buttons; die Bewertung erfolgt per Modal.
+        const feedbackState = readJSON(FEEDBACK_FILE, { entries: {}, owners: {}, tickets: {} });
+        feedbackState.entries ||= {};
+        feedbackState.owners ||= {};
+        feedbackState.tickets ||= {};
+        feedbackState.owners[channel.id] = ticket.userId;
+        feedbackState.tickets[channel.id] = {
+            guildId: channel.guild.id,
+            type: typeName,
+            claimedBy: ticket.claimedBy || null,
+            closedBy: String(closedBy),
+            closedAt: Date.now()
+        };
+        if (!writeJSON(FEEDBACK_FILE, feedbackState)) {
+            console.error("[TICKET] Feedback-Daten konnten nicht gespeichert werden.");
+        }
+        if (user) {
+            const feedbackRow = new ActionRowBuilder().addComponents(
+                ...[1, 2, 3, 4, 5].map(stars =>
+                    new ButtonBuilder()
+                        .setCustomId(`ticket_feedback_star_${stars}_${channel.id}`)
+                        .setLabel("⭐".repeat(stars))
+                        .setStyle(ButtonStyle.Primary)
+                )
+            );
+            await user.send({
+                embeds: [new EmbedBuilder()
+                    .setColor(0x0893F3)
+                    .setAuthor({ name: "💫 VEXO RP | V1 • SUPPORT" })
+                    .setTitle("💙 DEINE MEINUNG ZÄHLT!")
+                    .setDescription([
+                        "━━━━━━━━━━━━━━━━━━━━",
+                        "",
+                        "🔒 **Dein Support-Ticket wurde geschlossen.**",
+                        "",
+                        "Vielen Dank, dass du den Support von **Vexo RP | V1** genutzt hast!",
+                        "",
+                        "⭐ **Wie zufrieden warst du mit unserem Support?**",
+                        "",
+                        "Wähle unten **1 bis 5 Sterne** aus. Anschließend kannst du uns in einem kurzen Formular sagen, warum du so bewertet hast.",
+                        "",
+                        "🔐 Dein Feedback wird an unsere Serververwaltung weitergeleitet.",
+                        "",
+                        "━━━━━━━━━━━━━━━━━━━━"
+                    ].join("\n"))
+                    .addFields(
+                        { name: "🎫 Ticketart", value: typeName, inline: true },
+                        { name: "👨‍💻 Bearbeitet von", value: ticket.claimedBy ? `<@${ticket.claimedBy}>` : "Nicht übernommen", inline: true }
+                    )
+                    .setFooter({ text: "💫 Vexo RP | V1 • Support Experience" })
+                    .setTimestamp()],
+                components: [feedbackRow],
+                allowedMentions: { parse: [] }
+            }).catch(error => console.warn(`[TICKET] DM an ${ticket.userId} nicht möglich:`, error.message));
+        }
+
+        const logEmbed = new EmbedBuilder().setColor(0xED4245)
+            .setTitle("🔒 Ticket geschlossen")
+            .addFields(
+                { name: "Ersteller", value: `<@${ticket.userId}>`, inline: true },
+                { name: "Ticketart", value: typeName, inline: true },
+                { name: "Geschlossen von", value: closedBy, inline: true },
+                { name: "Grund", value: reason }
+            ).setTimestamp();
+        if (config.logChannelId) {
+            try {
+                const transcript = await buildTranscript(channel);
+                const file = new AttachmentBuilder(Buffer.from(transcript || "Keine Nachrichten", "utf8"), {
+                    name: `transcript-${channel.id}.txt`
+                });
+                await sendLog(channel.guild, config, logEmbed, [file]);
+            } catch (error) {
+                console.error("[TICKET] Transcript fehlgeschlagen:", error);
+                await sendLog(channel.guild, config, logEmbed);
+            }
+        }
+
+        const data = loadData();
+        delete data.tickets[channel.id];
+        if (!saveData(data)) {
+            console.error("[TICKET] Konnte Ticket-Daten nicht speichern:", channel.id);
+            return false;
+        }
+        await channel.send({
+            embeds: [new EmbedBuilder().setColor(0xED4245).setTitle("🔒 Ticket geschlossen")
+                .setDescription(`${reason}\n\nDer Kanal wird in 5 Sekunden gelöscht.`).setTimestamp()],
+            allowedMentions: { parse: [] }
+        }).catch(() => {});
+        setTimeout(() => channel.delete(reason).catch(error => {
+            console.error("[TICKET] Kanal konnte nicht gelöscht werden:", error);
+        }), 5000);
+        return true;
+    } finally {
+        closingTickets.delete(channel.id);
+    }
+}
+
+async function handleTicketFeedback(interaction) {
+    if (!interaction.isButton() && !interaction.isModalSubmit()) return;
+    const id = interaction.customId || "";
+    const buttonMatch = /^ticket_feedback_star_([1-5])_(\d+)$/.exec(id);
+    const modalMatch = /^ticket_feedback_modal_([1-5])_(\d+)$/.exec(id);
+    if (!buttonMatch && !modalMatch) return;
+
+    const [, ratingString, channelId] = buttonMatch || modalMatch;
+    const rating = Number(ratingString);
+    const feedback = readJSON(FEEDBACK_FILE, { entries: {}, owners: {}, tickets: {} });
+    feedback.entries ||= {};
+    feedback.owners ||= {};
+    feedback.tickets ||= {};
+    const key = `${channelId}:${interaction.user.id}`;
+
+    if (feedback.owners[channelId] !== interaction.user.id) {
+        return interaction.reply({ content: "🔒 Du darfst dieses Ticket nicht bewerten.", flags: 64 });
+    }
+    if (feedback.entries[key]) {
+        return interaction.reply({ content: "ℹ️ Du hast dieses Ticket bereits bewertet.", flags: 64 });
+    }
+
+    if (buttonMatch) {
+        const modal = new ModalBuilder()
+            .setCustomId(`ticket_feedback_modal_${rating}_${channelId}`)
+            .setTitle("💙 Vexo RP | Bewertung");
+        const reason = new TextInputBuilder()
+            .setCustomId("ticket_feedback_reason")
+            .setLabel("Grund für deine Bewertung")
+            .setPlaceholder("Warum gibst du diese Bewertung?")
+            .setStyle(TextInputStyle.Paragraph)
+            .setRequired(true)
+            .setMinLength(2)
+            .setMaxLength(1000);
+        modal.addComponents(new ActionRowBuilder().addComponents(reason));
+        return interaction.showModal(modal);
+    }
+
+    await interaction.deferReply({ flags: 64 });
+    const reason = interaction.fields.getTextInputValue("ticket_feedback_reason").trim();
+    if (reason.length < 2) {
+        return interaction.editReply("❌ Bitte gib einen Bewertungsgrund an.");
+    }
+    // Erneut lesen, damit zwischen Öffnen und Absenden kein Duplikat entsteht.
+    const current = readJSON(FEEDBACK_FILE, { entries: {}, owners: {}, tickets: {} });
+    current.entries ||= {};
+    if (current.entries[key]) {
+        return interaction.editReply("ℹ️ Du hast dieses Ticket bereits bewertet.");
+    }
+    const ticketInfo = current.tickets?.[channelId] || {};
+    current.entries[key] = {
+        ticketChannelId: channelId,
+        guildId: ticketInfo.guildId || null,
+        userId: interaction.user.id,
+        stars: rating,
+        reason,
+        claimedBy: ticketInfo.claimedBy || null,
+        ratedAt: Date.now()
+    };
+    if (!writeJSON(FEEDBACK_FILE, current)) {
+        return interaction.editReply("❌ Bewertung konnte nicht gespeichert werden.");
+    }
+
+    const guild = ticketInfo.guildId
+        ? await interaction.client.guilds.fetch(ticketInfo.guildId).catch(() => null)
+        : null;
+    if (guild) {
+        const config = getGuildConfig(guild.id);
+        if (config.feedbackChannelId) {
+            const logChannel = await guild.channels.fetch(config.feedbackChannelId).catch(() => null);
+            if (logChannel?.isTextBased()) {
+                const ratingDisplay = "⭐".repeat(rating) + "☆".repeat(5 - rating);
+                const embed = new EmbedBuilder()
+                    .setColor(0x0893F3)
+                    .setTitle("💙 VEXO RP | NEUE SUPPORT-BEWERTUNG")
+                    .setDescription("━━━━━━━━━━━━━━━━━━━━")
+                    .addFields(
+                        { name: "👤 Von", value: `<@${interaction.user.id}>` },
+                        { name: "⭐ Bewertung", value: `${ratingDisplay} (**${rating}/5**)` },
+                        { name: "🛠️ Staff", value: ticketInfo.claimedBy ? `<@${ticketInfo.claimedBy}>` : "Nicht übernommen" },
+                        { name: "📝 Grund", value: reason },
+                        { name: "🕒 Wann", value: `<t:${Math.floor(Date.now()/1000)}:f>` }
+                    )
+                    .setFooter({ text: "Vexo RP Ticketsystem • Bewertungen" })
+                    .setTimestamp();
+                await logChannel.send({ embeds: [embed], allowedMentions: { parse: [] } })
+                    .catch(error => console.error("[TICKET] Bewertungslog fehlgeschlagen:", error));
+            }
+        }
+    }
+    await interaction.editReply(`💙 Vielen Dank für dein Feedback! Du hast **${rating}/5 Sterne** vergeben.`);
+    // Buttons nach erfolgreicher Bewertung deaktivieren.
+    if (interaction.message?.editable) {
+        await interaction.message.edit({ components: [] }).catch(() => {});
+    }
+}
+
+// =====================================================
 // INTERAKTIONEN
 // =====================================================
 
@@ -1151,6 +1397,16 @@ async function handleTicketInteraction(interaction) {
         const config = getGuildConfig(
             interaction.guild.id
         );
+
+        // Eigenständiges Immobilien-Panel (ohne Auswahlmenü)
+        if (interaction.isButton() && id === "ticket_immobilien_open") {
+            await interaction.deferReply({ flags: 64 });
+            const member = await interaction.guild.members.fetch(interaction.user.id);
+            const result = await createTicket(interaction.guild, member, "immobilien", { source: "immobilien-panel" });
+            return interaction.editReply({
+                content: result.ok ? `✅ Dein Immobilien-Ticket wurde erstellt: <#${result.channel.id}>` : describeFailure(result)
+            });
+        }
 
         // ---------------------------------------------
         // TICKET ERSTELLEN
@@ -1344,6 +1600,90 @@ async function handleTicketInteraction(interaction) {
         }
 
         // ---------------------------------------------
+        // TICKET FREIGEBEN
+        // ---------------------------------------------
+
+        if (interaction.isButton() && id === "ticket_release") {
+            const data = loadData();
+            const ticket = data.tickets[interaction.channelId];
+
+            if (!ticket) {
+                return interaction.reply({
+                    content: "❌ Kein aktives Ticket.",
+                    flags: 64
+                });
+            }
+
+            const member = await interaction.guild.members.fetch(interaction.user.id);
+
+            if (!isStaff(member, ticket.type)) {
+                return interaction.reply({
+                    content: "🔒 Nur zuständige Teammitglieder dürfen dieses Ticket freigeben.",
+                    flags: 64
+                });
+            }
+
+            if (!ticket.claimedBy) {
+                return interaction.reply({
+                    content: "⚠️ Dieses Ticket wurde noch nicht übernommen.",
+                    flags: 64
+                });
+            }
+
+            if (ticket.claimedBy !== interaction.user.id && !isGlobalStaff(member)) {
+                return interaction.reply({
+                    content: "🔒 Nur das Teammitglied, das das Ticket übernommen hat, oder die Serverleitung darf es freigeben.",
+                    flags: 64
+                });
+            }
+
+            const staffName = getDisplayName(member);
+            ticket.claimedBy = null;
+            ticket.lastReminder = Date.now();
+
+            if (!saveData(data)) {
+                return interaction.reply({
+                    content: "❌ Die Freigabe konnte nicht gespeichert werden.",
+                    flags: 64
+                });
+            }
+
+            await interaction.update({
+                components: [ticketButtons(false)]
+            });
+
+            const releaseEmbed = new EmbedBuilder()
+                .setColor(0xF1C40F)
+                .setTitle("🔓 Ticket freigegeben!")
+                .setDescription([
+                    "━━━━━━━━━━━━━━━━━━━━━━━━",
+                    "",
+                    `**${staffName}** hat dieses Ticket freigegeben.`,
+                    "",
+                    "📋 Das Ticket ist wieder offen und kann",
+                    "von einem anderen zuständigen Teammitglied",
+                    "übernommen werden.",
+                    "",
+                    "🤝 Bitte habe etwas Geduld, bis sich",
+                    "jemand Neues um dein Anliegen kümmert.",
+                    "",
+                    "━━━━━━━━━━━━━━━━━━━━━━━━"
+                ].join("\n"))
+                .addFields({
+                    name: "📌 Ticket-Status",
+                    value: "🟡 Offen – wartet auf Übernahme",
+                    inline: false
+                })
+                .setFooter({ text: `${SERVER_NAME} • Support-Team` })
+                .setTimestamp();
+
+            return interaction.channel.send({
+                embeds: [releaseEmbed],
+                allowedMentions: { parse: [] }
+            });
+        }
+
+        // ---------------------------------------------
         // TICKET SCHLIESSEN
         // ---------------------------------------------
 
@@ -1380,108 +1720,14 @@ async function handleTicketInteraction(interaction) {
                 });
             }
 
-            await interaction.reply({
-                content:
-                    "🔒 Das Ticket wird geschlossen ..."
+            await interaction.deferReply({ flags: 64 });
+            const closed = await closeTicketWithFeedback(
+                interaction.channel, ticket, "Manuell durch das Support-Team geschlossen", getDisplayName(member)
+            );
+            await interaction.editReply({ content: closed
+                ? "✅ Ticket geschlossen. Der Ersteller erhält eine Feedback-DM, sofern DMs erlaubt sind."
+                : "❌ Das Ticket konnte nicht geschlossen werden."
             });
-
-            const closerName = getDisplayName(member);
-
-            const closeEmbed = new EmbedBuilder()
-                .setColor(0xED4245)
-                .setTitle("🔒 Ticket geschlossen")
-                .setDescription(
-                    [
-                        "━━━━━━━━━━━━━━━━━━━━━━━━",
-                        "",
-                        `**${closerName}** hat dieses Ticket geschlossen.`,
-                        "",
-                        "Vielen Dank, dass du unseren",
-                        "Support genutzt hast!",
-                        "",
-                        "🗑️ Der Kanal wird in 5 Sekunden gelöscht.",
-                        "",
-                        "━━━━━━━━━━━━━━━━━━━━━━━━"
-                    ].join("\n")
-                )
-                .setFooter({
-                    text: SERVER_NAME
-                })
-                .setTimestamp();
-
-            await interaction.channel.send({
-                embeds: [closeEmbed],
-                allowedMentions: {
-                    parse: []
-                }
-            }).catch(() => {});
-
-            // Transcript
-            if (config.logChannelId) {
-                try {
-                    const transcript = await buildTranscript(
-                        interaction.channel
-                    );
-
-                    const attachment = new AttachmentBuilder(
-                        Buffer.from(
-                            transcript || "Keine Nachrichten",
-                            "utf8"
-                        ),
-                        {
-                            name:
-                                `transcript-${interaction.channelId}.txt`
-                        }
-                    );
-
-                    await sendLog(
-                        interaction.guild,
-                        config,
-                        new EmbedBuilder()
-                            .setColor(0xED4245)
-                            .setTitle("🔒 Ticket geschlossen")
-                            .addFields(
-                                {
-                                    name: "Ersteller-ID",
-                                    value: ticket.userId,
-                                    inline: true
-                                },
-                                {
-                                    name: "Geschlossen von",
-                                    value: closerName,
-                                    inline: true
-                                },
-                                {
-                                    name: "Ticket-Art",
-                                    value: getTicketType(
-                                        ticket.type
-                                    )?.label || ticket.type,
-                                    inline: true
-                                }
-                            )
-                            .setTimestamp(),
-                        [attachment]
-                    );
-                } catch (error) {
-                    console.error(
-                        "[TICKET] Transcript-Fehler:",
-                        error
-                    );
-                }
-            }
-
-            delete data.tickets[
-                interaction.channelId
-            ];
-
-            saveData(data);
-
-            setTimeout(() => {
-                interaction.channel.delete(
-                    "Ticket geschlossen"
-                ).catch(console.error);
-            }, 5000);
-
             return;
         }
 
@@ -1511,8 +1757,10 @@ async function handleTicketInteraction(interaction) {
     }
 }
 
+
 // =====================================================
-// /ticketsystem
+// 🎫 VEXO RP | /ticketsystem
+// Mit Fehlerdiagnose und sicherer Fehlerbehandlung
 // =====================================================
 
 async function handleTicketSlashCommand(interaction) {
@@ -1520,22 +1768,37 @@ async function handleTicketSlashCommand(interaction) {
         return;
     }
 
-    if (
-        interaction.commandName !== "ticketsystem"
-    ) {
+    if (interaction.commandName !== "ticketsystem") {
         return;
     }
+
+    // =====================================================
+    // 🔍 DIAGNOSE: Prüfen, ob der Befehl erkannt wird
+    // =====================================================
+
+    console.log(
+        "🎫 [TICKET] /ticketsystem erkannt!",
+        "Benutzer:", interaction.user.tag,
+        "Server:", interaction.guild?.name
+    );
+
+    // =====================================================
+    // 🌐 SERVER- UND KANALPRÜFUNG
+    // =====================================================
 
     if (
         !interaction.guild ||
         !interaction.channel?.isTextBased()
     ) {
         return interaction.reply({
-            content:
-                "❌ Nur in Server-Textkanälen möglich.",
+            content: "❌ Nur in Server-Textkanälen möglich.",
             flags: 64
         });
     }
+
+    // =====================================================
+    // 🔒 BERECHTIGUNGSPRÜFUNG
+    // =====================================================
 
     if (
         !interaction.memberPermissions?.has(
@@ -1543,16 +1806,24 @@ async function handleTicketSlashCommand(interaction) {
         )
     ) {
         return interaction.reply({
-            content:
-                "🔒 Du benötigst Server verwalten.",
+            content: "🔒 Du benötigst Server verwalten.",
             flags: 64
         });
     }
+
+    // =====================================================
+    // 🎫 TICKET-PANEL ERSTELLEN
+    // =====================================================
 
     try {
         await interaction.deferReply({
             flags: 64
         });
+
+        console.log(
+            "🎫 [TICKET] Erstelle Ticket-Panel im Kanal:",
+            interaction.channel.name
+        );
 
         const config = getGuildConfig(
             interaction.guild.id
@@ -1566,13 +1837,16 @@ async function handleTicketSlashCommand(interaction) {
         );
 
         await interaction.editReply({
-            content:
-                "✅ Ticket-Panel erfolgreich erstellt!"
+            content: "✅ Ticket-Panel erfolgreich erstellt!"
         });
+
+        console.log(
+            "✅ [TICKET] Ticket-Panel erfolgreich gesendet!"
+        );
 
     } catch (error) {
         console.error(
-            "[TICKET] Slash-Fehler:",
+            "❌ [TICKET] Slash-Fehler:",
             error
         );
 
@@ -1581,168 +1855,85 @@ async function handleTicketSlashCommand(interaction) {
             interaction.replied
         ) {
             await interaction.editReply({
-                content:
-                    "❌ Panel konnte nicht erstellt werden."
+                content: "❌ Panel konnte nicht erstellt werden."
             }).catch(() => {});
         } else {
             await interaction.reply({
-                content:
-                    "❌ Panel konnte nicht erstellt werden.",
+                content: "❌ Panel konnte nicht erstellt werden.",
                 flags: 64
             }).catch(() => {});
         }
     }
 }
 
+
 // =====================================================
-// !ticketsetup
+// /ticketsetup – sämtliche Einstellungen als Slash-Befehle
 // =====================================================
 
-async function handleSetupCommand(message) {
-    if (
-        !message.guild ||
-        message.author.bot ||
-        !message.content.startsWith(
-            "!ticketsetup"
-        )
-    ) {
-        return;
+async function handleTicketSetupSlashCommand(interaction) {
+    if (!interaction.isChatInputCommand() || interaction.commandName !== "ticketsetup") return;
+    if (!interaction.guild || !interaction.channel?.isTextBased()) {
+        return interaction.reply({ content: "❌ Nur auf einem Server möglich.", flags: 64 });
+    }
+    if (!interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild)) {
+        return interaction.reply({ content: "🔒 Du benötigst Server verwalten.", flags: 64 });
     }
 
-    if (
-        !message.member?.permissions.has(
-            PermissionFlagsBits.ManageGuild
-        )
-    ) {
-        return message.reply(
-            "🔒 Du benötigst Server verwalten."
-        );
-    }
+    const sub = interaction.options.getSubcommand();
+    const config = getGuildConfig(interaction.guild.id);
 
-    const args = message.content
-        .trim()
-        .split(/\s+/)
-        .slice(1);
+    try {
+        await interaction.deferReply({ flags: 64 });
 
-    const sub = args[0]?.toLowerCase();
-
-    const config = getGuildConfig(
-        message.guild.id
-    );
-
-    // PANEL
-    if (sub === "panel") {
-        await message.channel.send(
-            buildPanel(
-                message.guild,
-                config
-            )
-        );
-
-        return message.reply(
-            "✅ Ticket-Panel erstellt."
-        );
-    }
-
-    // LOG-KANAL
-    if (sub === "log") {
-        const channel =
-            message.mentions.channels.first() ||
-            message.guild.channels.cache.get(
-                args[1]
-            );
-
-        if (!channel?.isTextBased()) {
-            return message.reply(
-                "❌ Bitte einen Textkanal angeben."
+        if (sub === "log" || sub === "bewertungen") {
+            const channel = interaction.options.getChannel("kanal", true);
+            if (!channel.isTextBased() || channel.isDMBased()) {
+                return interaction.editReply("❌ Bitte einen Server-Textkanal auswählen.");
+            }
+            if (sub === "log") config.logChannelId = channel.id;
+            else config.feedbackChannelId = channel.id;
+            if (!saveGuildConfig(interaction.guild.id, config)) {
+                return interaction.editReply("❌ Speichern fehlgeschlagen.");
+            }
+            return interaction.editReply(
+                sub === "log" ? `✅ Log-Kanal: <#${channel.id}>` : `⭐ Bewertungskanal: <#${channel.id}>`
             );
         }
-
-        config.logChannelId = channel.id;
-
-        saveGuildConfig(
-            message.guild.id,
-            config
-        );
-
-        return message.reply(
-            `✅ Log-Kanal: <#${channel.id}>`
-        );
-    }
-
-    // NACHTSPERRE
-    if (sub === "nachtsperre") {
-        if (
-            !["an", "aus"].includes(
-                args[1]
-            )
-        ) {
-            return message.reply(
-                "❌ !ticketsetup nachtsperre an/aus"
-            );
+        if (sub === "nachtsperre") {
+            const status = interaction.options.getString("status", true);
+            config.nightLock = status === "an";
+            if (!saveGuildConfig(interaction.guild.id, config)) {
+                return interaction.editReply("❌ Speichern fehlgeschlagen.");
+            }
+            return interaction.editReply(`🌙 Nachtsperre ${status}.`);
         }
-
-        config.nightLock = args[1] === "an";
-
-        saveGuildConfig(
-            message.guild.id,
-            config
-        );
-
-        return message.reply(
-            `✅ Nachtsperre ${args[1]}.`
-        );
-    }
-
-    // NAME
-    if (sub === "name") {
-        config.name =
-            args.slice(1).join(" ") ||
-            SERVER_NAME;
-
-        saveGuildConfig(
-            message.guild.id,
-            config
-        );
-
-        return message.reply(
-            "✅ Panelname gespeichert."
-        );
-    }
-
-    // STATUS
-    if (sub === "status") {
-        return message.reply({
-            content: [
+        if (sub === "name") {
+            config.name = interaction.options.getString("text", true);
+            if (!saveGuildConfig(interaction.guild.id, config)) {
+                return interaction.editReply("❌ Speichern fehlgeschlagen.");
+            }
+            return interaction.editReply("✅ Panelname gespeichert.");
+        }
+        if (sub === "status") {
+            return interaction.editReply([
                 "**🎫 Vexo RP Ticketsystem**",
-                "",
-                "📂 Kategorien: Fest eingestellt",
+                `📂 Ticketarten: ${TICKET_TYPES.length}`,
                 "👥 Rollen-Pings: Aktiv",
                 "🔒 Rechteprüfung: Aktiv",
-                `📋 Log: ${config.logChannelId || "Nicht gesetzt"}`,
-                `🌙 Nachtsperre: ${config.nightLock ? "An" : "Aus"}`,
-                "",
-                "Alle 13 Ticket-Arten sind eingerichtet."
-            ].join("\n")
-        });
+                `📋 Log: ${config.logChannelId ? `<#${config.logChannelId}>` : "Nicht gesetzt"}`,
+                `⭐ Bewertungen: ${config.feedbackChannelId ? `<#${config.feedbackChannelId}>` : "Nicht gesetzt"}`,
+                `🌙 Nachtsperre: ${config.nightLock ? "An" : "Aus"}`
+            ].join("\n"));
+        }
+        return interaction.editReply("❌ Unbekannter Unterbefehl.");
+    } catch (error) {
+        console.error("[TICKET] /ticketsetup:", error);
+        if (interaction.deferred || interaction.replied) {
+            return interaction.editReply("❌ Der Befehl konnte nicht ausgeführt werden.").catch(() => {});
+        }
+        return interaction.reply({ content: "❌ Ein Fehler ist aufgetreten.", flags: 64 }).catch(() => {});
     }
-
-    // HILFE
-    return message.reply({
-        content: [
-            "**🎫 Ticket-System Befehle**",
-            "",
-            "`!ticketsetup panel`",
-            "`!ticketsetup log #kanal`",
-            "`!ticketsetup nachtsperre an`",
-            "`!ticketsetup nachtsperre aus`",
-            "`!ticketsetup name TEXT`",
-            "`!ticketsetup status`",
-            "",
-            "📂 Kategorien und Rollen sind",
-            "bereits fest im Code eingetragen."
-        ].join("\n")
-    });
 }
 
 // =====================================================
@@ -1750,86 +1941,141 @@ async function handleSetupCommand(message) {
 // =====================================================
 
 async function runReminders(client) {
-    const hour = getBerlinHour();
-
-    if (
-        hour < 12 ||
-        hour >= 22
-    ) {
-        return;
-    }
-
     const data = loadData();
+    const now = Date.now();
     let changed = false;
 
-    for (
-        const [channelId, ticket]
-        of Object.entries(data.tickets)
-    ) {
-        if (ticket.claimedBy) {
-            continue;
-        }
-
-        const last =
-            ticket.lastReminder ||
-            ticket.createdAt;
-
-        if (
-            Date.now() - last <
-            REMINDER_INTERVAL
-        ) {
-            continue;
-        }
-
-        const channel = await client.channels
-            .fetch(channelId)
-            .catch(() => null);
-
-        if (!channel) {
+    for (const [channelId, ticket] of Object.entries(data.tickets)) {
+        if (closingTickets.has(channelId)) continue;
+        const channel = await client.channels.fetch(channelId).catch(() => null);
+        if (!channel || !channel.isTextBased() || !channel.guild) {
             delete data.tickets[channelId];
             changed = true;
             continue;
         }
 
-        const ticketRoles = getTicketRoleIds(
-            channel.guild,
-            ticket.type
-        );
+        // Jedes Ticket schließt 48 Stunden nach seiner Erstellung automatisch,
+        // unabhängig davon, ob es übernommen wurde.
+        if (now - ticket.createdAt >= TICKET_MAX_AGE) {
+            const closed = await closeTicketWithFeedback(
+                channel, ticket, "Automatisch nach 48 Stunden geschlossen", "Automatisches Ticketsystem"
+            );
+            if (closed) {
+                delete data.tickets[channelId];
+                changed = true;
+            }
+            continue;
+        }
+
+        const last = ticket.lastReminder || ticket.createdAt;
+        if (now - last < REMINDER_INTERVAL) continue;
 
         try {
-            const roleMentions = ticketRoles
-                .map(roleId => `<@&${roleId}>`)
-                .join(" ");
-
-            await channel.send({
-                content: [
-                    "⏰ **Ticket-Erinnerung**",
-                    "",
-                    "Dieses Ticket wartet noch",
-                    "auf Bearbeitung.",
-                    "",
-                    roleMentions
-                ].join("\n"),
-                allowedMentions: {
-                    parse: [],
-                    roles: ticketRoles,
-                    users: []
-                }
-            });
-
-            ticket.lastReminder = Date.now();
+            if (ticket.claimedBy) {
+                await channel.send({
+                    content: `⏰ **Ticket-Erinnerung (alle 5 Stunden)**\n\n` +
+                        `Dieses Ticket ist noch offen.\n` +
+                        `🙋 Zuständig: <@${ticket.claimedBy}>\n` +
+                        `👤 Ticket-Ersteller: <@${ticket.userId}>\n\n` +
+                        `Bitte kümmert euch um die weitere Bearbeitung.`,
+                    allowedMentions: { parse: [], users: [ticket.claimedBy, ticket.userId], roles: [] }
+                });
+            } else {
+                const roles = getTicketRoleIds(channel.guild, ticket.type);
+                const roleMentions = roles.map(id => `<@&${id}>`).join(" ");
+                await channel.send({
+                    content: `⏰ **Ticket-Erinnerung (alle 5 Stunden)**\n\n` +
+                        `Dieses Ticket wurde noch nicht übernommen.\n` +
+                        `👤 Ersteller: <@${ticket.userId}>\n` +
+                        `📢 Zuständiges Team: ${roleMentions || "Bitte Ticket prüfen."}`,
+                    allowedMentions: { parse: [], users: [ticket.userId], roles }
+                });
+            }
+            ticket.lastReminder = now;
             changed = true;
-
         } catch (error) {
-            console.error(
-                "[TICKET] Erinnerungsfehler:",
-                error
-            );
+            console.error("[TICKET] Erinnerungsfehler:", error);
         }
     }
+    if (changed) saveData(data);
+}
 
-    if (changed) {
-        saveData(data);
+// =====================================================
+// 🏠 VEXO RP | /immobilienpanel
+// =====================================================
+
+async function handleImmobilienPanelSlashCommand(interaction) {
+    if (!interaction.isChatInputCommand() ||
+        interaction.commandName !== "immobilienpanel") return;
+
+    console.log("🏠 [IMMOBILIEN] /immobilienpanel erkannt:", interaction.user.tag);
+
+    try {
+        if (!interaction.guild ||
+            !interaction.channel ||
+            interaction.channel.type !== ChannelType.GuildText) {
+            return await interaction.reply({
+                content: "❌ Nur in Server-Textkanälen möglich.",
+                flags: 64
+            });
+        }
+
+        if (!interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild)) {
+            return await interaction.reply({
+                content: "🔒 Du benötigst die Berechtigung Server verwalten.",
+                flags: 64
+            });
+        }
+
+        await interaction.deferReply({ flags: 64 });
+
+        const embed = new EmbedBuilder()
+            .setColor(0x0893F3)
+            .setTitle("🏠 VEXO RP | IMMOBILIEN-SERVICE")
+            .setDescription([
+                "**Dein direkter Kontakt zur Immobilienverwaltung**",
+                "",
+                "🏡 Du hast Fragen zu Immobilien, Häusern oder Grundstücken?",
+                "",
+                "📋 **So funktioniert es:**",
+                "• Klicke unten auf **Immobilien-Ticket erstellen**.",
+                "• Es öffnet sich ein privates Ticket.",
+                "• Die zuständige Fraktionsverwaltung wird benachrichtigt.",
+                "",
+                "🔐 Dein Anliegen wird vertraulich behandelt."
+            ].join("\n"))
+            .setFooter({ text: "💫 Vexo RP | Immobilien-Service" })
+            .setTimestamp();
+
+        const row = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+                .setCustomId("ticket_immobilien_open")
+                .setLabel("Immobilien-Ticket erstellen")
+                .setEmoji("🏠")
+                .setStyle(ButtonStyle.Primary)
+        );
+
+        await interaction.channel.send({
+            embeds: [embed],
+            components: [row],
+            allowedMentions: { parse: [] }
+        });
+
+        await interaction.editReply({
+            content: "✅ Immobilien-Panel erfolgreich erstellt!"
+        });
+    } catch (error) {
+        console.error("[IMMOBILIEN] Slash-Fehler:", error);
+        if (interaction.deferred || interaction.replied) {
+            await interaction.editReply({
+                content: "❌ Immobilien-Panel konnte nicht erstellt werden."
+            }).catch(() => {});
+        } else {
+            await interaction.reply({
+                content: "❌ Immobilien-Panel konnte nicht erstellt werden.",
+                flags: 64
+            }).catch(() => {});
+        }
     }
 }
 
@@ -1840,46 +2086,30 @@ async function runReminders(client) {
 let initialized = false;
 
 function initializeTicketSystem(client) {
-    if (initialized) {
-        return;
-    }
+    if (initialized) return;
+    if (!client) throw new Error("Kein Discord-Client übergeben.");
 
-    if (!client) {
-        throw new Error(
-            "Kein Discord-Client übergeben."
-        );
-    }
-
-    client.on(
-        "interactionCreate",
-        handleTicketInteraction
-    );
-
-    client.on(
-        "interactionCreate",
-        handleTicketSlashCommand
-    );
-
-    client.on(
-        "messageCreate",
-        handleSetupCommand
-    );
+    client.on("interactionCreate", handleTicketInteraction);
+    client.on("interactionCreate", handleTicketSlashCommand);
+    client.on("interactionCreate", handleImmobilienPanelSlashCommand);
+    client.on("interactionCreate", handleTicketFeedback);
+    client.on("interactionCreate", handleTicketSetupSlashCommand);
 
     setInterval(() => {
-        if (!client.isReady()) {
-            return;
-        }
-
-        runReminders(client).catch(
-            console.error
-        );
+        if (!client.isReady()) return;
+        runReminders(client).catch(error => {
+            console.error("[TICKET] Erinnerungsfehler:", error);
+        });
     }, REMINDER_CHECK_INTERVAL);
 
+    client.once("clientReady", () => {
+        runReminders(client).catch(error => console.error("[TICKET] Startprüfung:", error));
+    });
+    if (client.isReady()) {
+        runReminders(client).catch(error => console.error("[TICKET] Startprüfung:", error));
+    }
     initialized = true;
-
-    console.log(
-        "🎫 Vexo RP Ticketsystem aktiviert."
-    );
+    console.log("✅ Vexo RP Ticketsystem initialisiert (/ticketsystem, /immobilienpanel, /ticketsetup).");
 }
 
 // =====================================================

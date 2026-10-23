@@ -36,6 +36,17 @@ const backupModule = require("./backup.js");
 const dashboardModule = require("./dashboard.js");
 const loggingModule = require("./logging.js");
 
+// Neues Discord-Logging-System
+const { registerDiscordLogger } = require("./Discord-Logger.js");
+
+// =====================================================
+// 💫 VEXO RP VORLAGEN-SYSTEM
+// =====================================================
+
+const {
+    initializeVorlagenSystem
+} = require("./Vorlagen-System");
+
 // =====================================================
 // 🌐 HEALTH-CHECK HTTP-SERVER (für Render Web Service)
 // =====================================================
@@ -870,56 +881,59 @@ const RP_PANEL_DESCRIPTION =
 // RP START
 // =====================================================
 
-const RP_START_TITLE = "💫 𝐕𝐄𝐗𝐎 𝐑𝐏 ┃ 𝐕𝟏";
 
-const RP_START_DESCRIPTION = `━━━━━━━━━━━━━━━━━━━━━━
+const RP_START_TITLE = "🚀 VEXO RP V1  •  CITY ONLINE";
 
-🟢・**𝐃𝐀𝐒 𝐑𝐎𝐋𝐄𝐏𝐋𝐀𝐘 𝐈𝐒𝐓 𝐎𝐅𝐅𝐈𝐙𝐈𝐄𝐋𝐋 𝐆𝐄𝐒𝐓𝐀𝐑𝐓𝐄𝐓!**
+const RP_START_DESCRIPTION = [
+    "### 🟢 DIE STADT IST JETZT GEÖFFNET",
+    "Willkommen zurück in **Vexo Roleplay**!",
+    "Die Tore unserer Stadt sind geöffnet und ein neuer RP-Tag beginnt.",
+    "",
+    "━━━━━━━━━━━━━━━━━━━━",
+    "### 📡 LIVE-SERVERSTATUS",
+    "🟢 **Roleplay:** ONLINE",
+    "🚓 **Polizei:** Einsatzbereit",
+    "🚑 **Rettungsdienst:** Einsatzbereit",
+    "🏙️ **Bürger:** Willkommen in der Stadt",
+    "",
+    "### 🔑 DEIN EINSTIEG",
+    "🎮 **Servercode:** `83ej67c7`",
+    "📜 **IC-Regeln:** <#1559659268494327931>",
+    "🔗 **Server-Codes:** <#1559659269190586413>",
+    "",
+    "━━━━━━━━━━━━━━━━━━━━",
+    "✨ Schreibt eure eigene Geschichte, bleibt fair und genießt das Roleplay!",
+    "",
+    "🟢 **VEXO RP IST JETZT LIVE!**"
+].join("\n");
 
-🚨 Die Stadt ist geöffnet und der RP-Betrieb hat begonnen!
+const RP_START_SUCCESS = "✅ Das Roleplay wurde gestartet!";
 
-🚓 Polizei bereit zum Einsatz
-🚑 Rettungsdienst einsatzbereit
-🚒 Feuerwehr auf Bereitschaft
-🏙️ Bürger können ins Roleplay starten
+const RP_STOP_TITLE = "🌙 VEXO RP V1  •  CITY OFFLINE";
 
-📜 Bitte beachtet die geltenden IC-Regeln und Safezones und sorgt für realistisches, faires Roleplay.
+const RP_STOP_DESCRIPTION = [
+    "### 🔴 DIE STADT SCHLIESST IHRE TORE",
+    "Ein weiterer RP-Tag in **Vexo Roleplay** geht zu Ende.",
+    "",
+    "━━━━━━━━━━━━━━━━━━━━",
+    "### 📡 LIVE-SERVERSTATUS",
+    "🔴 **Roleplay:** OFFLINE",
+    "🛑 **Neue RP-Situationen:** Nicht mehr starten",
+    "📋 **Laufende Situationen:** Bitte geordnet beenden",
+    "",
+    "### 💙 DANKE, COMMUNITY!",
+    "Ein großes Dankeschön an alle Bürger, Einsatzkräfte und Teammitglieder.",
+    "Ihr habt unsere Stadt heute wieder lebendig gemacht!",
+    "",
+    "📢 Der nächste RP-Start wird rechtzeitig angekündigt.",
+    "",
+    "━━━━━━━━━━━━━━━━━━━━",
+    "🌙 Erholt euch gut. Wir sehen uns beim nächsten RP-Abenteuer!",
+    "",
+    "🔴 **VEXO RP IST JETZT OFFLINE!**"
+].join("\n");
 
-🔑 **Servercode:** \`83ej67c7\`
-
-💫 Viel Spaß und ein erfolgreiches Roleplay wünscht euch die Serverleitung von Vexo RP V1!
-
-━━━━━━━━━━━━━━━━━━━━━━
-🟢 **𝐑𝐏 𝐈𝐒𝐓 𝐉𝐄𝐓𝐙𝐓 𝐎𝐅𝐅𝐄𝐍!**`;
-
-const RP_START_SUCCESS = "🚨 Das RP wurde gestartet!";
-
-// =====================================================
-// RP STOP
-// =====================================================
-
-const RP_STOP_TITLE = "💫 𝐕𝐄𝐗𝐎 𝐑𝐏 ┃ 𝐕𝟏";
-
-const RP_STOP_DESCRIPTION = `━━━━━━━━━━━━━━━━━━━━━━
-
-🔴・**𝐃𝐀𝐒 𝐑𝐎𝐋𝐄𝐏𝐋𝐀𝐘 𝐈𝐒𝐓 𝐎𝐅𝐅𝐈𝐙𝐈𝐄𝐋𝐋 𝐁𝐄𝐄𝐍𝐃𝐄𝐓!**
-
-🚨 Achtung, liebe Community!
-
-Der offizielle RP-Betrieb für heute ist beendet. Bitte startet keine neuen RP-Situationen mehr und beendet laufende Situationen nach Möglichkeit geordnet.
-
-🤝 Vielen Dank an alle Spieler, Einsatzkräfte und Teammitglieder, die heute dabei waren und für spannende RP-Momente gesorgt haben!
-
-📌 Weitere Informationen zum nächsten RP-Start werden rechtzeitig bekannt gegeben.
-
-🔑 Server-Code und weitere Informationen findet ihr in <#1559659269190586413>.
-
-💫 Wir freuen uns, euch beim nächsten Mal wieder in Vexo RP V1 begrüßen zu dürfen!
-
-━━━━━━━━━━━━━━━━━━━━━━
-🔴 **𝐑𝐏 𝐈𝐒𝐓 𝐅Ü𝐑 𝐇𝐄𝐔𝐓𝐄 𝐁𝐄𝐄𝐍𝐃𝐄𝐓!**`;
-
-const RP_STOP_SUCCESS = "🚨 Das RP wurde gestoppt!";
+const RP_STOP_SUCCESS = "✅ Das Roleplay wurde beendet!";
 
 // =====================================================
 // TEAM
@@ -2218,6 +2232,7 @@ const TEAM_LOG_CHANNEL_ID = "TEAM_LOG_CHANNEL_ID";
 const TEAMLIST_AUTO_UPDATE_CHANNEL_ID = "1539989948273401999";
 
 
+
 // =====================================================
 // CLIENT
 // =====================================================
@@ -2230,18 +2245,95 @@ const client = new Client({
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildVoiceStates,
-        GatewayIntentBits.GuildModeration
+        GatewayIntentBits.GuildModeration,
+
+        GatewayIntentBits.GuildMessageReactions,
+        GatewayIntentBits.GuildInvites,
+        GatewayIntentBits.GuildEmojisAndStickers,
+        GatewayIntentBits.GuildScheduledEvents
     ]
 });
 
 // =====================================================
-// TICKET-SYSTEM STARTEN
+// 🎫 VEXO RP | TICKETSYSTEM STARTEN
 // =====================================================
 
-const { initializeTicketSystem } = require("./Ticket-System");
+const {
+    initializeTicketSystem
+} = require("./Ticket-System.js");
 
 initializeTicketSystem(client);
 
+console.log("🎫 Vexo RP Ticketsystem wurde gestartet.");
+
+
+ // =====================================================
+// 📋 VEXO RP | DISCORD-LOGGING STARTEN
+// =====================================================
+
+registerDiscordLogger(client);
+
+// =====================================================
+// 🏢 VEXO RP | BÜRO-WARTERAUM STARTEN
+// =====================================================
+
+const {
+    initializeBueroWarteraum
+} = require("./Buero-Warteraum.js");
+
+initializeBueroWarteraum(client);
+
+// =====================================================
+// 👋 VEXO RP | ÖFFENTLICHES AUSREISE-SYSTEM
+// =====================================================
+
+const VEXO_AUSREISE_KANAL = "1559659268494327929";
+
+client.on("guildMemberRemove", async (member) => {
+    try {
+        const channel = await member.guild.channels
+            .fetch(VEXO_AUSREISE_KANAL)
+            .catch(() => null);
+
+        if (!channel?.isTextBased()) return;
+
+        const user = member.user;
+
+        const embed = new EmbedBuilder()
+            .setColor(0x00BFFF)
+            .setTitle("👋 Tschüss! | Vexo RP")
+            .setDescription(
+                `🌙 **Auf Wiedersehen bei Vexo RP!**\n\n` +
+                `👋 **${user.username}** hat unseren Server verlassen.\n\n` +
+                `💔 Schade, dass du uns verlässt!\n` +
+                `Wir bedanken uns für deine Zeit bei Vexo RP und hoffen, ` +
+                `dass du eines Tages wieder zurückkommst.\n\n` +
+                `🤝 Bis dahin wünschen wir dir alles Gute und viel Erfolg!\n\n` +
+                `💙 **Dein Vexo-RP-Team sagt Tschüss!**`
+            )
+            .setThumbnail(
+                user.displayAvatarURL({ size: 256 })
+            )
+            .setFooter({
+                text: "💙 Vexo RP • Ausreise"
+            })
+            .setTimestamp();
+
+        await channel.send({
+            embeds: [embed],
+            allowedMentions: { parse: [] }
+        });
+
+    } catch (error) {
+        console.error("❌ Ausreise-System Fehler:", error);
+    }
+});
+
+// =====================================================
+// VEXO RP VORLAGEN-SYSTEM STARTEN
+// =====================================================
+
+initializeVorlagenSystem(client);
 
 // =====================================================
 // NEXORACLOUD DASHBOARD
@@ -10671,6 +10763,639 @@ function createTextSendeModal(
 // INTERACTIONS
 // =====================================================
 
+// =====================================================
+// 🧞 VEXO AKINATOR – /akinator start | stop
+// Öffentlicher Start-Button, privates Spiel, öffentliche Erfolge
+// =====================================================
+const AKINATOR_FILE = path.join(__dirname, "akinator-data.json");
+let akinatorData = {};
+try {
+    if (fs.existsSync(AKINATOR_FILE)) {
+        akinatorData = JSON.parse(fs.readFileSync(AKINATOR_FILE, "utf8"));
+    }
+} catch (error) {
+    console.error("Akinator-Daten konnten nicht geladen werden:", error);
+}
+function saveAkinator() {
+    const temp = AKINATOR_FILE + ".tmp";
+    fs.writeFileSync(temp, JSON.stringify(akinatorData, null, 2), "utf8");
+    fs.renameSync(temp, AKINATOR_FILE);
+}
+function akinatorState(guildId) {
+    if (!akinatorData[guildId]) akinatorData[guildId] = { panelChannelId: null, panelMessageId: null, scores: {} };
+    if (!akinatorData[guildId].scores) akinatorData[guildId].scores = {};
+    return akinatorData[guildId];
+}
+const akinatorGames = new Map();
+const akinatorCommand = {
+    name: "akinator",
+    description: "Akinator-Panel verwalten",
+    options: [
+        { type: 1, name: "start", description: "Akinator-Panel in diesem Kanal erstellen" },
+        { type: 1, name: "stop", description: "Akinator-Panel deaktivieren" }
+    ]
+};
+function akinatorPanel() {
+    return {
+        embeds: [new EmbedBuilder().setColor(0x0893F3)
+            .setTitle("🧞 𝐕𝐄𝐗𝐎 𝐀𝐊𝐈𝐍𝐀𝐓𝐎𝐑")
+            .setDescription("**Denk an eine echte oder erfundene Figur!**\n\nIch stelle dir Fragen und versuche sie zu erraten. Deine Antworten siehst nur du.\n\n*Hinweis: Ich kenne derzeit eine Auswahl bekannter Figuren.*\n\n🏆 Für eine bestätigte Vermutung erhältst du Punkte auf dem gemeinsamen Leaderboard.")
+            .setFooter({ text: "💫 Vexo RP | Akinator" })],
+        components: [new ActionRowBuilder().addComponents(
+            new ButtonBuilder().setCustomId("vexo_akinator:begin").setLabel("Akinator spielen").setEmoji("🧞").setStyle(ButtonStyle.Primary)
+        )]
+    };
+}
+function akinatorQuestionButtons() {
+    const options = [
+        ["Ja", "✅", ButtonStyle.Success],
+        ["Nein", "❌", ButtonStyle.Danger],
+        ["Weiß nicht", "❔", ButtonStyle.Secondary],
+        ["Wahrscheinlich", "🤔", ButtonStyle.Primary],
+        ["Wahrscheinlich nicht", "🙅", ButtonStyle.Secondary]
+    ];
+    return [
+        new ActionRowBuilder().addComponents(options.map(([label, emoji, style], i) =>
+            new ButtonBuilder().setCustomId(`vexo_akinator:answer:${i}`).setLabel(label).setEmoji(emoji).setStyle(style)
+        )),
+        new ActionRowBuilder().addComponents(
+            new ButtonBuilder().setCustomId("vexo_akinator:quit").setLabel("Beenden").setEmoji("🛑").setStyle(ButtonStyle.Danger)
+        )
+    ];
+}
+function akinatorGuessButtons() {
+    return [new ActionRowBuilder().addComponents(
+        new ButtonBuilder().setCustomId("vexo_akinator:correct").setLabel("Ja, richtig!").setStyle(ButtonStyle.Success),
+        new ButtonBuilder().setCustomId("vexo_akinator:wrong").setLabel("Nein, weiterraten!").setStyle(ButtonStyle.Primary),
+        new ButtonBuilder().setCustomId("vexo_akinator:quit").setLabel("Beenden").setStyle(ButtonStyle.Danger)
+    )];
+}
+// Lokale Wissensbasis: keine externe Akinator-API, kein API-Key notwendig.
+// Jede Figur besitzt Eigenschaften; die nächste Frage wird anhand der bisherigen
+// Antworten so gewählt, dass sie möglichst viele Kandidaten unterscheidet.
+const VEXO_AKI_QUESTIONS = [
+    ["real", "Ist deine Figur eine echte Person?"],
+    ["male", "Ist deine Figur männlich?"],
+    ["alive", "Lebt diese Person heute noch?"],
+    ["music", "Ist die Figur für Musik bekannt?"],
+    ["sport", "Ist die Figur für Sport bekannt?"],
+    ["football", "Hat die Figur etwas mit Fußball zu tun?"],
+    ["actor", "Ist die Figur für Filme oder Serien bekannt?"],
+    ["politics", "Ist die Figur aus der Politik bekannt?"],
+    ["creator", "Ist die Figur durch YouTube, Streaming oder Internet bekannt?"],
+    ["german", "Kommt die Figur aus Deutschland?"],
+    ["american", "Kommt die Figur aus den USA?"],
+    ["fiction", "Stammt die Figur aus einer erfundenen Geschichte?"],
+    ["anime", "Kommt die Figur aus einem Anime oder Manga?"],
+    ["game", "Kommt die Figur aus einem Videospiel?"],
+    ["movie", "Kommt die Figur aus einem Kinofilm?"],
+    ["series", "Kommt die Figur aus einer Fernseh- oder Streamingserie?"],
+    ["cartoon", "Ist die Figur gezeichnet oder animiert?"],
+    ["superhero", "Ist die Figur ein Superheld oder eine Superheldin?"],
+    ["villain", "Ist die Figur eher ein Bösewicht?"],
+    ["magic", "Hat die Figur magische oder übernatürliche Fähigkeiten?"],
+    ["animal", "Ist die Figur ein Tier oder tierähnliches Wesen?"],
+    ["robot", "Ist die Figur ein Roboter oder eine künstliche Maschine?"],
+    ["yellow", "Ist die Figur hauptsächlich gelb?"],
+    ["red", "Trägt die Figur auffällig rote Kleidung?"],
+    ["blue", "Ist Blau eine typische Farbe der Figur?"],
+    ["mask", "Trägt die Figur häufig eine Maske?"],
+    ["cape", "Trägt die Figur einen Umhang?"],
+    ["weapon", "Benutzt die Figur häufig eine Waffe?"],
+    ["space", "Hat die Figur etwas mit dem Weltraum zu tun?"],
+    ["school", "Spielt die Geschichte der Figur oft an einer Schule?"],
+    ["royal", "Ist die Figur eine Prinzessin, ein Prinz oder königlich?"],
+    ["old", "Wurde die Figur bereits vor dem Jahr 2000 berühmt?"],
+    ["minecraft", "Hat die Figur etwas mit Minecraft zu tun?"],
+    ["nintendo", "Gehört die Figur zu einem Nintendo-Spiel?"],
+    ["disney", "Gehört die Figur zu Disney?"],
+    ["marvel", "Gehört die Figur zu Marvel?"],
+    ["dc", "Gehört die Figur zu DC Comics?"],
+    ["pokemon", "Gehört die Figur zu Pokémon?"],
+    ["dragonball", "Gehört die Figur zu Dragon Ball?"],
+    ["naruto", "Gehört die Figur zu Naruto?"],
+    ["onepiece", "Gehört die Figur zu One Piece?"],
+    ["harrypotter", "Gehört die Figur zu Harry Potter?"],
+    ["starwars", "Gehört die Figur zu Star Wars?"],
+    ["spongebob", "Gehört die Figur zu SpongeBob Schwammkopf?"],
+    ["simpsons", "Gehört die Figur zu Die Simpsons?"],
+    ["gta", "Gehört die Figur zu Grand Theft Auto?"],
+    ["fortnite", "Gehört die Figur zu Fortnite?"],
+    ["fnaf", "Gehört die Figur zu Five Nights at Freddy's?"],
+    ["horror", "Kommt die Figur aus einem Horror-Spiel oder Horror-Film?"],
+    ["speed", "Ist die Figur für besonders hohe Geschwindigkeit bekannt?"],
+    ["strong", "Ist die Figur für außergewöhnliche Stärke bekannt?"]
+];
+// Syntax: [Name, "kommagetrennte zutreffende Merkmale", Wikipedia-Suchbegriff (optional)]
+const VEXO_AKI_PEOPLE = [
+    ["Michael Jackson", "real,male,music,american,old", "Michael_Jackson"],
+    ["Taylor Swift", "real,alive,music,american", "Taylor_Swift"],
+    ["Elvis Presley", "real,male,music,american,old", "Elvis_Presley"],
+    ["Billie Eilish", "real,alive,music,american", "Billie_Eilish"],
+    ["Eminem", "real,male,alive,music,american,old", "Eminem"],
+    ["Ariana Grande", "real,alive,music,actor,american", "Ariana_Grande"],
+    ["Cristiano Ronaldo", "real,male,alive,sport,football", "Cristiano_Ronaldo"],
+    ["Lionel Messi", "real,male,alive,sport,football", "Lionel_Messi"],
+    ["Neymar", "real,male,alive,sport,football", "Neymar"],
+    ["Kylian Mbappé", "real,male,alive,sport,football", "Kylian_Mbappé"],
+    ["Thomas Müller", "real,male,alive,sport,football,german", "Thomas_Müller"],
+    ["Manuel Neuer", "real,male,alive,sport,football,german", "Manuel_Neuer"],
+    ["LeBron James", "real,male,alive,sport,american", "LeBron_James"],
+    ["Michael Jordan", "real,male,alive,sport,american,old", "Michael_Jordan"],
+    ["Albert Einstein", "real,male,german,old", "Albert_Einstein"],
+    ["Elon Musk", "real,male,alive,creator", "Elon_Musk"],
+    ["Donald Trump", "real,male,alive,politics,american", "Donald_Trump"],
+    ["Barack Obama", "real,male,alive,politics,american", "Barack_Obama"],
+    ["Angela Merkel", "real,alive,politics,german", "Angela_Merkel"],
+    ["MrBeast", "real,male,alive,creator,american", "MrBeast"],
+    ["MontanaBlack", "real,male,alive,creator,german", "MontanaBlack"],
+    ["Gronkh", "real,male,alive,creator,german,minecraft", "Gronkh"],
+    ["Rezo", "real,male,alive,creator,music,german", "Rezo"],
+    ["Paluten", "real,male,alive,creator,german,minecraft", "Paluten"],
+    ["Knossi", "real,male,alive,creator,german", "Jens_Knossalla"],
+    ["Dwayne Johnson", "real,male,alive,actor,sport,american", "Dwayne_Johnson"],
+    ["Leonardo DiCaprio", "real,male,alive,actor,american", "Leonardo_DiCaprio"],
+    ["Tom Holland", "real,male,alive,actor", "Tom_Holland"],
+    ["Jenna Ortega", "real,alive,actor,american", "Jenna_Ortega"],
+    ["Johnny Depp", "real,male,alive,actor,american", "Johnny_Depp"],
+    ["Harry Potter", "fiction,male,movie,magic,school,harrypotter,old", "Harry_Potter_(character)"],
+    ["Hermine Granger", "fiction,movie,magic,school,harrypotter,old", "Hermione_Granger"],
+    ["Lord Voldemort", "fiction,male,movie,magic,villain,harrypotter,old", "Lord_Voldemort"],
+    ["Darth Vader", "fiction,male,movie,villain,mask,cape,weapon,space,starwars,old", "Darth_Vader"],
+    ["Yoda", "fiction,male,movie,magic,weapon,space,starwars,old", "Yoda"],
+    ["Luke Skywalker", "fiction,male,movie,weapon,space,starwars,old", "Luke_Skywalker"],
+    ["Spider-Man", "fiction,male,movie,superhero,mask,red,blue,marvel", "Spider-Man"],
+    ["Iron Man", "fiction,male,movie,superhero,mask,red,robot,marvel", "Iron_Man"],
+    ["Hulk", "fiction,male,movie,superhero,strong,marvel", "Hulk"],
+    ["Thor", "fiction,male,movie,superhero,magic,weapon,cape,strong,marvel", "Thor_(Marvel_Comics)"],
+    ["Captain America", "fiction,male,movie,superhero,mask,blue,red,weapon,marvel", "Captain_America"],
+    ["Thanos", "fiction,male,movie,villain,magic,space,strong,marvel", "Thanos"],
+    ["Batman", "fiction,male,movie,superhero,mask,cape,weapon,dc,old", "Batman"],
+    ["Superman", "fiction,male,movie,superhero,cape,red,blue,strong,dc,old", "Superman"],
+    ["Joker", "fiction,male,movie,villain,dc,old", "Joker_(character)"],
+    ["Wonder Woman", "fiction,movie,superhero,weapon,strong,dc", "Wonder_Woman"],
+    ["SpongeBob Schwammkopf", "fiction,male,series,cartoon,animal,yellow,spongebob", "SpongeBob_SquarePants_(character)"],
+    ["Patrick Star", "fiction,male,series,cartoon,animal,spongebob", "Patrick_Star"],
+    ["Thaddäus Tentakel", "fiction,male,series,cartoon,animal,spongebob", "Squidward_Tentacles"],
+    ["Homer Simpson", "fiction,male,series,cartoon,yellow,simpsons,old", "Homer_Simpson"],
+    ["Bart Simpson", "fiction,male,series,cartoon,yellow,simpsons,old", "Bart_Simpson"],
+    ["Lisa Simpson", "fiction,series,cartoon,yellow,simpsons,old", "Lisa_Simpson"],
+    ["Micky Maus", "fiction,male,cartoon,animal,disney,old", "Mickey_Mouse"],
+    ["Donald Duck", "fiction,male,cartoon,animal,disney,old", "Donald_Duck"],
+    ["Elsa", "fiction,movie,cartoon,magic,royal,disney", "Elsa_(Frozen)"],
+    ["Anna (Die Eiskönigin)", "fiction,movie,cartoon,royal,disney", "Anna_(Frozen)"],
+    ["Simba", "fiction,male,movie,cartoon,animal,royal,disney,old", "Simba"],
+    ["Shrek", "fiction,male,movie,cartoon,strong", "Shrek_(character)"],
+    ["Gru", "fiction,male,movie,cartoon,villain", "Felonius_Gru"],
+    ["Mario", "fiction,male,game,red,nintendo,old", "Mario"],
+    ["Luigi", "fiction,male,game,nintendo,old", "Luigi"],
+    ["Prinzessin Peach", "fiction,game,royal,nintendo,old", "Princess_Peach"],
+    ["Bowser", "fiction,male,game,animal,villain,strong,nintendo,old", "Bowser"],
+    ["Link", "fiction,male,game,weapon,magic,nintendo,old", "Link_(The_Legend_of_Zelda)"],
+    ["Pikachu", "fiction,game,cartoon,animal,yellow,pokemon,nintendo,old", "Pikachu"],
+    ["Glurak", "fiction,game,cartoon,animal,pokemon,nintendo,old", "Charizard"],
+    ["Ash Ketchum", "fiction,male,anime,series,cartoon,pokemon,old", "Ash_Ketchum"],
+    ["Sonic", "fiction,male,game,cartoon,animal,blue,speed,old", "Sonic_the_Hedgehog"],
+    ["Steve (Minecraft)", "fiction,male,game,weapon,minecraft", "Steve_(Minecraft)"],
+    ["Herobrine", "fiction,male,game,villain,minecraft", "Herobrine"],
+    ["Creeper", "fiction,game,animal,villain,minecraft", "Creeper_(Minecraft)"],
+    ["Enderman", "fiction,game,animal,minecraft", "Enderman"],
+    ["Lara Croft", "fiction,game,weapon,old", "Lara_Croft"],
+    ["Kratos", "fiction,male,game,weapon,strong,magic", "Kratos_(God_of_War)"],
+    ["Freddy Fazbear", "fiction,male,game,animal,robot,horror,fnaf", "Freddy_Fazbear"],
+    ["Springtrap", "fiction,male,game,animal,robot,villain,horror,fnaf", "Springtrap"],
+    ["Michael De Santa", "fiction,male,game,weapon,gta", "Michael_De_Santa"],
+    ["Franklin Clinton", "fiction,male,game,weapon,gta", "Franklin_Clinton"],
+    ["Trevor Philips", "fiction,male,game,weapon,villain,gta", "Trevor_Philips"],
+    ["Goku", "fiction,male,anime,series,cartoon,magic,strong,dragonball,old", "Goku"],
+    ["Vegeta", "fiction,male,anime,series,cartoon,magic,strong,dragonball,old", "Vegeta"],
+    ["Naruto Uzumaki", "fiction,male,anime,series,cartoon,magic,weapon,naruto", "Naruto_Uzumaki"],
+    ["Sasuke Uchiha", "fiction,male,anime,series,cartoon,magic,weapon,naruto", "Sasuke_Uchiha"],
+    ["Monkey D. Ruffy", "fiction,male,anime,series,cartoon,magic,strong,onepiece", "Monkey_D._Luffy"],
+    ["Roronoa Zoro", "fiction,male,anime,series,cartoon,weapon,strong,onepiece", "Roronoa_Zoro"],
+    ["Wednesday Addams", "fiction,series,magic,school,horror", "Wednesday_Addams"],
+    ["Eleven (Stranger Things)", "fiction,series,magic", "Eleven_(Stranger_Things)"],
+    ["Rick Sanchez", "fiction,male,series,cartoon,space", "Rick_Sanchez"],
+    ["Morty Smith", "fiction,male,series,cartoon,space", "Morty_Smith"]
+].map(([name, tags, wiki]) => ({ name, tags: new Set(tags.split(",")), wiki }));
+
+function vexoAkiRank(game) {
+    return VEXO_AKI_PEOPLE.map((person, index) => {
+        let score = 0;
+        for (const [trait, answer] of Object.entries(game.answers)) {
+            const expected = person.tags.has(trait) ? 1 : 0;
+            // Antworten 0=Ja, 1=Nein, 2=Unbekannt, 3=Wahrscheinlich, 4=Wahrscheinlich nicht
+            const strength = answer === 0 ? 2.2 : answer === 1 ? -2.2 : answer === 3 ? 1 : answer === 4 ? -1 : 0;
+            score += expected ? strength : -strength;
+        }
+        return { person, score, index };
+    }).filter(x => !game.rejected.includes(x.index)).sort((a,b) => b.score - a.score);
+}
+function vexoAkiNext(game) {
+    const ranked = vexoAkiRank(game);
+    const pool = ranked.slice(0, Math.min(18, ranked.length));
+    if (!pool.length) return null;
+    let best = null, bestValue = -Infinity;
+    for (const [trait, question] of VEXO_AKI_QUESTIONS) {
+        if (Object.hasOwn(game.answers, trait)) continue;
+        let yes = 0, total = 0;
+        for (const item of pool) {
+            const weight = Math.exp(Math.max(-20, item.score - pool[0].score) * 0.42);
+            total += weight;
+            if (item.person.tags.has(trait)) yes += weight;
+        }
+        const balance = total ? Math.min(yes / total, 1 - yes / total) : 0;
+        if (balance > bestValue) { bestValue = balance; best = { trait, question }; }
+    }
+    return best;
+}
+function vexoAkiAdvance(game) {
+    const ranked = vexoAkiRank(game);
+    if (!ranked.length) return { type: "end" };
+    const next = vexoAkiNext(game);
+    const answered = Object.keys(game.answers).length;
+    // Nach ausreichend Information vermuten; nie eine Endlosschleife erzeugen.
+    if (!next || answered >= 38 || (answered >= 7 && (ranked.length === 1 || ranked[0].score - (ranked[1]?.score ?? -100) >= 6))) {
+        game.guessing = true;
+        game.guess = ranked[0].person;
+        return { type: "guess" };
+    }
+    game.currentQuestion = next;
+    game.currentStep = answered;
+    return { type: "question" };
+}
+function akinatorQuestionEmbed(game) {
+    return new EmbedBuilder().setColor(0x0893F3)
+        .setTitle("🧞 𝐕𝐄𝐗𝐎 𝐀𝐊𝐈𝐍𝐀𝐓𝐎𝐑")
+        .setDescription(`**Frage ${game.currentStep + 1}**\n\n${game.currentQuestion.question}`)
+        .setFooter({ text: `Eigener Figuren-Rater • ${VEXO_AKI_PEOPLE.length} bekannte Figuren` });
+}
+async function vexoAkiPicture(guess) {
+    if (!guess?.wiki || typeof fetch !== "function") return null;
+    try {
+        const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(guess.wiki)}`;
+        const response = await fetch(url, { headers: { "User-Agent": "VexoRP-DiscordBot/1.0 (character-game)" }, signal: AbortSignal.timeout(3500) });
+        if (!response.ok) return null;
+        const data = await response.json();
+        const image = data?.thumbnail?.source;
+        return typeof image === "string" && /^https:\/\//i.test(image) ? image : null;
+    } catch { return null; }
+}
+function akinatorGuessEmbed(guess) {
+    return new EmbedBuilder().setColor(0x0893F3).setTitle("🧞 Ich habe eine Vermutung!")
+        .setDescription(`**${guess.name}**\n\n**Habe ich richtig geraten?**`);
+}
+function akinatorPoints(game) {
+    const steps = Number(game.currentStep) || 0;
+    const minutes = (Date.now() - game.startedAt) / 60000;
+    const difficulty = steps >= 30 ? 10 : steps >= 20 ? 7 : steps >= 10 ? 5 : 3;
+    const speed = minutes <= 2 ? 5 : minutes <= 5 ? 3 : minutes <= 10 ? 1 : 0;
+    return { points: difficulty + speed, steps, minutes: Math.max(1, Math.ceil(minutes)) };
+}
+async function handleAkinatorSetup(interaction) {
+    if (!interaction.memberPermissions?.has(PermissionsBitField.Flags.ManageGuild)) {
+        return interaction.reply({ content: "❌ Du benötigst **Server verwalten**.", flags: MessageFlags.Ephemeral });
+    }
+    const action = interaction.options.getSubcommand();
+    const state = akinatorState(interaction.guildId);
+    if (action === "stop") {
+        if (state.panelChannelId && state.panelMessageId) {
+            const channel = await interaction.guild.channels.fetch(state.panelChannelId).catch(() => null);
+            const old = await channel?.messages?.fetch(state.panelMessageId).catch(() => null);
+            await old?.delete().catch(() => {});
+        }
+        state.panelChannelId = null;
+        state.panelMessageId = null;
+        saveAkinator();
+        return interaction.reply({ content: "🛑 Akinator-Panel deaktiviert. Punkte bleiben erhalten.", flags: MessageFlags.Ephemeral });
+    }
+    if (interaction.channel?.type !== ChannelType.GuildText) {
+        return interaction.reply({ content: "❌ Bitte einen normalen Textkanal verwenden.", flags: MessageFlags.Ephemeral });
+    }
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    try {
+        const panel = await interaction.channel.send(akinatorPanel());
+        if (state.panelChannelId && state.panelMessageId) {
+            const oldChannel = await interaction.guild.channels.fetch(state.panelChannelId).catch(() => null);
+            const oldPanel = await oldChannel?.messages?.fetch(state.panelMessageId).catch(() => null);
+            await oldPanel?.delete().catch(() => {});
+        }
+        state.panelChannelId = interaction.channelId;
+        state.panelMessageId = panel.id;
+        saveAkinator();
+        return interaction.editReply("✅ Akinator-Panel erstellt! Spieler starten mit dem Button ein privates Spiel.");
+    } catch (error) {
+        console.error("Akinator Panel:", error);
+        return interaction.editReply("❌ Panel konnte nicht erstellt werden. Prüfe meine Kanalberechtigungen.");
+    }
+}
+async function handleAkinatorButton(interaction) {
+    const state = akinatorState(interaction.guildId);
+    const action = interaction.customId.split(":")[1];
+    const key = `${interaction.guildId}:${interaction.user.id}`;
+    if (action === "begin") {
+        if (state.panelChannelId !== interaction.channelId || state.panelMessageId !== interaction.message.id) {
+            return interaction.reply({ content: "❌ Dieses Akinator-Panel ist nicht mehr aktiv.", flags: MessageFlags.Ephemeral });
+        }
+        if (akinatorGames.has(key)) {
+            return interaction.reply({ content: "❌ Du hast bereits ein Spiel. Beende es zuerst.", flags: MessageFlags.Ephemeral });
+        }
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+        const game = { answers: {}, rejected: [], currentQuestion: null, currentStep: 0,
+            startedAt: Date.now(), lastActivity: Date.now(), busy: false,
+            guessing: false, guess: null, messageId: null };
+        vexoAkiAdvance(game);
+        akinatorGames.set(key, game);
+        try {
+            await interaction.editReply({ embeds: [akinatorQuestionEmbed(game)], components: akinatorQuestionButtons() });
+            const reply = await interaction.fetchReply();
+            game.messageId = reply.id;
+        } catch (error) {
+            akinatorGames.delete(key);
+            console.error("Akinator Spielstart:", error.message);
+        }
+        return;
+    }
+    const game = akinatorGames.get(key);
+    if (!game || game.messageId !== interaction.message.id) {
+        return interaction.reply({ content: "❌ Dieses Spiel gehört nicht dir oder ist abgelaufen.", flags: MessageFlags.Ephemeral });
+    }
+    if (game.busy) return interaction.reply({ content: "⏳ Bitte kurz warten.", flags: MessageFlags.Ephemeral });
+    game.busy = true;
+    game.lastActivity = Date.now();
+    try {
+        await interaction.deferUpdate();
+        if (action === "quit") {
+            akinatorGames.delete(key);
+            return interaction.editReply({ content: "🛑 Spiel beendet.", embeds: [], components: [] });
+        }
+        if (action === "correct" && game.guessing && game.guess) {
+            // Zuerst öffentliches Ergebnis senden; erst danach Punkte vergeben.
+            const award = akinatorPoints(game);
+            const guess = game.guess;
+            const embed = new EmbedBuilder().setColor(0x0893F3)
+                .setTitle("🏆 Akinator hat richtig geraten!")
+                .setDescription(`<@${interaction.user.id}> hat an **${String(guess.name).slice(0, 200)}** gedacht!\n\n🧞 Fragen: **${award.steps}**\n⏱️ Dauer: **${award.minutes} Min.**\n⭐ Erhaltene Punkte: **+${award.points}**`)
+                .setTimestamp();
+            const picture = await vexoAkiPicture(guess);
+            if (picture) embed.setImage(picture);
+            const resultChannel = await interaction.guild.channels.fetch(state.panelChannelId).catch(() => null);
+            if (!resultChannel?.isTextBased()) {
+                return interaction.editReply({ content: "❌ Ergebnis-Kanal nicht erreichbar. Bitte später erneut versuchen.", embeds: [], components: [] });
+            }
+            await resultChannel.send({ content: `<@${interaction.user.id}>`, embeds: [embed], allowedMentions: { users: [interaction.user.id] } });
+            state.scores[interaction.user.id] = (state.scores[interaction.user.id] || 0) + award.points;
+            saveAkinator();
+            akinatorGames.delete(key);
+            await interaction.editReply({ content: `🎉 Richtig geraten! **+${award.points} Punkte**. Dein Ergebnis steht jetzt öffentlich im Akinator-Kanal.`, embeds: [], components: [] });
+            await updateCountingLeaderboard(interaction.guildId).catch(error => console.error("Akinator Leaderboard:", error));
+            return;
+        }
+        if (action === "wrong" && game.guessing) {
+            const rejectedGuess = game.guess;
+            game.guessing = false;
+            game.guess = null;
+            game.rejected.push(VEXO_AKI_PEOPLE.indexOf(rejectedGuess));
+            const next = vexoAkiAdvance(game);
+            if (next.type === "end") {
+                akinatorGames.delete(key);
+                return interaction.editReply({ content: "🤷 Ich kenne deine Figur leider noch nicht. Versuche eine andere!", embeds: [], components: [] });
+            }
+            return interaction.editReply({ embeds: [next.type === "guess" ? akinatorGuessEmbed(game.guess) : akinatorQuestionEmbed(game)], components: next.type === "guess" ? akinatorGuessButtons() : akinatorQuestionButtons() });
+        }
+        if (action !== "answer" || game.guessing) return;
+        const answer = Number(interaction.customId.split(":")[2]);
+        if (!Number.isInteger(answer) || answer < 0 || answer > 4) return;
+        game.answers[game.currentQuestion.trait] = answer;
+        const next = vexoAkiAdvance(game);
+        if (next.type === "end") {
+            akinatorGames.delete(key);
+            return interaction.editReply({ content: "🤷 Diese Figur kenne ich noch nicht. Versuche eine andere!", embeds: [], components: [] });
+        }
+        await interaction.editReply({ embeds: [next.type === "guess" ? akinatorGuessEmbed(game.guess) : akinatorQuestionEmbed(game)], components: next.type === "guess" ? akinatorGuessButtons() : akinatorQuestionButtons() });
+    } catch (error) {
+        console.error("Akinator Spielfehler:", error);
+        akinatorGames.delete(key);
+        await interaction.editReply({ content: "❌ Beim Figuren-Raten ist ein Fehler aufgetreten. Starte bitte ein neues Spiel.", embeds: [], components: [] }).catch(() => {});
+    } finally {
+        game.busy = false;
+    }
+}
+setInterval(() => {
+    for (const [key, game] of akinatorGames) {
+        if (Date.now() - game.lastActivity > 20 * 60 * 1000) akinatorGames.delete(key);
+    }
+}, 60_000).unref?.();
+
+// =====================================================
+// 🔢 VEXO COUNTING - /counting start | stop | status
+// =====================================================
+const COUNTING_FILE = path.join(__dirname, "counting-data.json");
+let countingData = {};
+try {
+    if (fs.existsSync(COUNTING_FILE)) {
+        countingData = JSON.parse(fs.readFileSync(COUNTING_FILE, "utf8"));
+    }
+} catch (error) {
+    console.error("Counting-Daten konnten nicht geladen werden:", error);
+}
+function saveCounting() {
+    const temp = COUNTING_FILE + ".tmp";
+    fs.writeFileSync(temp, JSON.stringify(countingData, null, 2), "utf8");
+    fs.renameSync(temp, COUNTING_FILE);
+}
+const leaderboardCommand = {
+    name: "leaderboard",
+    description: "Erstellt oder aktualisiert das Counting-Leaderboard in diesem Kanal"
+};
+
+function countingPoints(number) {
+    if (number % 1000n === 0n) return 100;
+    if (number % 100n === 0n) return 50;
+    if (number % 30n === 0n) return 20;
+    if (number % 10n === 0n) return 5;
+    return 1;
+}
+
+function leaderboardPages(state) {
+    const combined = { ...(state.scores || {}) };
+    for (const [id, points] of Object.entries(akinatorState(state.guildId).scores)) {
+        combined[id] = (combined[id] || 0) + points;
+    }
+    const scores = Object.entries(combined)
+        .filter(([, points]) => Number.isSafeInteger(points) && points > 0)
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+    const lines = scores.map(([id, points], index) =>
+        `**${index + 1}.** <@${id}> — **${points.toLocaleString("de-DE")} Punkte**`
+    );
+    if (!lines.length) lines.push("Noch keine Punkte vergeben. Schreibt die **1**!");
+    const pages = [];
+    let current = [];
+    let length = 0;
+    for (const line of lines) {
+        if (current.length >= 30 || length + line.length + 1 > 3500) {
+            pages.push(current.join("\n")); current = []; length = 0;
+        }
+        current.push(line); length += line.length + 1;
+    }
+    if (current.length) pages.push(current.join("\n"));
+    return pages;
+}
+
+async function updateCountingLeaderboard(guildId) {
+    const state = countingData[guildId];
+    if (!state?.leaderboardChannelId) return;
+    const channel = await client.channels.fetch(state.leaderboardChannelId).catch(() => null);
+    if (!channel?.isTextBased()) return;
+    state.guildId = guildId;
+    const pages = leaderboardPages(state);
+    const ids = state.leaderboardMessageIds || [];
+    const nextIds = [];
+    for (let i = 0; i < pages.length; i++) {
+        const payload = {
+            embeds: [new EmbedBuilder()
+                .setColor(0x0893F3)
+                .setTitle(`🏆 𝐕𝐄𝐗𝐎 𝐑𝐏 — 𝐋𝐄𝐀𝐃𝐄𝐑𝐁𝐎𝐀𝐑𝐃${pages.length > 1 ? ` (${i + 1}/${pages.length})` : ""}`)
+                .setDescription(pages[i])
+                .setFooter({ text: `Counting + Akinator • Aktuelle Zahl: ${state.number}` })
+                .setTimestamp()],
+            allowedMentions: { parse: [] }
+        };
+        let msg = ids[i] ? await channel.messages.fetch(ids[i]).catch(() => null) : null;
+        if (msg) await msg.edit(payload);
+        else msg = await channel.send(payload);
+        nextIds.push(msg.id);
+    }
+    for (const oldId of ids.slice(pages.length)) {
+        const old = await channel.messages.fetch(oldId).catch(() => null);
+        if (old) await old.delete().catch(() => {});
+    }
+    state.leaderboardMessageIds = nextIds;
+    saveCounting();
+}
+
+async function handleLeaderboardCommand(interaction) {
+    if (!interaction.memberPermissions?.has(PermissionsBitField.Flags.ManageGuild)) {
+        return interaction.reply({ content: "❌ Du benötigst **Server verwalten**.", flags: MessageFlags.Ephemeral });
+    }
+    if (interaction.channel.type !== ChannelType.GuildText) {
+        return interaction.reply({ content: "❌ Bitte einen normalen Textkanal verwenden.", flags: MessageFlags.Ephemeral });
+    }
+    const state = countingData[interaction.guildId] || (countingData[interaction.guildId] = { channelId: null, number: "0", lastUserId: null, scores: {} });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    // Vorherige Leaderboard-Nachrichten werden im alten Kanal nicht automatisch gelöscht.
+    if (state.leaderboardChannelId !== interaction.channelId) state.leaderboardMessageIds = [];
+    state.leaderboardChannelId = interaction.channelId;
+    saveCounting();
+    try {
+        await updateCountingLeaderboard(interaction.guildId);
+        return interaction.editReply("✅ Das Live-Leaderboard wurde in diesem Kanal eingerichtet.");
+    } catch (error) {
+        console.error("Leaderboard-Fehler:", error);
+        return interaction.editReply("❌ Leaderboard konnte nicht erstellt werden. Prüfe die Bot-Berechtigungen.");
+    }
+}
+
+const countingCommand = {
+    name: "counting",
+    description: "Counting-Kanal verwalten",
+    options: [
+        { type: 1, name: "start", description: "Counting in diesem Kanal starten" },
+        { type: 1, name: "stop", description: "Counting deaktivieren" },
+        { type: 1, name: "status", description: "Aktuellen Zählerstand anzeigen" }
+    ]
+};
+
+// Nachrichten werden pro Kanal nacheinander verarbeitet.
+const countingQueues = new Map();
+client.on("messageCreate", message => {
+    if (!message.guild || message.author.bot) return;
+    const state = countingData[message.guild.id];
+    if (!state || state.channelId !== message.channel.id) return;
+
+    const previous = countingQueues.get(message.channel.id) || Promise.resolve();
+    const next = previous.catch(() => {}).then(async () => {
+        const current = countingData[message.guild.id];
+        if (!current || current.channelId !== message.channel.id) return;
+        const content = message.content.trim();
+        if (!/^\d+$/.test(content)) return;
+
+        const expected = BigInt(current.number || "0") + 1n;
+        const validNumber = BigInt(content) === expected;
+        const samePerson = current.lastUserId === message.author.id;
+        if (validNumber && !samePerson) {
+            current.number = expected.toString();
+            current.lastUserId = message.author.id;
+            current.scores ||= {};
+            current.scores[message.author.id] = (current.scores[message.author.id] || 0) + countingPoints(expected);
+            saveCounting();
+            await updateCountingLeaderboard(message.guild.id).catch(error => console.error("Leaderboard-Update:", error));
+            await message.react("✅").catch(() => {});
+            return;
+        }
+
+        // Jeder falsche Zahleneintrag setzt die Runde zurück.
+        current.number = "0";
+        current.lastUserId = null;
+        saveCounting();
+        await message.react("❌").catch(() => {});
+        await message.channel.send({
+            content: samePerson
+                ? `❌ ${message.author}, du hast zweimal hintereinander gezählt!\n🔄 **Neustart:** Beginnt wieder mit **1**. Danach muss eine andere Person die **2** schreiben.`
+                : `❌ ${message.author}, falsche Zahl! Erwartet wurde **${expected.toString()}**.\n🔄 Wir beginnen wieder bei **1**.`,
+            allowedMentions: { users: [message.author.id] }
+        });
+    });
+    countingQueues.set(message.channel.id, next);
+    void next.finally(() => {
+        if (countingQueues.get(message.channel.id) === next) countingQueues.delete(message.channel.id);
+    }).catch(error => console.error("Counting-Fehler:", error));
+});
+
+async function handleCountingCommand(interaction) {
+    const sub = interaction.options.getSubcommand();
+    const state = countingData[interaction.guildId];
+    if (sub === "status") {
+        return interaction.reply({
+            content: state?.channelId
+                ? `🔢 Counting läuft in <#${state.channelId}>. Letzte Zahl: **${state.number}**. Nächste Zahl: **${(BigInt(state.number) + 1n).toString()}**.`
+                : "ℹ️ Counting ist noch nicht aktiviert.",
+            flags: MessageFlags.Ephemeral
+        });
+    }
+    if (!interaction.memberPermissions?.has(PermissionsBitField.Flags.ManageGuild)) {
+        return interaction.reply({ content: "❌ Du benötigst die Berechtigung **Server verwalten**.", flags: MessageFlags.Ephemeral });
+    }
+    if (sub === "stop") {
+        if (!state?.channelId) return interaction.reply({ content: "ℹ️ Counting ist nicht aktiv.", flags: MessageFlags.Ephemeral });
+        // Punkte und Leaderboard beim Stoppen behalten.
+        state.channelId = null;
+        state.number = "0";
+        state.lastUserId = null;
+        saveCounting();
+        return interaction.reply({ content: "🛑 Counting wurde deaktiviert." });
+    }
+    if (sub === "start") {
+        if (interaction.channel.type !== ChannelType.GuildText) {
+            return interaction.reply({ content: "❌ Bitte in einem normalen Textkanal starten.", flags: MessageFlags.Ephemeral });
+        }
+        countingData[interaction.guildId] = {
+            ...(state || {}),
+            channelId: interaction.channelId,
+            number: "0",
+            lastUserId: null,
+            scores: state?.scores || {}
+        };
+        saveCounting();
+        return interaction.reply({
+            embeds: [new EmbedBuilder()
+                .setColor(0x0893F3)
+                .setTitle("🔢 𝐕𝐄𝐗𝐎 𝐂𝐎𝐔𝐍𝐓𝐈𝐍𝐆")
+                .setDescription("Das Counting ist gestartet!\n\n✅ Zählt **1, 2, 3 ...** so weit ihr könnt.\n🚫 Niemand darf zweimal hintereinander zählen.\n❌ Bei einem Fehler beginnt alles wieder bei **1**.\n\n**Los geht's: Schreibt die 1!**")]
+        });
+    }
+}
+
 const processedInteractions = new Set();
 
 client.on(
@@ -10678,6 +11403,19 @@ client.on(
     async interaction => {
 
         try {
+
+            if (interaction.isChatInputCommand() && interaction.commandName === "akinator") {
+                return await handleAkinatorSetup(interaction);
+            }
+            if (interaction.isButton() && interaction.customId.startsWith("vexo_akinator:")) {
+                return await handleAkinatorButton(interaction);
+            }
+            if (interaction.isChatInputCommand() && interaction.commandName === "leaderboard") {
+                return await handleLeaderboardCommand(interaction);
+            }
+            if (interaction.isChatInputCommand() && interaction.commandName === "counting") {
+                return await handleCountingCommand(interaction);
+            }
 
             // Permission-Check für Slash-Commands (nur autorisierte Rollen)
             if (interaction.isChatInputCommand()) {
@@ -10690,7 +11428,11 @@ client.on(
                 }
             }
 
-            // RP Start Button
+           
+            // =====================================================
+            // 🚀 VEXO RP | RP-START
+            // =====================================================
+
             if (interaction.isButton() && interaction.customId === "rp_start") {
                 if (!hasSlashCommandPermission(interaction.member)) {
                     return interaction.reply({
@@ -10703,34 +11445,29 @@ client.on(
                 rpStatus.startTime = Date.now();
                 saveRPStatus();
 
-                // Sende RP Start Nachricht in den spezifizierten Kanal
-                const rpChannel = await client.channels.fetch(RP_ANNOUNCEMENT_CHANNEL_ID).catch(() => null);
-                if (rpChannel && rpChannel.isTextBased()) {
-                    const rpStartMessage = `💫 𝐕𝐄𝐗𝐎 𝐑𝐏 ┃ 𝐕𝟏
-━━━━━━━━━━━━━━━━━━━━━━
-🟢・𝐃𝐀𝐒 𝐑𝐎𝐋𝐄𝐏𝐋𝐀𝐘 𝐈𝐒𝐓 𝐎𝐅𝐅𝐈𝐙𝐈𝐄𝐋𝐋 𝐆𝐄𝐒𝐓𝐀𝐑𝐓𝐄𝐓!
-🚨 Die Stadt ist geöffnet und der RP-Betrieb hat begonnen!
-🚓 Polizei bereit zum Einsatz
-🚑 Rettungsdienst einsatzbereit
-🚒 Feuerwehr auf Bereitschaft
-🏙️ Bürger können ins Roleplay starten
-📜 Bitte beachtet die geltenden IC-Regeln und Safezones und sorgt für realistisches, faires Roleplay.
-🔑 Servercode: \`83ej67c7\`
-💫 Viel Spaß und ein erfolgreiches Roleplay wünscht euch die Serverleitung von Vexo RP V1!
-━━━━━━━━━━━━━━━━━━━━━━
-🟢 𝐑𝐏 𝐈𝐒𝐓 𝐉𝐄𝐓𝐙𝐓 𝐎𝐅𝐅𝐄𝐍!`;
-                    await rpChannel.send(rpStartMessage);
+                // Neue RP-Start-Ankündigung mit Embed und Rollen-Ping
+                const rpAnnouncementSent = await updateRPStatus(
+                    interaction.guild,
+                    "start"
+                );
+
+                if (!rpAnnouncementSent) {
+                    console.error(
+                        "❌ RP-Start-Ankündigung konnte nicht gesendet werden."
+                    );
                 }
 
+                // RP-Status-Panel aktualisieren
                 const embed = new EmbedBuilder()
-                    .setColor(0x00FF00)
-                    .setTitle("🎮 RP STATUS PANEL")
+                    .setColor(0x22C55E)
+                    .setTitle("🎮 VEXO RP V1 | RP-STATUS")
                     .setDescription(
-                        "🟢 **RP läuft**\n\n" +
-                        `⏱️ Startzeit: ${new Date(rpStatus.startTime).toLocaleString('de-DE')}\n` +
-                        `⏳ Laufzeit: ${formatUptime(rpStatus.startTime)}`
+                        "🟢 **ROLEPLAY IST GEÖFFNET**\n\n" +
+                        `🕒 **Startzeit:** <t:${Math.floor(rpStatus.startTime / 1000)}:F>\n` +
+                        `⏳ **Laufzeit:** ${formatUptime(rpStatus.startTime)}\n\n` +
+                        "🌆 Die Stadt ist jetzt für alle Bürger geöffnet."
                     )
-                    .setFooter({ text: "Wexo-RP" })
+                    .setFooter({ text: "Vexo RP V1 • Roleplay-Verwaltung" })
                     .setTimestamp();
 
                 const startButton = new ButtonBuilder()
@@ -10741,23 +11478,30 @@ client.on(
 
                 const stopButton = new ButtonBuilder()
                     .setCustomId("rp_stop")
-                    .setLabel("⏹️ RP Stopen")
+                    .setLabel("⏹️ RP Stoppen")
                     .setStyle(ButtonStyle.Danger)
                     .setDisabled(false);
 
                 const row = new ActionRowBuilder()
                     .addComponents(startButton, stopButton);
 
-                await interaction.update({ embeds: [embed], components: [row] });
+                await interaction.update({
+                    embeds: [embed],
+                    components: [row]
+                });
+
                 console.log("✅ RP gestartet.");
                 return;
             }
 
-            // RP Stop Button
+            // =====================================================
+            // 🌙 VEXO RP | RP-STOP
+            // =====================================================
+
             if (interaction.isButton() && interaction.customId === "rp_stop") {
                 if (!hasSlashCommandPermission(interaction.member)) {
                     return interaction.reply({
-                        content: "❌ Nur autorisierte Rollen dürfen RP stopen.",
+                        content: "❌ Nur autorisierte Rollen dürfen RP stoppen.",
                         flags: MessageFlags.Ephemeral
                     });
                 }
@@ -10766,32 +11510,29 @@ client.on(
                 rpStatus.startTime = null;
                 saveRPStatus();
 
-                // Sende RP Stop Nachricht in den spezifizierten Kanal
-                const rpChannel = await client.channels.fetch(RP_ANNOUNCEMENT_CHANNEL_ID).catch(() => null);
-                if (rpChannel && rpChannel.isTextBased()) {
-                    const rpStopMessage = `💫 𝐕𝐄𝐗𝐎 𝐑𝐏 ┃ 𝐕𝟏
-━━━━━━━━━━━━━━━━━━━━━━
-🔴・𝐃𝐀𝐒 𝐑𝐎𝐋𝐄𝐏𝐋𝐀𝐘 𝐈𝐒𝐓 𝐎𝐅𝐅𝐈𝐙𝐈𝐄𝐋𝐋 𝐁𝐄𝐄𝐍𝐃𝐄𝐓!
-🚨 Achtung, liebe Community!
-Der offizielle RP-Betrieb für heute ist beendet. Bitte startet keine neuen RP-Situationen mehr und beendet laufende Situationen nach Möglichkeit geordnet.
-🤝 Vielen Dank an alle Spieler, Einsatzkräfte und Teammitglieder, die heute dabei waren und für spannende RP-Momente gesorgt haben!
-📌 Weitere Informationen zum nächsten RP-Start werden rechtzeitig bekannt gegeben.
-🔑 Server Code
-➜ 🔗 [┃](https://discord.com/channels/1559659266737176699/1559659269190586413%E2%94%83)
-💫 Wir freuen uns, euch beim nächsten Mal wieder in Vexo RP V1 begrüßen zu dürfen!
-━━━━━━━━━━━━━━━━━━━━━━
-🔴 𝐑𝐏 𝐈𝐒𝐓 𝐅Ü𝐑 𝐇𝐄𝐔𝐓𝐄 𝐁𝐄𝐄𝐍𝐃𝐄𝐓!`;
-                    await rpChannel.send(rpStopMessage);
+                // Neue RP-Stop-Ankündigung mit Embed und Rollen-Ping
+                const rpStopAnnouncementSent = await updateRPStatus(
+                    interaction.guild,
+                    "stop"
+                );
+
+                if (!rpStopAnnouncementSent) {
+                    console.error(
+                        "❌ RP-Stop-Ankündigung konnte nicht gesendet werden."
+                    );
                 }
 
+                // RP-Status-Panel aktualisieren
                 const embed = new EmbedBuilder()
-                    .setColor(0xFF0000)
-                    .setTitle("🎮 RP STATUS PANEL")
+                    .setColor(0xEF4444)
+                    .setTitle("🎮 VEXO RP V1 | RP-STATUS")
                     .setDescription(
-                        "🔴 **RP gestoppt**\n\n" +
-                        "⏹️ RP ist derzeit nicht aktiv."
+                        "🔴 **ROLEPLAY IST GESCHLOSSEN**\n\n" +
+                        "🌙 Der heutige RP-Betrieb wurde offiziell beendet.\n" +
+                        "🛑 Bitte startet keine neuen RP-Situationen.\n\n" +
+                        "💙 Vielen Dank an unsere Community!"
                     )
-                    .setFooter({ text: "Wexo-RP" })
+                    .setFooter({ text: "Vexo RP V1 • Roleplay-Verwaltung" })
                     .setTimestamp();
 
                 const startButton = new ButtonBuilder()
@@ -10802,14 +11543,18 @@ Der offizielle RP-Betrieb für heute ist beendet. Bitte startet keine neuen RP-S
 
                 const stopButton = new ButtonBuilder()
                     .setCustomId("rp_stop")
-                    .setLabel("⏹️ RP Stopen")
+                    .setLabel("⏹️ RP Stoppen")
                     .setStyle(ButtonStyle.Danger)
                     .setDisabled(true);
 
                 const row = new ActionRowBuilder()
                     .addComponents(startButton, stopButton);
 
-                await interaction.update({ embeds: [embed], components: [row] });
+                await interaction.update({
+                    embeds: [embed],
+                    components: [row]
+                });
+
                 console.log("✅ RP gestoppt.");
                 return;
             }
@@ -12068,7 +12813,19 @@ Der offizielle RP-Betrieb für heute ist beendet. Bitte startet keine neuen RP-S
                 if (commandName === "backup") {
                     return;
                 }
+                // /vorlage wird komplett von Vorlagen-System.js behandelt
+                if (commandName === "vorlage") {
+                    return;
+                }
+                // =====================================================
+// 🎫 VEXO RP | TICKETSYSTEM
+// Der Slash-Command wird bereits in Ticket-System.js
+// verarbeitet. Hier keine zweite Antwort senden.
+// =====================================================
 
+if (commandName === "ticketsystem") {
+    return;
+}
                 console.log(`⚠️ Unbekannter Slash-Command: /${commandName}`);
                 await interaction.reply({ content: "❌ Unbekannter Befehl.", flags: MessageFlags.Ephemeral });
                 return;
@@ -17735,17 +18492,14 @@ if (
                     }
 
                     deleteSelfDestructPanelState(panelMessageId);
-
-                    return;
-                }
-            }
-
-        } catch (error) {
-            console.error("❌ Fehler in interactionCreate:", error);
-        }
+            return;
+          }
     }
-);
 
+} catch (error) {
+    console.error("❌ Fehler in interactionCreate:", error);
+}
+});
 // =====================================================
 // SECURITY – NACHRICHT GELÖSCHT
 // =====================================================
@@ -18651,7 +19405,7 @@ client.once("clientReady", async () => {
     // --- NEU: Backup-, Dashboard- und Logging-Modul starten ---
     // Die /backup-Befehle werden unten zusammen mit den eigenen Commands pro
     // Server registriert (NICHT global, sonst erscheinen sie doppelt).
-    const allSlashCommands = [...slashCommands, ...backupModule.commands];
+    const allSlashCommands = [...slashCommands, ...backupModule.commands, countingCommand, leaderboardCommand, akinatorCommand];
 
     try {
         global.__botCommandList = backupModule.commands.flatMap(c =>
@@ -18738,3 +19492,70 @@ client.on("guildMemberUpdate", (oldMember, newMember) => {
 client.login(
     process.env.BOT_TOKEN
 );
+
+// =====================================================
+// VEXO RP | LIVE SERVER-STATISTIK-KANÄLE
+// =====================================================
+const VEXO_STATS_GUILD_ID = "1559659266737176699";
+const VEXO_STATS_STAFF_ROLE_ID = "1559659267269595147";
+const VEXO_STATS_CHANNELS = {
+    members: "1560755261172482079",
+    boosts: "1560755267724124271",
+    bots: "1560755275818868866",
+    roles: "1561290265589710879",
+    team: "1563148080965226576"
+};
+let vexoStatsRunning = false;
+let vexoStatsPending = null;
+
+async function updateVexoStatChannels() {
+    if (vexoStatsRunning || !client.isReady()) return;
+    vexoStatsRunning = true;
+    try {
+        const guild = await client.guilds.fetch(VEXO_STATS_GUILD_ID);
+        // GuildMembers-Intent ist bereits im Client aktiviert.
+        await guild.members.fetch();
+        await guild.fetch();
+        const members = guild.memberCount;
+        const boosts = guild.premiumSubscriptionCount ?? 0;
+        const bots = guild.members.cache.filter(member => member.user.bot).size;
+        const roles = guild.roles.cache.size;
+        const team = guild.members.cache.filter(member => member.roles.cache.has(VEXO_STATS_STAFF_ROLE_ID)).size;
+        const names = {
+            members: `『🧑』〆 ${members} Members`,
+            boosts: `『💎』〆 ${boosts} Boosts`,
+            bots: `『🤖』〆 ${bots} Bots`,
+            roles: `『💂』 〆 ${roles} Roles`,
+            team: `『🧑』〆 ${team} Teamlar`
+        };
+        for (const [key, id] of Object.entries(VEXO_STATS_CHANNELS)) {
+            try {
+                const channel = await guild.channels.fetch(id);
+                if (channel && channel.name !== names[key]) await channel.setName(names[key], "Vexo RP Live-Statistiken");
+            } catch (error) {
+                console.warn(`[VEXO-STATS] Kanal ${key} (${id}):`, error.message);
+            }
+        }
+    } catch (error) {
+        console.warn("[VEXO-STATS] Aktualisierung fehlgeschlagen:", error.message);
+    } finally {
+        vexoStatsRunning = false;
+    }
+}
+function scheduleVexoStatsUpdate() {
+    if (vexoStatsPending) clearTimeout(vexoStatsPending);
+    vexoStatsPending = setTimeout(() => {
+        vexoStatsPending = null;
+        updateVexoStatChannels().catch(console.error);
+    }, 20000);
+}
+client.once("ready", () => {
+    scheduleVexoStatsUpdate();
+    setInterval(() => updateVexoStatChannels().catch(console.error), 10 * 60 * 1000);
+});
+for (const event of ["guildMemberAdd", "guildMemberRemove", "guildMemberUpdate", "roleCreate", "roleDelete", "guildUpdate"]) {
+    client.on(event, (...args) => {
+        const guild = args[args.length - 1]?.guild || args[0]?.guild || args[0];
+        if (guild?.id === VEXO_STATS_GUILD_ID) scheduleVexoStatsUpdate();
+    });
+}
