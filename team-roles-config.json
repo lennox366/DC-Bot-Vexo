@@ -34,14 +34,6 @@
       ]
     },
     {
-      "category": "High-Ausbilder",
-      "roles": [
-        { "id": "1559659267378778217", "name": "━━High-Ausbilder━━", "position": 8 },
-        { "id": "1559659267378778220", "name": "[HAS] ✗ High Ausbilder", "position": 9 },
-        { "id": "1559659267378778219", "name": "[Stv.HAS] ✗ Stv. High Ausbilder", "position": 10 }
-      ]
-    },
-    {
       "category": "Direktor",
       "roles": [
         { "id": "1559659267349553272", "name": "━━Direktor━━", "position": 11 },
@@ -81,8 +73,8 @@
       "category": "Low-Ausbilder",
       "roles": [
         { "id": "1559659267307339843", "name": "━━━Low-Ausbilder━━", "position": 27 },
-        { "id": "1559659267307339846", "name": "[LAS] ✗ Low Ausbilder", "position": 28 },
-        { "id": "1559659267307339845", "name": "[Stv.LAS] ✗ Stv. Low Ausbilder", "position": 29 }
+        { "id": "1559659267307339846", "name": "[AS] ✗ LAusbilder", "position": 28 },
+        { "id": "1559659267307339845", "name": "[Stv.AS] ✗ Stv.Ausbilder", "position": 29 }
       ]
     },
     {

@@ -327,15 +327,18 @@ loadNametagConfig();
 function setupNametagsFromRoles() {
     try {
         const teamRolesConfig = require("./team-roles-config.json");
-        for (const category of teamRolesConfig.roleHierarchy) {
-            for (const role of category.roles) {
-                // Erstelle Tag basierend auf der Kategorie
-                const tagPrefix = category.category;
-                nametagConfig.roleIdToTag[role.id] = tagPrefix;
+        let added = 0;
+        for (const category of teamRolesConfig.roleHierarchy || []) {
+            for (const role of category.roles || []) {
+                // Individuelle Kürzel aus nametag-config.json niemals überschreiben.
+                if (!Object.prototype.hasOwnProperty.call(nametagConfig.roleIdToTag, role.id)) {
+                    nametagConfig.roleIdToTag[role.id] = category.category;
+                    added++;
+                }
             }
         }
-        saveNametagConfig();
-        console.log("✅ Nametags basierend auf Team-Rollen-Konfiguration eingerichtet.");
+        if (added > 0) saveNametagConfig();
+        console.log(`✅ Nametags geladen; ${added} fehlende Rollen ergänzt (eigene Kürzel bleiben erhalten).`);
     } catch (error) {
         console.error("❌ Fehler beim Einrichten der Nametags:", error);
     }
@@ -2295,6 +2298,7 @@ const client = new Client({
         GatewayIntentBits.DirectMessages,
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildPresences,
         GatewayIntentBits.GuildVoiceStates,
         GatewayIntentBits.GuildModeration,
 
@@ -5015,126 +5019,80 @@ function findHouse(
 let autoUpdateInterval = null;
 let teamListUpdateRunning = false;
 
-async function createTeamListEmbeds(
-    guild
-) {
-    const embeds = [];
-
-    // BUGFIX: Vorher wurde direkt guild.members.cache gefiltert. Discord
-    // liefert beim Verbinden aber nicht zwangsläufig ALLE Mitglieder eines
-    // Servers aus (abhängig von Servergröße/Online-Status), wodurch der
-    // Cache unvollständig sein kann. Dadurch wurden Team-Mitglieder mit
-    // korrekt hinterlegter Rollen-ID nicht gefunden und fehlten in der
-    // Teamliste/den Pings. Ein vollständiger Fetch vor dem Filtern stellt
-    // sicher, dass der Cache alle aktuellen Serverm-Mitglieder enthält.
+async function createTeamListEmbeds(guild) {
+    // Die Liste verwendet die bestehenden Rollen aus team-roles-config.json.
+    // Präsenzwerte benötigen GuildPresences + aktivierten Presence Intent im Developer Portal.
     try {
         await guild.members.fetch();
     } catch (error) {
-        console.error("❌ Mitglieder konnten für die Teamliste nicht vollständig geladen werden (guild.members.fetch()):", error);
+        console.warn("⚠️ Teamliste: Mitgliederabruf unvollständig:", error.message);
     }
 
     const { roleHierarchy } = require("./team-roles-config.json");
     if (!Array.isArray(roleHierarchy)) {
-        throw new Error("team-roles-config.json enthält keine gültige roleHierarchy.");
+        throw new Error("team-roles-config.json: roleHierarchy fehlt.");
     }
 
-    const highTeamCategories = new Set([
-        "Founder",
-        "Owner",
-        "Co.Owner",
-        "Developer",
-        "Projektleitung",
-        "High-Ausbilder",
-        "Direktor",
-        "Management",
-        "Supervisor",
-        "Teamleitung"
-    ]);
-    const roleEmojis = {
-        ...TEAM_RANK_EMOJIS,
-        "Co-Owner": "🛡️",
-        "Developer": "💻",
-        "High Ausbilder": "🎓",
-        "Leitender Supervisor": "🛡️",
-        "Supervisor": "🛡️",
-        "Stellvertretender Supervisor": "🛡️",
-        "Low Ausbilder": "🎓",
-        "Stellvertretender Low Ausbilder": "📚",
-        "Head Supporter": "🎧",
-        "Senior Supporter": "🎧",
-        "Supporter": "🎧",
-        "Test Supporter": "🧪"
-    };
-    const roleNameAliases = {
-        "Co. Owner": "Co-Owner",
-        "Stv. Projektleitung": "Stellvertretende Projektleitung",
-        "Stv. High Ausbilder": "Stellvertretender High Ausbilder",
-        "Stv. Direktor": "Stellvertretender Direktor",
-        "Stv. Manager": "Stellvertretender Manager",
-        "Stv. Supervisor": "Stellvertretender Supervisor",
-        "Stv. Teamleitung": "Stellvertretende Teamleitung",
-        "Stv. Low Ausbilder": "Stellvertretender Low Ausbilder",
-        "Stv. Fraktionsverwaltung": "Stellvertretende Fraktionsverwaltung",
-        "Stv. Eventleitung": "Stellvertretende Eventleitung",
-        "Stv. Moderator": "Stellvertretender Moderator",
-        "Stv. Supporter": "Stellvertretender Supporter"
-    };
+    const statusIcon = status => ({
+        online: "🟢", idle: "🟡", dnd: "🔴", offline: "⚪", invisible: "⚪"
+    }[status] || "⚪");
+
     const now = new Date();
-    const updateTime = new Intl.DateTimeFormat("de-DE", {
-        hour: "2-digit",
-        minute: "2-digit"
-    }).format(now);
-    const highTeamEmbed = new EmbedBuilder()
-        .setColor(0x5865F2)
-        .setTitle("👥 TEAMLISTE")
-        .setDescription("Vexo RP ✧ 𝙑𝘾 RP-VC | HIGH TEAM")
-        .setFooter({ text: `Teamliste • heute um ${updateTime} Uhr` })
-        .setTimestamp(now);
-    const lowTeamEmbed = new EmbedBuilder()
-        .setColor(0x5865F2)
-        .setTitle("👥 TEAMLISTE")
-        .setDescription("Vexo RP ✧ 𝙑𝘾 RP-VC | LOW TEAM")
-        .setFooter({ text: `Teamliste • heute um ${updateTime} Uhr` })
-        .setTimestamp(now);
+    const embeds = [];
+    let lines = [];
+    let size = 0;
+    let section = 1;
+    const pushPage = () => {
+        if (!lines.length) return;
+        embeds.push(new EmbedBuilder()
+            .setColor(0x5865F2)
+            .setTitle(section === 1 ? "👥 VEXO RP • TEAMLISTE" : `👥 VEXO RP • TEAMLISTE (${section})`)
+            .setDescription(lines.join("\n"))
+            .setFooter({ text: "🟢 Online  🟡 Abwesend  🔴 Nicht stören  ⚪ Offline" })
+            .setTimestamp(now));
+        section++;
+        lines = [];
+        size = 0;
+    };
+    const append = line => {
+        // 3800 Zeichen Sicherheitsabstand zum Discord-Embed-Limit (4096).
+        if (size + line.length + 1 > 3800) pushPage();
+        lines.push(line);
+        size += line.length + 1;
+    };
 
+    const seenRoles = new Set();
     for (const category of roleHierarchy) {
-        const targetEmbed = highTeamCategories.has(category.category)
-            ? highTeamEmbed
-            : lowTeamEmbed;
-
         for (const role of category.roles || []) {
-            if (!role.id || !role.name || role.name.includes("━")) {
-                continue;
+            if (!role.id || !role.name || role.name.includes("━") || seenRoles.has(role.id)) continue;
+            seenRoles.add(role.id);
+            const guildRole = guild.roles.cache.get(role.id);
+            const members = [...guild.members.cache.values()]
+                .filter(member => !member.user.bot && member.roles.cache.has(role.id))
+                .sort((a, b) => a.displayName.localeCompare(b.displayName, "de"));
+            // Discord rendert <@&ROLLEN_ID> als echte, farbige Rollen-Erwähnung.
+            // Nicht als Markdown fett markieren: der Rollen-Chip soll wie im Screenshot aussehen.
+            append(`\n• <@&${role.id}>`);
+            if (!members.length) {
+                append("└ Niemand");
+            } else {
+                for (const member of members) {
+                    append(`└ <@${member.id}> ${statusIcon(member.presence?.status)}`);
+                }
             }
-
-            const configuredName = (role.name.includes("✗")
-                ? role.name.split("✗").pop()
-                : role.name)
-                .trim()
-                .replace(/^[^A-Za-zÀ-ÿ0-9]+/u, "")
-                .replace(/^Server Founder$/i, "Founder");
-            const displayName = roleNameAliases[configuredName] || configuredName;
-            const members = guild.members.cache.filter(member =>
-                member.roles.cache.has(role.id)
-            );
-            const memberList = members.size > 0
-                ? [...members.values()].map(member => `<@${member.id}>`).join("\n")
-                : "— Keine Mitglieder —";
-            const emoji = roleEmojis[displayName] || "📋";
-
-            targetEmbed.addFields({
-                name: `${emoji} ${displayName} [${members.size}]`,
-                value: memberList,
-                inline: false
-            });
         }
     }
-
-    embeds.push(highTeamEmbed, lowTeamEmbed);
-
-    return {
-        embeds
-    };
+    pushPage();
+    if (!embeds.length) {
+        embeds.push(new EmbedBuilder().setColor(0x5865F2).setTitle("👥 VEXO RP • TEAMLISTE")
+            .setDescription("Keine Teamrollen konfiguriert."));
+    }
+    // Discord erlaubt maximal 10 Embeds pro Nachricht.
+    if (embeds.length > 10) {
+        console.warn(`⚠️ Teamliste hat ${embeds.length} Seiten; Discord erlaubt nur 10 Embeds pro Nachricht.`);
+        return { embeds: embeds.slice(0, 10) };
+    }
+    return { embeds };
 }
 
 // =====================================================
@@ -5492,6 +5450,26 @@ function startAutoUpdate(
             5 * 60 * 1000
         );
 }
+
+// Präsenzänderungen aktualisieren die bestehenden Teamlisten gebündelt.
+let presenceTeamListTimer = null;
+client.on("presenceUpdate", (oldPresence, newPresence) => {
+    if (!newPresence?.guild || oldPresence?.status === newPresence.status) return;
+    if (presenceTeamListTimer) return;
+    presenceTeamListTimer = setTimeout(async () => {
+        presenceTeamListTimer = null;
+        try {
+            for (const guild of client.guilds.cache.values()) {
+                await updateLastTeamListMessage(guild);
+                if (guild.id === newPresence.guild.id && autoUpdateInterval) {
+                    await updateTeamList(guild, TEAMLIST_AUTO_UPDATE_CHANNEL_ID);
+                }
+            }
+        } catch (error) {
+            console.error("❌ Teamliste: Präsenzaktualisierung fehlgeschlagen:", error);
+        }
+    }, 30000);
+});
 
 function stopAutoUpdate() {
     if (
@@ -12741,14 +12719,14 @@ client.on(
                 }
 
                 // /teamliste
-                if (commandName === "teamliste") {
+                if (commandName === "teamliste" || commandName === "teamlistepanel") {
                     if (!hasTeamPermission(interaction.member)) {
                         return interaction.reply({ content: "❌ Du hast dafür keine Berechtigung.", flags: MessageFlags.Ephemeral });
                     }
                     try {
                         await interaction.deferReply();
                         const { embeds } = await createTeamListEmbeds(interaction.guild);
-                        const teamListMessage = await interaction.editReply({ embeds });
+                        const teamListMessage = await interaction.editReply({ embeds, allowedMentions: { parse: [] } });
                         setLastTeamListMessage(interaction.guild.id, teamListMessage.channel.id, teamListMessage.id);
                     } catch (error) {
                         console.error("❌ Fehler bei /teamliste:", error);
@@ -19548,7 +19526,7 @@ client.once("clientReady", async () => {
     // --- NEU: Backup-, Dashboard- und Logging-Modul starten ---
     // Die /backup-Befehle werden unten zusammen mit den eigenen Commands pro
     // Server registriert (NICHT global, sonst erscheinen sie doppelt).
-    const allSlashCommands = [...slashCommands, ...robloxCommands, ...aktivCheckCommands, { name: "teambewerbung-test", description: "Fertige Testbewerbung mit Rollenping und Testbuttons senden" }, ...backupModule.commands, countingCommand, leaderboardCommand, supportLeaderboardCommand, akinatorCommand];
+    const allSlashCommands = [...slashCommands, { name: "teamlistepanel", description: "Zeigt die automatische Vexo-RP-Teamliste mit Statuspunkten" }, ...robloxCommands, ...aktivCheckCommands, { name: "teambewerbung-test", description: "Fertige Testbewerbung mit Rollenping und Testbuttons senden" }, ...backupModule.commands, countingCommand, leaderboardCommand, supportLeaderboardCommand, akinatorCommand];
 
     try {
         global.__botCommandList = backupModule.commands.flatMap(c =>
