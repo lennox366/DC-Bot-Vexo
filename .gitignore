@@ -9,3 +9,9 @@ index-SICHERUNG.js
 !package-lock.json
 !**/package.json
 !**/package-lock.json
+
+.cursor/
+cookies.txt
+.env
+node_modules/
+bot-instance.lock
