@@ -1,17 +1,27 @@
-node_modules/
-**/node_modules/
-support-tickets.json
-index-SICHERUNG.js
+﻿node_modules/
 .env
 .env.*
-*.json
-!package.json
-!package-lock.json
-!**/package.json
-!**/package-lock.json
+!.env.example
+*.log
+.ki-code-backups/
+backups/
 
+# Editor
 .cursor/
-cookies.txt
+.vscode/
+
+# Geheimnisse
 .env
+.env.*
+!.env.example
+cookies.txt
+*token*
+*secret*
+*.pem
+*.key
+
+# Abhängigkeiten und Backups
 node_modules/
-bot-instance.lock
+.ki-code-backups/
+backups/
+*.log

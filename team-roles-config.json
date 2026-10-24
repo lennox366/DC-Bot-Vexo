@@ -1,0 +1,135 @@
+{
+  "staffRoleId": "1559659267269595147",
+  "roleHierarchy": [
+    {
+      "category": "Founder",
+      "roles": [
+        { "id": "1559659267441819689", "name": "《 Server Founder", "position": 1 }
+      ]
+    },
+    {
+      "category": "Owner",
+      "roles": [
+        { "id": "1559659267408134201", "name": "《Owner", "position": 2 }
+      ]
+    },
+    {
+      "category": "Co.Owner",
+      "roles": [
+        { "id": "1559659267408134200", "name": "《Co. Owner", "position": 3 }
+      ]
+    },
+    {
+      "category": "Developer",
+      "roles": [
+        { "id": "1559659267395428541", "name": "[Dev] ✗ Developer", "position": 4 }
+      ]
+    },
+    {
+      "category": "Projektleitung",
+      "roles": [
+        { "id": "1559659267395428537", "name": "[LPL] ✗ Leitende Projektleitung", "position": 5 },
+        { "id": "1559659267395428536", "name": "[PL] ✗ Projektleitung", "position": 6 },
+        { "id": "1559659267395428535", "name": "[Stv.PL] ✗ Stv. Projektleitung", "position": 7 }
+      ]
+    },
+    {
+      "category": "High-Ausbilder",
+      "roles": [
+        { "id": "1559659267378778217", "name": "━━High-Ausbilder━━", "position": 8 },
+        { "id": "1559659267378778220", "name": "[HAS] ✗ High Ausbilder", "position": 9 },
+        { "id": "1559659267378778219", "name": "[Stv.HAS] ✗ Stv. High Ausbilder", "position": 10 }
+      ]
+    },
+    {
+      "category": "Direktor",
+      "roles": [
+        { "id": "1559659267349553272", "name": "━━Direktor━━", "position": 11 },
+        { "id": "1559659267378778216", "name": "[LDT] ✗ Leitender Direktor", "position": 12 },
+        { "id": "1559659267378778215", "name": "[DT] ✗ Direktor", "position": 13 },
+        { "id": "1559659267378778214", "name": "[Stv.DT] ✗ Stv. Direktor", "position": 14 }
+      ]
+    },
+    {
+      "category": "Management",
+      "roles": [
+        { "id": "1559659267349553265", "name": "━━Managment━━", "position": 15 },
+        { "id": "1559659267349553269", "name": "[LMA] ✗ Leitender Manager", "position": 16 },
+        { "id": "1559659267349553268", "name": "[MA] ✗ Manager", "position": 17 },
+        { "id": "1559659267349553267", "name": "[Stv.MA] ✗ Stv. Manager", "position": 18 }
+      ]
+    },
+    {
+      "category": "Supervisor",
+      "roles": [
+        { "id": "1559659267324256373", "name": "━━━━━Supervisor━━━━", "position": 19 },
+        { "id": "1559659267349553264", "name": "[LSV] ✗ Leitender Supervisor", "position": 20 },
+        { "id": "1559659267349553263", "name": "[SV] ✗  Supervisor", "position": 21 },
+        { "id": "1559659267324256375", "name": "[Stv.SV] ✗ Stv. Supervisor", "position": 22 }
+      ]
+    },
+    {
+      "category": "Teamleitung",
+      "roles": [
+        { "id": "1559659267324256366", "name": "━━━Teamleitung━━", "position": 23 },
+        { "id": "1559659267324256370", "name": "[LTL] ✗ Leitende Teamleitung", "position": 24 },
+        { "id": "1559659267324256369", "name": "[TL] ✗ Teamleitung", "position": 25 },
+        { "id": "1559659267324256368", "name": "[Stv.TL] ✗ Stv. Teamleitung", "position": 26 }
+      ]
+    },
+    {
+      "category": "Low-Ausbilder",
+      "roles": [
+        { "id": "1559659267307339843", "name": "━━━Low-Ausbilder━━", "position": 27 },
+        { "id": "1559659267307339846", "name": "[LAS] ✗ Low Ausbilder", "position": 28 },
+        { "id": "1559659267307339845", "name": "[Stv.LAS] ✗ Stv. Low Ausbilder", "position": 29 }
+      ]
+    },
+    {
+      "category": "Fraktionsverwaltung",
+      "roles": [
+        { "id": "1559659267307339839", "name": "━━━Fraktionsverwaltung━━", "position": 30 },
+        { "id": "1559659267307339842", "name": "[FV] ✗ Fraktionsverwaltung", "position": 31 },
+        { "id": "1559659267307339841", "name": "[Stv.FV] ✗ Stv. Fraktionsverwaltung", "position": 32 }
+      ]
+    },
+    {
+      "category": "Eventleitung",
+      "roles": [
+        { "id": "1559659267299217467", "name": "━━━Eventleitung━━", "position": 33 },
+        { "id": "1559659267307339838", "name": "[EL] ✗ Eventleitung", "position": 34 },
+        { "id": "1559659267307339837", "name": "[Stv.EL] ✗ Stv. Eventleitung", "position": 35 }
+      ]
+    },
+    {
+      "category": "Administrator",
+      "roles": [
+        { "id": "1559659267299217462", "name": "━━━Administrator━━", "position": 36 },
+        { "id": "1559659267299217466", "name": "[Head Admin] ✗ Head Administrator", "position": 37 },
+        { "id": "1559659267299217465", "name": "[Sr.Admin] ✗ Sr. Administrator", "position": 38 },
+        { "id": "1559659267299217464", "name": "[Admin] ✗ Administrator", "position": 39 },
+        { "id": "1559659267299217463", "name": "[Jr.Admin] ✗ Jr. Administrator", "position": 40 }
+      ]
+    },
+    {
+      "category": "Moderator",
+      "roles": [
+        { "id": "1559659267269595154", "name": "━━━Moderator━━", "position": 41 },
+        { "id": "1559659267299217461", "name": "[Head Mod] ✗ Head Moderator", "position": 42 },
+        { "id": "1559659267299217460", "name": "[Sr.Mod] ✗ Sr. Moderator", "position": 43 },
+        { "id": "1559659267299217459", "name": "[Mod] ✗ Moderator", "position": 44 },
+        { "id": "1559659267269595155", "name": "[Jr.Mod] ✗ Jr. Moderator", "position": 45 }
+      ]
+    },
+    {
+      "category": "Supporter",
+      "roles": [
+        { "id": "1559659267269595149", "name": "━━━Supporter━━", "position": 46 },
+        { "id": "1559659267269595153", "name": "[Head Sup] ✗ Head Supporter", "position": 47 },
+        { "id": "1559659267269595152", "name": "[Sr.Sup] ✗ Sr. Supporter", "position": 48 },
+        { "id": "1559659267269595151", "name": "[Sup] ✗ Supporter", "position": 49 },
+        { "id": "1559659267269595150", "name": "[T-Sup] ✗ Test Supporter", "position": 50 }
+      ]
+    }
+  ]
+}

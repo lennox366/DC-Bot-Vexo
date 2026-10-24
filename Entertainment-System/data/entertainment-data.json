@@ -1,0 +1,121 @@
+{
+  "welcome": {
+    "1552653648641925170": {
+      "message": "👋 Willkommen {user} auf Bedrock Brothers!\nSchön, dass du da bist! 🥳\nSchau dich gerne um, lies dir die Regeln durch und hab viel Spaß auf unserem Server! ❤️\n\n🎮 Viel Spaß und willkommen bei der Bedrock Brothers Community! 🔥",
+      "channel": "1552653649228992544",
+      "mention": true,
+      "image": "welcome-1552653648641925170.png"
+    }
+  },
+  "movies": [
+    {
+      "id": "6a626119ea4ccc4f",
+      "type": "movie",
+      "name": "name",
+      "genre": "genre",
+      "description": "ja",
+      "suggestedBy": "1331661518424768523",
+      "suggestedByName": "lion77x",
+      "createdAt": "2026-09-25T11:25:23.482Z",
+      "duration": "100"
+    },
+    {
+      "id": "4bc3a307e6b311b8",
+      "type": "movie",
+      "name": "test",
+      "genre": "test",
+      "description": "test",
+      "suggestedBy": "1331661518424768523",
+      "suggestedByName": "lion77x",
+      "createdAt": "2026-09-25T11:27:25.743Z",
+      "duration": "100"
+    }
+  ],
+  "series": [
+    {
+      "id": "1c62dc8a7dd9d9bd",
+      "type": "seriesawdawd",
+      "name": "dawda",
+      "genre": "wdaw",
+      "description": "dawa",
+      "suggestedBy": "1322191083303731201",
+      "suggestedByName": "lennox01266",
+      "createdAt": "2026-09-25T11:54:13.503Z",
+      "seasons": "dad"
+    }
+  ],
+  "polls": [
+    {
+      "id": "8ae28e5c998f469c",
+      "type": "custom",
+      "question": "leck eier",
+      "options": [
+        "ja",
+        "nein"
+      ],
+      "votes": {
+        "1322191083303731201": 0
+      },
+      "createdBy": "1322191083303731201",
+      "createdAt": "2026-09-25T11:02:45.233Z"
+    },
+    {
+      "id": "7d00ed8810e467fd",
+      "type": "Game",
+      "question": "hab ihr bock Sos Ops zu spielen es kostet 50c kosten getragen von lennox",
+      "options": [
+        "ja",
+        "nein"
+      ],
+      "votes": {
+        "1331661518424768523": 0
+      },
+      "createdBy": "1331661518424768523",
+      "createdAt": "2026-09-27T09:42:52.252Z"
+    }
+  ],
+  "gameSchedule": [
+    {
+      "id": "334b88c63c20cd2e",
+      "game": "awdawd",
+      "date": "awdawda",
+      "time": "",
+      "endDate": null,
+      "endTime": null,
+      "players": [
+        "wdawd"
+      ],
+      "info": "",
+      "locked": false,
+      "panelChannelId": null,
+      "panelMessageId": null,
+      "guildId": "1552653648641925170",
+      "createdBy": "1322191083303731201",
+      "createdAt": "2026-09-25T11:18:03.478Z"
+    },
+    {
+      "id": "34ff17933aadd6c0",
+      "game": "Ark",
+      "date": "01.08.2026",
+      "time": "",
+      "endDate": null,
+      "endTime": null,
+      "players": [],
+      "info": "",
+      "locked": false,
+      "panelChannelId": null,
+      "panelMessageId": null,
+      "guildId": "1552653648641925170",
+      "createdBy": "1331661518424768523",
+      "createdAt": "2026-09-25T11:23:51.715Z"
+    }
+  ],
+  "highscores": [],
+  "gameSuggestions": [],
+  "announcements": [],
+  "events": [],
+  "autoMessages": [],
+  "movieNights": [],
+  "ratings": [],
+  "panels": {}
+}

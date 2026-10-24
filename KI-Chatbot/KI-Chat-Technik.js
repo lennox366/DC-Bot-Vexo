@@ -72,16 +72,17 @@ function pickProvider() {
     return null;
 }
 
-const MAX_TOKENS = 4000;
-const TEMPERATURE = 0.5;
-const REQUEST_TIMEOUT_MS = 90 * 1000;
+// Groessere Codeantworten erlauben; Anbieter koennen eigene Obergrenzen haben.
+const MAX_TOKENS = Math.min(12000, Math.max(1000, Number(process.env.AI_MAX_TOKENS) || 8000));
+const TEMPERATURE = 0.25;
+const REQUEST_TIMEOUT_MS = 150 * 1000;
 
 // =====================================================
 // GESPRÄCHSVERLAUF (für Rückfragen beim Coden)
 // =====================================================
 
 const HISTORY_LIMIT = 10; // Nachrichten pro Nutzer (5 Frage/Antwort-Paare)
-const HISTORY_MAX_CHARS = 6000; // pro Nachricht, spart Tokens
+const HISTORY_MAX_CHARS = 12000; // pro Nachricht, spart Tokens
 const history = new Map();
 
 function historyKey(context) {
@@ -241,28 +242,66 @@ function buildAskerInfo(context) {
 // SYSTEM-PROMPT (inkl. Coding-Fähigkeiten)
 // =====================================================
 
-const CODING_PROMPT =
-    "Du bist außerdem ein erfahrener Programmierer und kannst in jeder gängigen Sprache coden " +
-    "(z. B. JavaScript/Node.js, discord.js, Python, Java, Lua, C#, C++, HTML/CSS, SQL, Bash, " +
-    "Minecraft-Plugins und Skripte). " +
-    "Wenn jemand Code möchte, schreibst du vollständigen, lauffähigen Code, keine Platzhalter " +
-    "wie \"// hier Code einfügen\". " +
-    "Wenn jemand Code ändern lässt, gibst du die komplette geänderte Datei bzw. Funktion aus. " +
-    "Setze Code IMMER in Markdown-Codeblöcke mit Sprachangabe, z. B. ```js. " +
-    "Erkläre danach kurz und verständlich, was der Code macht und wie man ihn benutzt. " +
-    "Hilf auch beim Fehlersuchen: Wenn jemand eine Fehlermeldung oder Code schickt, " +
-    "nenne die Ursache und liefere die Korrektur. " +
-    "Nutze auf Discord keine Tabellen und keine Überschriften mit #; " +
-    "halte Erklärungen außerhalb des Codes kurz.";
+const CODING_PROMPT = `
+Du bist der erfahrene leitende Entwickler des bereits laufenden Vexo-RP-Discord-Bots (Node.js, discord.js v14).
+Der Nutzer ist kein Programmierer und schreibt kurze, natürliche Wünsche wie "Erstelle mir ein Ticket-Tool".
+Interpretiere solche Wünsche eigenständig und liefere eine hochwertige, praxisnahe Lösung, ohne den Nutzer
+mit einer langen Liste technischer Anforderungen zu belasten. Frage nur nach wirklich unverzichtbaren Angaben.
 
-async function buildSystemPrompt(context) {
+CODING-REGELN:
+- "Erstelle mir ...", "Mach mir ...", "Programmiere ..." bedeutet: Code im Chat entwerfen, KEINE Dateien ändern.
+- Nur eine ausdrückliche Aufforderung wie "Baue das in mein Projekt ein" darf den gesonderten,
+  passwortgeschützten Code-Manager für einen Änderungsvorschlag auslösen.
+- Vexo RP hat bereits einen Client und einen Login. Für Erweiterungen NIEMALS new Client(), client.login(),
+  einen zweiten Event-Client oder einen neuen Bot-Token anlegen. Verwende ein Modul mit
+  module.exports = function registerFeature(client, options = {}) { ... } oder ein zum Projekt passendes Muster.
+- Erfinde keine vorhandenen Dateien, Funktionen, Slash-Command-Registrierungen oder Konfigurationswerte.
+  Wenn Projektstruktur unbekannt ist, nenne die Annahmen klar und liefere eine eigenständige registrierbare Datei.
+- Nutze discord.js v14 APIs, Slash-Commands oder Buttons wo sinnvoll, PermissionsBitField.Flags,
+  ChannelType, Interaction-Acknowledgement, async/await und try/catch korrekt.
+- Bei einem Ticket-Tool standardmäßig: Ticket-Panel mit Button, private Ticketkanäle,
+  Support-Rolle (konfigurierbar), pro Nutzer maximal ein offenes Ticket,
+  Schutz vor schnellen Doppelklicks, Bestätigung vor dem Schließen, Berechtigungsprüfung,
+  Neustart-Verhalten und hilfreiche Fehlermeldungen. Keine flüchtige Set-Lösung als einzige Persistenz.
+- Bei anderen Tools ebenso sinnvolle Standardfunktionen, Rechteprüfung, Missbrauchsschutz,
+  Fehlerbehandlung und Neustart-Verhalten eigenständig berücksichtigen.
+- Keine Fake-Tests behaupten. Prüfe vor dem Antworten gedanklich Syntax, Imports, Zustände,
+  API-Kompatibilität und ob alle angekündigten Funktionen wirklich enthalten sind.
+- Gib bei Codeanfragen vollständigen Code in sauber getrennten Markdown-Codeblöcken mit Sprachangabe
+  (z. B. drei Backticks + js). Pro Datei Dateiname, vollständiger Inhalt und kurze Einbauanleitung.
+  Keine einzeiligen riesigen Codeblöcke, keine abgebrochenen Klammern, keine unbenutzten Imports.
+- Bei umfangreichen Aufgaben zuerst den wichtigsten vollständigen, benutzbaren Teil liefern;
+  wenn eine Antwort abgeschnitten ist, fehlende Teile offen benennen statt Vollständigkeit zu behaupten.
+- Antworte auf Deutsch, direkt und verständlich. Auf Discord keine Markdown-Tabellen.
+- Bei Fragen und Fehlermeldungen Ursachen erklären und korrigierten Code liefern.
+`;
 
-    let prompt =
-        "Du bist ein freundlicher KI-Assistent auf einem Discord-Server. " +
-        "Antworte hilfreich, verständlich und auf Deutsch. " +
-        CODING_PROMPT;
+function isInternalCodePlan(message) {
+    // Der Code-Manager benötigt maschinenlesbares JSON statt Markdown-Codeblöcken.
+    return typeof message === "string" &&
+        message.includes('"changes"') &&
+        message.includes('"action"') &&
+        /Gib NUR gültiges JSON|Schema:/i.test(message);
+}
 
-    if (!context.guild) {
+function isCodingRequest(message) {
+    return typeof message === "string" &&
+        /(?:code|programmier|ticket|tool|system|discord\.js|\.js\b|skript|funktion|bug|fehler|reparier|implementier|entwickel|slash.command|bot)/i.test(message);
+}
+
+async function buildSystemPrompt(context, userMessage = "") {
+
+    const internalPlan = isInternalCodePlan(userMessage);
+    let prompt = internalPlan
+        ? "Du bist ein vorsichtiger JavaScript-Entwickler. Befolge das angeforderte JSON-Schema exakt. " +
+          "Antworte ausschließlich mit gültigem JSON ohne Markdown, Prosa oder Codeblöcke. " +
+          "Verändere keine Dateien selbst; erzeuge nur einen Vorschlag. "
+        : "Du bist ein freundlicher KI-Assistent auf einem Discord-Server. " +
+          "Antworte hilfreich, verständlich und auf Deutsch. " + CODING_PROMPT;
+
+    // Beim Programmieren keine vollständige Mitgliederliste abrufen:
+    // das verbraucht Tokens, verlangsamt Antworten und kann Discord-Rate-Limits auslösen.
+    if (!context.guild || internalPlan || isCodingRequest(userMessage)) {
         return prompt;
     }
 
@@ -311,7 +350,7 @@ async function generateAIResponse(userMessage, context = {}) {
 
         const model = process.env.AI_MODEL || provider.model;
 
-        const systemPrompt = await buildSystemPrompt(context);
+        const systemPrompt = await buildSystemPrompt(context, userMessage);
 
         // =================================================
         // ANFRAGE
@@ -398,6 +437,11 @@ async function generateAIResponse(userMessage, context = {}) {
 
         if (!answer) {
             return "❌ Es wurde keine Antwort von der KI erhalten.";
+        }
+
+        // Eine am Tokenlimit abgeschnittene Codeantwort nicht als komplett ausgeben.
+        if (data?.choices?.[0]?.finish_reason === "length" && !isInternalCodePlan(userMessage)) {
+            answer += "\n\n⚠️ Die Antwort wurde am Tokenlimit abgeschnitten und ist möglicherweise unvollständig. Bitte fordere die Fortsetzung an, bevor du den Code verwendest.";
         }
 
         addToHistory(context, userMessage, answer);

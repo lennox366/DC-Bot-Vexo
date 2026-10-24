@@ -1,0 +1,24 @@
+{
+  "panels": {
+    "1510593847972073653": [
+      {
+        "channelId": "1545763477560369202",
+        "messageId": "1546948089418358795",
+        "panelType": "suggestion",
+        "createdAt": "2026-09-08T18:19:26.344Z"
+      },
+      {
+        "channelId": "1545790876280954951",
+        "messageId": "1546086060566642761",
+        "panelType": "burger",
+        "createdAt": "2026-09-06T09:14:02.001Z"
+      },
+      {
+        "channelId": "1545790876280954951",
+        "messageId": "1546089576345641041",
+        "panelType": "suggestion",
+        "createdAt": "2026-09-06T09:28:00.196Z"
+      }
+    ]
+  }
+}

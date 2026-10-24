@@ -1,0 +1,28 @@
+{
+  "statusByGuild": {
+    "1540369255353032848": {
+      "channelId": "1548634862888423504",
+      "messageId": "1548634879506522204",
+      "currentStatus": "online",
+      "lastUpdated": "2026-09-13T10:02:07.387Z"
+    },
+    "1545474402009743440": {
+      "channelId": "1549429396819943435",
+      "messageId": "1552992067263660155",
+      "currentStatus": "online",
+      "lastUpdated": "2026-09-25T10:36:02.535Z"
+    },
+    "1552653648641925170": {
+      "channelId": "1552992118291701840",
+      "messageId": "1552992144992641095",
+      "currentStatus": "online",
+      "lastUpdated": "2026-09-25T10:36:21.237Z"
+    },
+    "1559659266737176699": {
+      "channelId": "1559659268834328737",
+      "messageId": "1563102773862731798",
+      "currentStatus": "online",
+      "lastUpdated": "2026-10-23T08:12:31.730Z"
+    }
+  }
+}

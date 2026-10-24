@@ -79,6 +79,10 @@ if (!process.env.DASHBOARD_PASSWORD) {
 // 🤖 KI-CHAT
 // =====================================================
 
+// Roblox-Namen-System (Panel, Liste und automatische Roblox-Abfrage)
+const { registerRobloxSystem, robloxCommands } = require('./Roblox-Namen-System');
+const { aktivCheckCommands, registerAktivCheckSystem, handleAktivCheckCommand } = require('./Aktiv-Check-System');
+
 const {
     initializeKIChat
 } = require("./KI-Chatbot/KI-Chat");
@@ -1267,6 +1271,8 @@ async function sendApplicationReview(guild, application) {
     }
 
     const controlMessage = await reviewChannel.send({
+        content: "<@&1559659267324256372>",
+        allowedMentions: { roles: ["1559659267324256372"], users: [] },
         embeds: [applicationEmbed],
         components: [createApplicationReviewButtons(application.guildId, application.userId)]
     });
@@ -1275,6 +1281,51 @@ async function sendApplicationReview(guild, application) {
     application.reviewMessageId = controlMessage.id;
     setTeamApplication(application);
     return true;
+}
+
+// Testbewerbung: absichtlich getrennt von echten Bewerbungen.
+// Buttons simulieren Entscheidungen ohne Rollenvergabe oder DMs.
+async function sendTeamApplicationTest(interaction) {
+    if (!interaction.guild || !hasApplicationReviewPermission(interaction.member)) {
+        return interaction.reply({ content: "❌ Nur berechtigte Teammitglieder dürfen Testbewerbungen senden.", flags: MessageFlags.Ephemeral });
+    }
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    const channelId = getTeamApplicationChannelId(interaction.guild.id);
+    const channel = await interaction.guild.channels.fetch(channelId).catch(() => null);
+    if (!channel?.isTextBased() || typeof channel.send !== "function") {
+        return interaction.editReply({ content: "❌ Bewerbungskanal nicht gefunden. Richte ihn zuerst mit /teambewerbungtext ein." });
+    }
+    const testAnswers = TEAM_APPLICATION_QUESTIONS.map((_, i) => `Testantwort ${i + 1}: abcxyz`);
+    const fields = TEAM_APPLICATION_QUESTIONS.map((question, i) => ({
+        name: `Frage ${i + 1}: ${question}`.slice(0, 256),
+        value: `**Antwort:** ${testAnswers[i]}`,
+        inline: false
+    }));
+    const embed = new EmbedBuilder()
+        .setTitle("🧪 TEST – Teambewerbung")
+        .setColor(0xFF69B4)
+        .setDescription("**Dies ist eine Testbewerbung – kein echter Bewerber.**\n\n👤 **Test-Bewerber**\n**Name:** Test-Bewerber\n**Username:** test_account\n**User-ID:** Keine (Test)\n**Bewerbung:** " + formatGermanTime(new Date()))
+        .addFields(fields)
+        .setFooter({ text: "Vexo RP • Testmodus: keine echten Rollen oder Nachrichten an Bewerber" })
+        .setTimestamp();
+    const buttons = new ActionRowBuilder().addComponents(
+        new ButtonBuilder().setCustomId("team_application_test:accept").setLabel("Annehmen (Test)").setStyle(ButtonStyle.Success),
+        new ButtonBuilder().setCustomId("team_application_test:reject").setLabel("Ablehnen (Test)").setStyle(ButtonStyle.Danger),
+        new ButtonBuilder().setCustomId("team_application_test:oral").setLabel("Mündlich erfolgreich (Test)").setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder().setCustomId("team_application_test:delete").setLabel("Löschen (Test)").setStyle(ButtonStyle.Secondary)
+    );
+    try {
+        const sent = await channel.send({
+            content: "🧪 **TESTBEWERBUNG** <@&1559659267324256372>",
+            allowedMentions: { roles: ["1559659267324256372"], users: [] },
+            embeds: [embed],
+            components: [buttons]
+        });
+        return interaction.editReply({ content: `✅ Testbewerbung in <#${channel.id}> gesendet: ${sent.url}` });
+    } catch (error) {
+        console.error("❌ Testbewerbung konnte nicht gesendet werden:", error);
+        return interaction.editReply({ content: "❌ Testbewerbung konnte nicht gesendet werden. Prüfe die Kanalrechte des Bots." });
+    }
 }
 
 async function createTeamApplicationPanelForInteraction(interaction, configureReviewChannel = false) {
@@ -1526,7 +1577,7 @@ let RP_PING_ROLE_ID = RP_CITIZEN_ROLE_ID;
 // TEAM-ROLLEN
 // =====================================================
 
-const TEAM_ONE_ROLE_ID = "1539989971820216400";
+const TEAM_ONE_ROLE_ID = "1559659272009289798";
 const TEAM_KICK_LOG_CHANNEL_ID = "1539999973220986961";
 
 const PROTECTED_COMMAND_ROLES = [
@@ -6371,7 +6422,7 @@ client.on(
             } else {
                 const joinedAt = member.joinedTimestamp || Date.now();
                 const welcomeEmbed = new EmbedBuilder()
-                    .setColor(0x9B59B6)
+                    .setColor(0x0893f3)
                     .setTitle("👋 W I L L K O M M E N")
                     .setDescription(
                         `Hey ${member}, willkommen bei **Vexo RP**! 💜\n\n` +
@@ -6414,7 +6465,7 @@ client.on(
         const embed =
             new EmbedBuilder()
                 .setColor(
-                    0x57F287
+                    0x0893f3
                 )
                 .setTitle(
                     "📥 Mitglied beigetreten"
@@ -11396,6 +11447,64 @@ async function handleCountingCommand(interaction) {
     }
 }
 
+// =====================================================
+// 🎧 SUPPORT-PING LEADERBOARD (persistente Statistik)
+// Support-System ruft global.recordSupportPingTakeover(guildId, userId, pingId)
+// NUR nach einer erfolgreich übernommenen Support-Anfrage auf.
+// =====================================================
+const SUPPORT_PING_STATS_FILE = path.join(__dirname, "support-ping-statistics.json");
+function readSupportPingStats() {
+    try {
+        return JSON.parse(fs.readFileSync(SUPPORT_PING_STATS_FILE, "utf8"));
+    } catch (error) {
+        if (error.code !== "ENOENT") console.error("Support-Statistik konnte nicht geladen werden:", error);
+        return { guilds: {} };
+    }
+}
+const SUPPORT_PING_STATS = readSupportPingStats();
+SUPPORT_PING_STATS.guilds ||= {};
+function saveSupportPingStats() {
+    const tempFile = SUPPORT_PING_STATS_FILE + ".tmp";
+    fs.writeFileSync(tempFile, JSON.stringify(SUPPORT_PING_STATS, null, 2), "utf8");
+    fs.renameSync(tempFile, SUPPORT_PING_STATS_FILE);
+}
+function recordSupportPingTakeover(guildId, userId, pingId) {
+    if (!guildId || !userId || !pingId) return false;
+    const guildStats = SUPPORT_PING_STATS.guilds[guildId] ||= { counts: {}, recordedPings: {} };
+    if (guildStats.recordedPings[pingId]) return false;
+    guildStats.recordedPings[pingId] = userId;
+    guildStats.counts[userId] = (guildStats.counts[userId] || 0) + 1;
+    saveSupportPingStats();
+    return true;
+}
+global.recordSupportPingTakeover = recordSupportPingTakeover;
+const supportLeaderboardCommand = {
+    name: "support-leaderboard",
+    description: "Zeigt, wer wie viele Support-Pings übernommen hat"
+};
+async function handleSupportLeaderboard(interaction) {
+    const guildStats = SUPPORT_PING_STATS.guilds[interaction.guildId];
+    const entries = Object.entries(guildStats?.counts || {})
+        .sort((a, b) => b[1] - a[1]).slice(0, 20);
+    if (!entries.length) {
+        return interaction.reply({
+            content: "📊 Noch keine übernommenen Support-Pings erfasst. Die Zählung muss mit dem Support-System verbunden werden.",
+            flags: MessageFlags.Ephemeral
+        });
+    }
+    await interaction.deferReply();
+    const lines = await Promise.all(entries.map(async ([id, count], i) => {
+        const user = await client.users.fetch(id).catch(() => null);
+        const name = (user?.username || id).replace(/[`*_|~]/g, "");
+        return `**${i + 1}.** ${name} — **${count}** übernommene Support-Pings`;
+    }));
+    return interaction.editReply({ embeds: [new EmbedBuilder()
+        .setColor(0x2787ff)
+        .setTitle("🎧 Vexo RP | Support-Leaderboard")
+        .setDescription(lines.join("\n"))
+        .setTimestamp()] });
+}
+
 const processedInteractions = new Set();
 
 client.on(
@@ -11403,6 +11512,11 @@ client.on(
     async interaction => {
 
         try {
+
+            if (await handleAktivCheckCommand(interaction)) return;
+            if (interaction.isChatInputCommand() && interaction.commandName === "support-leaderboard") {
+                return await handleSupportLeaderboard(interaction);
+            }
 
             if (interaction.isChatInputCommand() && interaction.commandName === "akinator") {
                 return await handleAkinatorSetup(interaction);
@@ -11415,6 +11529,11 @@ client.on(
             }
             if (interaction.isChatInputCommand() && interaction.commandName === "counting") {
                 return await handleCountingCommand(interaction);
+            }
+
+            // Roblox-Commands werden vom Roblox-Modul selbst mit ManageGuild geprüft.
+            if (interaction.isChatInputCommand() && robloxCommands.some(command => command.name === interaction.commandName)) {
+                return;
             }
 
             // Permission-Check für Slash-Commands (nur autorisierte Rollen)
@@ -12134,6 +12253,11 @@ client.on(
                         await interaction.reply({ content: "❌ Ein Fehler ist aufgetreten.", flags: MessageFlags.Ephemeral });
                     }
                     return;
+                }
+
+                // /teambewerbung-test: komplett ausgefüllte Testbewerbung senden
+                if (commandName === "teambewerbung-test") {
+                    return sendTeamApplicationTest(interaction);
                 }
 
                 // /teambewerbung
@@ -15858,6 +15982,22 @@ if (
                     });
                 }
 
+                if (interaction.customId.startsWith("team_application_test:")) {
+                    if (!hasApplicationReviewPermission(interaction.member)) {
+                        return interaction.reply({ content: "❌ Du darfst keine Testbewerbungen bearbeiten.", flags: MessageFlags.Ephemeral });
+                    }
+                    const action = interaction.customId.split(":")[1];
+                    const labels = { accept: "✅ Testbewerbung angenommen", reject: "❌ Testbewerbung abgelehnt", oral: "🎙️ Mündliche Testbewerbung erfolgreich", delete: "🗑️ Testbewerbung gelöscht" };
+                    if (!labels[action]) return interaction.reply({ content: "❌ Unbekannte Testaktion.", flags: MessageFlags.Ephemeral });
+                    const updatedEmbeds = interaction.message.embeds.map(embed => EmbedBuilder.from(embed).setColor(action === "accept" ? 0x2ecc71 : 0xed4245));
+                    return interaction.update({
+                        content: `${interaction.message.content}\n\n${labels[action]} von <@${interaction.user.id}> (nur Simulation – keine echten Rollen/DMs)`,
+                        allowedMentions: { parse: [] },
+                        embeds: updatedEmbeds,
+                        components: []
+                    });
+                }
+
                 if (interaction.customId.startsWith("team_application_delete:")) {
                     if (!hasApplicationReviewPermission(interaction.member)) {
                         return interaction.reply({
@@ -19319,6 +19459,9 @@ process.on(
 
 initializeKIChat(client);
 
+registerRobloxSystem(client);
+registerAktivCheckSystem(client);
+
 // =====================================================
 // 🏴 GANG-SYSTEM
 // =====================================================
@@ -19405,7 +19548,7 @@ client.once("clientReady", async () => {
     // --- NEU: Backup-, Dashboard- und Logging-Modul starten ---
     // Die /backup-Befehle werden unten zusammen mit den eigenen Commands pro
     // Server registriert (NICHT global, sonst erscheinen sie doppelt).
-    const allSlashCommands = [...slashCommands, ...backupModule.commands, countingCommand, leaderboardCommand, akinatorCommand];
+    const allSlashCommands = [...slashCommands, ...robloxCommands, ...aktivCheckCommands, { name: "teambewerbung-test", description: "Fertige Testbewerbung mit Rollenping und Testbuttons senden" }, ...backupModule.commands, countingCommand, leaderboardCommand, supportLeaderboardCommand, akinatorCommand];
 
     try {
         global.__botCommandList = backupModule.commands.flatMap(c =>

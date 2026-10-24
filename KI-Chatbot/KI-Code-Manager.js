@@ -17,13 +17,13 @@ const sessions = new Map();
 const MAX_AGE = 15 * 60 * 1000;
 const MAX_FILE_BYTES = 850000;
 const MAX_CHANGES = 4;
-const MAX_RETRIES = 3;
-const MAX_CONTEXT = 34000;
-const MAX_NEW = 60000;
+const MAX_RETRIES = 4;
+const MAX_CONTEXT = 45000;
+const MAX_NEW = 90000;
 const hash = value => crypto.createHash('sha256').update(value).digest('hex');
 const owner = () => process.env.KI_CODE_OWNER_ID;
 const ignore = /(?:^|\/)(?:node_modules|\.git|\.env|\.ki-code-backups|backups|logs)(?:\/|$)/i;
-const sensitive = /(?:cookie|token|secret|credential|password|lock)/i;
+const sensitive = /(?:cookie|token|secret|credential|password|lock|private|\.pem$|\.key$)/i;
 
 function resolveTarget(name, allowNew = false) {
   if (typeof name !== 'string' || !name || name.length > 180 ||
@@ -104,15 +104,24 @@ function isApproval(text) {
 function isCancel(text) {
   return /^(?:abbrechen|verwerfen|stopp|stop|doch nicht)[.! ]*$/i.test(text.trim());
 }
-function isEditIntent(text) {
-  return /(?:änder|bearbeit|einbau|einbauen|bau(?:e|en)?\b|austausch|ersetz|erstell|entwickel|reparier|korrigier|fix(?:e|en)?\b|neu(?:e|en|es)?\b|verbind|ergänz|implementier|mach|füge|anpass|schreib|programmier|hinzufüg|integrier)/i.test(text);
+// Nur ausdrueckliche Projektaktionen werden vom Dateimanager abgefangen.
+// Allgemeine Coding-Wuensche laufen ueber KI-Chat-Technik und erzeugen Code im Chat.
+function isNoWriteIntent(text) {
+  return /(?:nicht|nichts|noch nichts|keine|ohne)\s+(?:bearbeit|aender|änder|einbau|einbauen|installier|speicher|veränder)/i.test(text) ||
+    /(?:bearbeite|ändere|aendere|baue|installiere)\s+(?:bitte\s+)?(?:noch\s+)?nicht/i.test(text) ||
+    /(?:erst|zuerst|zunächst)\s+(?:nur\s+)?(?:lesen|prüfen|ansehen|zeigen)/i.test(text) ||
+    /(?:nur|erstmal|zunächst)\s+(?:den\s+)?code\s+(?:zeigen|schreiben|erstellen|sehen)/i.test(text);
+}
+function isInstallIntent(text) {
+  if (isNoWriteIntent(text)) return false;
+  return /(?:bau(?:e)?|füg(?:e)?|integrier(?:e)?|installier(?:e)?|übernimm|spiel(?:e)?|speicher(?:e)?|wend(?:e)?|setz(?:e)?)\b[\s\S]{0,110}?(?:in\s+(?:mein|dein|unser)(?:em|en|es)?\s+(?:projekt|bot)|ins\s+projekt|in\s+die\s+datei|ein|im\s+projekt|änderungen)/i.test(text) ||
+    /(?:ändere|aendere|bearbeite|repariere|fixe|ersetze|aktualisiere)\s+(?:bitte\s+)?(?:meine|die|diese|folgende)\s+(?:datei|projektdatei|\S+\.(?:js|json))/i.test(text) ||
+    /(?:im|in meinem|in unser(?:em|en))\s+(?:bot|projekt)\s+(?:einbauen|installieren|ändern|bearbeiten)/i.test(text);
 }
 function isReadIntent(text) {
-  return !isEditIntent(text) && /(?:such|find|zeig|lies|öffne|schick|sende|wo (?:ist|steht)|raus)/i.test(text) &&
-    /(?:code|datei|funktion|ticket|index|modul|skript|\.json|\.js)/i.test(text);
-}
-function isCodeIntent(text) {
-  return isEditIntent(text) || isReadIntent(text) || /(?:code|datei|\.js\b|\.json\b|ticketsystem|skript|modul)/i.test(text);
+  return !isNoWriteIntent(text) && !isInstallIntent(text) &&
+    /(?:such|find|zeig|lies|öffne|schick|sende|wo (?:ist|steht))/i.test(text) &&
+    /(?:meine|meinem|projekt|vorhanden|aktuell|datei|\.js\b|\.json\b)/i.test(text);
 }
 function listFiles() {
   const result = [];
@@ -242,10 +251,6 @@ async function handleCodeMessage(message) {
   if (!message?.author || message.author.bot || message.author.id !== owner()) return false;
   const text = (message.content || '').trim();
   if (!text && !message.attachments?.size) return false;
-  if (!process.env.KI_CODE_PASSWORD_HASH) {
-    if (isCodeIntent(text)) { await message.reply('🔒 KI_CODE_PASSWORD_HASH fehlt in der .env.'); return true; }
-    return false;
-  }
   const id = message.author.id;
   const session = getSession(id);
   if (isCancel(text) && session.pending) {
@@ -255,6 +260,10 @@ async function handleCodeMessage(message) {
     return true;
   }
   if (isApproval(text) && session.pending) {
+    if (!process.env.KI_CODE_PASSWORD_HASH) {
+      await message.reply('🔒 KI_CODE_PASSWORD_HASH fehlt. Ohne Passwort ist kein Einbau möglich.');
+      return true;
+    }
     const pending = session.pending;
     await message.reply({
       content: `🔐 **Freigabe erforderlich:** ${pending.summary.slice(0, 800)}\nErst nach privater Passwortbestätigung wird gespeichert.`,
@@ -264,16 +273,22 @@ async function handleCodeMessage(message) {
     });
     return true;
   }
-  if (!isCodeIntent(text) && !message.attachments?.size) return false;
+  // Keine impliziten Dateiaenderungen aufgrund von Woertern wie
+  // "Ticketsystem", "Code", "erstelle" oder "slash-commands.js".
+  if (isNoWriteIntent(text)) return false;
+  const wantsInstall = isInstallIntent(text);
+  const wantsRead = isReadIntent(text);
+  if (!wantsInstall && !wantsRead) return false;
+  if (wantsInstall && !process.env.KI_CODE_PASSWORD_HASH) {
+    await message.reply('🔒 Für den Projekteingriff fehlt KI_CODE_PASSWORD_HASH. Code im Chat kannst du trotzdem anfordern.');
+    return true;
+  }
   const files = listFiles();
   const named = namedFiles(text);
   const existingNamed = named.filter(file => files.includes(file));
   const chosen = existingNamed[0] || relevantFiles(text, files)[0] || session.activeFile;
-  const wantsEdit = isEditIntent(text);
-  const projectIntent = /(?:mein|dein|bot|\.js\b|\.json\b|index|ticket|datei|modul|einbauen|austauschen|hochladen|verbinden|erstell|programmier)/i.test(text) || !!session.activeFile;
-  if (!projectIntent) return false;
   try {
-    if (isReadIntent(text)) {
+    if (wantsRead) {
       if (!chosen) { await message.reply('🔎 Welche Datei soll ich suchen?'); return true; }
       session.activeFile = chosen;
       keep(id, session);
@@ -281,17 +296,17 @@ async function handleCodeMessage(message) {
       await message.reply({ content: `🔎 Gefunden: \`${chosen}\``, files: [new AttachmentBuilder(Buffer.from(content, 'utf8'), { name: path.basename(chosen) })] });
       return true;
     }
-    if (!wantsEdit) return false;
+    if (!wantsInstall) return false;
     let attached = '';
     const attachment = message.attachments?.find(file => /\.(js|json|txt)$/i.test(file.name || '') && file.size < 100000);
     if (attachment) {
-      const response = await fetch(attachment.url);
+      const response = await fetch(attachment.url, { signal: AbortSignal.timeout(20000) });
       if (!response.ok) throw Error('Anhang konnte nicht geladen werden');
       attached = (await response.text()).slice(0, 90000);
     }
     const contextFiles = [...new Set([...existingNamed, chosen, ...relevantFiles(text, files)].filter(file => files.includes(file)))].slice(0, 4);
-    if (!contextFiles.length && !/(?:neue datei|neues modul|erstell|programmier|entwickel)/i.test(text)) {
-      await message.reply('Welche Datei soll ich bearbeiten? Nenne bitte den Dateinamen.');
+    if (!contextFiles.length && !/(?:neue datei|neues modul|erstell|programmier|entwickel|einbau|einbauen|installier)/i.test(text)) {
+      await message.reply('📂 Bitte schicke zuerst die betroffene .js/.json-Datei oder nenne ihren genauen Pfad. Ich ändere nichts ohne passenden Projektkontext.');
       return true;
     }
     await message.channel.sendTyping().catch(() => {});

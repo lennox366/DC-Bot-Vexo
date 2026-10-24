@@ -1,0 +1,57 @@
+{
+  "enabled": true,
+  "guilds": {
+    "1512081907175657513": {
+      "enabled": true,
+      "channelId": "1545448024287748106"
+    },
+    "1510593847972073653": {
+      "enabled": true,
+      "channelId": "1546099916831465513"
+    },
+    "1542996845922361405": {
+      "enabled": false,
+      "channelId": null
+    },
+    "1540369255353032848": {
+      "enabled": false,
+      "channelId": null
+    },
+    "1543165850260086824": {
+      "enabled": false,
+      "channelId": null
+    },
+    "1534274042893434960": {
+      "enabled": false,
+      "channelId": null
+    },
+    "1545474402009743440": {
+      "enabled": false,
+      "channelId": null
+    },
+    "1549437482586869762": {
+      "enabled": false,
+      "channelId": null
+    },
+    "1552653648641925170": {
+      "enabled": false,
+      "channelId": null
+    },
+    "1553109822172438538": {
+      "enabled": false,
+      "channelId": null
+    },
+    "1555946789754904787": {
+      "enabled": false,
+      "channelId": null
+    },
+    "1559659266737176699": {
+      "enabled": true,
+      "channelId": "1562499265333305435"
+    }
+  },
+  "channels": {},
+  "model": "gpt-4o-mini",
+  "temperature": 0.7,
+  "maxTokens": 1000
+}

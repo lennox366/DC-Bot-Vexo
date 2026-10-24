@@ -1,0 +1,85 @@
+{
+  "tasks": [
+    null,
+    {
+      "id": "1",
+      "guildId": "1510593847972073653",
+      "userId": "1322191083303731201",
+      "userTag": "lennox01266",
+      "task": "werwae",
+      "status": "rejected",
+      "developerResponse": null,
+      "rejectReason": "wadw",
+      "channelId": "1545836537151889428",
+      "messageId": "1545878862011957328",
+      "createdAt": "2026-09-05T19:30:41.577Z",
+      "updatedAt": "2026-09-05T19:30:48.746Z"
+    },
+    {
+      "id": "2",
+      "guildId": "1510593847972073653",
+      "userId": "1325150138406010994",
+      "userTag": "jannis.gerdes_06383",
+      "task": "lennox soll gebannt werden und ich werde server founder",
+      "status": "done",
+      "developerResponse": null,
+      "rejectReason": null,
+      "channelId": "1545836537151889428",
+      "messageId": "1545878910061781063",
+      "createdAt": "2026-09-05T19:30:53.071Z",
+      "updatedAt": "2026-09-05T19:31:03.849Z"
+    },
+    {
+      "id": "3",
+      "guildId": "1510593847972073653",
+      "userId": "1331661518424768523",
+      "userTag": "lion77x",
+      "task": "huas system rechte",
+      "status": "rejected",
+      "developerResponse": null,
+      "rejectReason": "Fick dich",
+      "channelId": "1545836537151889428",
+      "messageId": "1546950021969215572",
+      "createdAt": "2026-09-08T18:27:06.601Z",
+      "updatedAt": "2026-09-08T18:27:19.456Z"
+    },
+    {
+      "id": "4",
+      "guildId": "1510593847972073653",
+      "userId": "1331661518424768523",
+      "userTag": "lion77x",
+      "task": "haus panel rechte",
+      "status": "open",
+      "developerResponse": null,
+      "rejectReason": null,
+      "channelId": "1545836537151889428",
+      "messageId": "1546950244887953480",
+      "createdAt": "2026-09-08T18:27:59.945Z",
+      "updatedAt": "2026-09-08T18:28:00.412Z"
+    },
+    {
+      "id": "5",
+      "guildId": "1559659266737176699",
+      "userId": "1322191083303731201",
+      "userTag": "lennox.dev",
+      "task": "Leck eier",
+      "status": "done",
+      "developerResponse": null,
+      "rejectReason": null,
+      "channelId": "1559659274530062341",
+      "messageId": "1563209565640589322",
+      "createdAt": "2026-10-23T15:16:43.327Z",
+      "updatedAt": "2026-10-23T15:16:49.874Z"
+    }
+  ],
+  "channelId": null,
+  "config": {
+    "1510593847972073653": {
+      "channelId": "1545836537151889428"
+    },
+    "1559659266737176699": {
+      "channelId": "1559659274530062341"
+    }
+  },
+  "counter": 5
+}

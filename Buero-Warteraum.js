@@ -30,14 +30,16 @@ const BUERO_VOICE_ID = "1559659273678622735";
 const BUERO_TEXT_ID = "1559659273678622734";
 
 const BUERO_ROLE_IDS = [
-    "1559659267299217467", // Eventleitung
-    "1559659267307339839", // Fraktionsverwaltung
-    "1559659267307339843", // Ausbilder
-    "1559659267324256366", // Teamleitung
-    "1559659267349553265", // Management
-    "1559659267349553272", // Direktor
-    "1559659267378778221", // Projektleitung
-    "1559659267395428539"  // Development
+    "1559659267299217467",  // Eventleitung
+    "1559659267307339839",  // Fraktionsverwaltung
+    "1559659267307339843",  // Ausbilder
+    "1559659267324256366",  // Teamleitung
+    "1559659267349553265",  // Management
+    "1559659267349553272",  // Direktor
+    "1559659267378778221",  // Projektleitung
+    "1559659267395428539",  // Development
+    "1559659267408134198",  // Owner/Co-Owner
+    "1561728076231086243",  // Founder/In
 ];
 
 const BOT_OWNER_ID = process.env.BOT_OWNER_ID || "";

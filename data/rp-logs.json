@@ -1,0 +1,35 @@
+{
+  "1510593847972073653": {
+    "guildId": "1510593847972073653",
+    "webhookUrl": "https://discord.com/api/webhooks/1545862176533778513/zjAAnuhPW5cIxjZR_P6XmHjeCqfOo-idzGji7lFsKQflbTrO13p4cXKcTkPdpthNLtda",
+    "channelId": "1545711184844562544",
+    "webPanelChannelId": "1545711184844562544",
+    "webPanelMessageId": "1545878429843460167",
+    "enabled": true,
+    "logsSent": 0,
+    "failedLogs": 0,
+    "lastLog": null,
+    "webhookId": "1545873481667838084",
+    "webhookToken": "BDcDP7wBR2pfco0XSLgT94IsX6nzpHZh5IQFwD20h3FHACF1ARPdobRC8APBtBXBcsQM",
+    "webhookGuildId": "1510593847972073653",
+    "webhookChannelId": "1545711184844562544",
+    "webhookCreatedAt": "2026-09-05T19:09:19.235Z"
+  },
+  "1543165850260086824": {
+    "guildId": "1543165850260086824",
+    "webhookId": null,
+    "webhookToken": null,
+    "webhookGuildId": null,
+    "webhookChannelId": null,
+    "webhookCreatedAt": null,
+    "manualWebhookUrl": null,
+    "manualWebhookName": null,
+    "channelId": null,
+    "webPanelChannelId": "1548384705139974335",
+    "webPanelMessageId": "1549079474132357131",
+    "enabled": false,
+    "logsSent": 0,
+    "failedLogs": 0,
+    "lastLog": null
+  }
+}

@@ -1,0 +1,6 @@
+{
+    "enabled": true,
+    "maxMessagesPerUser": 50,
+    "maxTotalMessages": 1000,
+    "memory": {}
+}

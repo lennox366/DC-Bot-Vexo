@@ -1,0 +1,70 @@
+{
+  "suggestions": {
+    "1": {
+      "id": 1,
+      "userId": "1322191083303731201",
+      "username": "lennox01266",
+      "displayName": "Lennox ✝️",
+      "title": "awd",
+      "description": "awdwadwadadwa",
+      "category": "other",
+      "status": "in_review",
+      "createdAt": "2026-09-06T09:28:54.090Z",
+      "lastModifiedAt": "2026-09-06T09:28:54.450Z",
+      "teamNotes": "",
+      "guildId": "1510593847972073653",
+      "channelId": "1545763477560369202",
+      "messageId": "1546089803420930054"
+    },
+    "2": {
+      "id": 2,
+      "userId": "1322191083303731201",
+      "username": "lennox01266",
+      "displayName": "Lennox ✝️",
+      "title": "awd",
+      "description": "wdwadddddddddddddd",
+      "category": "other",
+      "status": "in_review",
+      "createdAt": "2026-09-06T09:29:18.356Z",
+      "lastModifiedAt": "2026-09-06T09:29:18.858Z",
+      "teamNotes": "",
+      "guildId": "1510593847972073653",
+      "channelId": "1545790876280954951",
+      "messageId": "1546089905522999397"
+    },
+    "3": {
+      "id": 3,
+      "userId": "1331661518424768523",
+      "username": "lion77x",
+      "displayName": "[Owner] Lion",
+      "title": "dildo firma",
+      "description": "wir konstruieren neue spielzeuge",
+      "category": "other",
+      "status": "in_review",
+      "createdAt": "2026-09-06T09:31:19.395Z",
+      "lastModifiedAt": "2026-09-06T09:31:19.713Z",
+      "teamNotes": "",
+      "guildId": "1510593847972073653",
+      "channelId": "1545763477560369202",
+      "messageId": "1546090413029326910"
+    },
+    "4": {
+      "id": 4,
+      "userId": "1322191083303731201",
+      "username": "lennox01266",
+      "displayName": "Lennox ✝️",
+      "title": "awd",
+      "description": "awdawdawdad",
+      "category": "other",
+      "status": "in_review",
+      "createdAt": "2026-09-06T09:32:24.852Z",
+      "lastModifiedAt": "2026-09-06T09:32:25.091Z",
+      "teamNotes": "",
+      "guildId": "1510593847972073653",
+      "channelId": "1545763477560369202",
+      "messageId": "1546090687425020036"
+    }
+  },
+  "counter": 0,
+  "lastSuggestionId": 4
+}

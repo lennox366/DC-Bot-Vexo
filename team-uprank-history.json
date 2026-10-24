@@ -1,0 +1,20 @@
+{
+  "1559659266737176699": {
+    "1557873260157210666": {
+      "roleId": "1561119043983773696",
+      "roleName": "[STV.Dev] ✗ STV.Developer",
+      "reason": "Rangänderung über Team-Panel durch qouisbaba",
+      "moderatorId": "867724933392236576",
+      "moderatorTag": "qouisbaba",
+      "timestamp": "2026-10-21T17:32:31.205Z"
+    },
+    "867724933392236576": {
+      "roleId": "1559659267441819689",
+      "roleName": "《 Server Founder",
+      "reason": "Rangänderung über Team-Panel durch lennox.dev",
+      "moderatorId": "1322191083303731201",
+      "moderatorTag": "lennox.dev",
+      "timestamp": "2026-10-22T17:39:11.439Z"
+    }
+  }
+}

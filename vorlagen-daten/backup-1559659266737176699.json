@@ -1,0 +1,1670 @@
+{
+  "guildId": "1559659266737176699",
+  "createdAt": "2026-10-23T08:54:32.250Z",
+  "channels": [
+    {
+      "id": "1562484024939647008",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 0,
+      "oldName": "『🔎』・ཧོ・Hosted By Spongebob",
+      "newName": "『🔎』・ཧོ・Hosted By Spongebob"
+    },
+    {
+      "id": "1559659268175826947",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 1,
+      "oldName": "ཧོ・Stats",
+      "newName": "ཧོ・Stats"
+    },
+    {
+      "id": "1559659268175826952",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 2,
+      "oldName": "ཧོ・𝙀𝙞𝙣𝙜𝙖𝙣𝙜",
+      "newName": "ཧོ・𝙀𝙞𝙣𝙜𝙖𝙣𝙜"
+    },
+    {
+      "id": "1559659268494327934",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 3,
+      "oldName": "ཧོ・𝙑𝙚𝙧𝙞𝙛𝙞𝙠𝙖𝙩𝙞𝙤𝙣",
+      "newName": "ཧོ・𝙑𝙚𝙧𝙞𝙛𝙞𝙠𝙖𝙩𝙞𝙤𝙣"
+    },
+    {
+      "id": "1559659268494327937",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 4,
+      "oldName": "ཧོ・𝙉𝙚𝙬𝙨",
+      "newName": "ཧོ・𝙉𝙚𝙬𝙨"
+    },
+    {
+      "id": "1559659268834328738",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 5,
+      "oldName": "ཧོ・𝙎𝙩𝙖𝙩𝙪𝙨",
+      "newName": "ཧོ・𝙎𝙩𝙖𝙩𝙪𝙨"
+    },
+    {
+      "id": "1559659269190586416",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 6,
+      "oldName": "ཧོ・𝘾𝙝𝙖𝙩",
+      "newName": "ཧོ・𝘾𝙝𝙖𝙩"
+    },
+    {
+      "id": "1559659269673062453",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 7,
+      "oldName": "ཧོ・𝙏𝙖𝙡𝙠𝙨",
+      "newName": "ཧོ・𝙏𝙖𝙡𝙠𝙨"
+    },
+    {
+      "id": "1559659270058803370",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 8,
+      "oldName": "ཧོ・𝙎𝙥𝙞𝙚𝙡𝙚",
+      "newName": "ཧོ・𝙎𝙥𝙞𝙚𝙡𝙚"
+    },
+    {
+      "id": "1559659270058803376",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 9,
+      "oldName": "ཧོ・𝙍𝙋",
+      "newName": "ཧོ・𝙍𝙋"
+    },
+    {
+      "id": "1559659270352543749",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 10,
+      "oldName": "ཧོ・𝙄𝙢𝙢𝙤𝙗𝙞𝙡𝙞𝙚𝙣",
+      "newName": "ཧོ・𝙄𝙢𝙢𝙤𝙗𝙞𝙡𝙞𝙚𝙣"
+    },
+    {
+      "id": "1559659270629499062",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 11,
+      "oldName": "ཧོ・𝙁𝙧𝙖𝙠𝙩𝙞𝙤𝙣𝙚𝙣",
+      "newName": "ཧོ・𝙁𝙧𝙖𝙠𝙩𝙞𝙤𝙣𝙚𝙣"
+    },
+    {
+      "id": "1559659270629499070",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 12,
+      "oldName": "ཧོ・𝙋𝙖𝙧𝙩𝙣𝙚𝙧",
+      "newName": "ཧོ・𝙋𝙖𝙧𝙩𝙣𝙚𝙧"
+    },
+    {
+      "id": "1559659270864113739",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 13,
+      "oldName": "ཧོ・𝘽𝙚𝙬𝙚𝙧𝙗𝙪𝙣𝙜",
+      "newName": "ཧོ・𝘽𝙚𝙬𝙚𝙧𝙗𝙪𝙣𝙜"
+    },
+    {
+      "id": "1559659270864113743",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 14,
+      "oldName": "ཧོ・𝘾𝙤𝙣𝙩𝙚𝙣𝙩 𝘾𝙧𝙚𝙖𝙩𝙤𝙧-𝙄𝙣𝙛𝙤𝙨",
+      "newName": "ཧོ・𝘾𝙤𝙣𝙩𝙚𝙣𝙩 𝘾𝙧𝙚𝙖𝙩𝙤𝙧-𝙄𝙣𝙛𝙤𝙨"
+    },
+    {
+      "id": "1559659271111839757",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 15,
+      "oldName": "ཧོ・𝙏𝙚𝙖𝙢-𝙄𝙣𝙛𝙤",
+      "newName": "ཧོ・𝙏𝙚𝙖𝙢-𝙄𝙣𝙛𝙤"
+    },
+    {
+      "id": "1559659271329808414",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 16,
+      "oldName": "ཧོ・𝙎𝙪𝙥𝙥𝙤𝙧𝙩",
+      "newName": "ཧོ・𝙎𝙪𝙥𝙥𝙤𝙧𝙩"
+    },
+    {
+      "id": "1559659271329808419",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 17,
+      "oldName": "ཧོ・𝙎𝙪𝙥𝙥𝙤𝙧𝙩-𝙍ä𝙪𝙢𝙚",
+      "newName": "ཧོ・𝙎𝙪𝙥𝙥𝙤𝙧𝙩-𝙍ä𝙪𝙢𝙚"
+    },
+    {
+      "id": "1559659271543726238",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 18,
+      "oldName": "ཧོ・𝙏𝙚𝙖𝙢",
+      "newName": "ཧོ・𝙏𝙚𝙖𝙢"
+    },
+    {
+      "id": "1559659272478924920",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 19,
+      "oldName": "ཧོ・𝙑𝙤𝙧𝙡𝙖𝙜𝙚𝙣",
+      "newName": "ཧོ・𝙑𝙤𝙧𝙡𝙖𝙜𝙚𝙣"
+    },
+    {
+      "id": "1559659272478924925",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 20,
+      "oldName": "ཧོ・𝙏𝙪𝙩𝙤𝙧𝙞𝙖𝙡𝙨",
+      "newName": "ཧོ・𝙏𝙪𝙩𝙤𝙧𝙞𝙖𝙡𝙨"
+    },
+    {
+      "id": "1559659273015926895",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 21,
+      "oldName": "ཧོ・𝙎𝙥𝙞𝙚𝙡𝙚-𝘼𝙗𝙚𝙣𝙙",
+      "newName": "ཧོ・𝙎𝙥𝙞𝙚𝙡𝙚-𝘼𝙗𝙚𝙣𝙙"
+    },
+    {
+      "id": "1559659273015926899",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 22,
+      "oldName": "ཧོ・𝙃𝙞𝙜𝙝 𝙏𝙚𝙖𝙢",
+      "newName": "ཧོ・𝙃𝙞𝙜𝙝 𝙏𝙚𝙖𝙢"
+    },
+    {
+      "id": "1559659273351602293",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 23,
+      "oldName": "ཧོ・𝙇𝙤𝙪𝙣𝙜𝙚",
+      "newName": "ཧོ・𝙇𝙤𝙪𝙣𝙜𝙚"
+    },
+    {
+      "id": "1559659273678622732",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 24,
+      "oldName": "ཧོ・𝙱ü𝚛𝚘𝚜",
+      "newName": "ཧོ・𝙱ü𝚛𝚘𝚜"
+    },
+    {
+      "id": "1559659274530062339",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 25,
+      "oldName": "ཧོ・𝙇𝙤𝙜𝙨",
+      "newName": "ཧོ・𝙇𝙤𝙜𝙨"
+    },
+    {
+      "id": "1559659274827866243",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 26,
+      "oldName": "ཧོ・𝘽𝙚𝙬𝙚𝙧𝙗𝙪𝙣𝙜𝙚𝙣",
+      "newName": "ཧོ・𝘽𝙚𝙬𝙚𝙧𝙗𝙪𝙣𝙜𝙚𝙣"
+    },
+    {
+      "id": "1559659274827866252",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 27,
+      "oldName": "ཧོ・tickets",
+      "newName": "ཧོ・tickets"
+    },
+    {
+      "id": "1559659275163275335",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 28,
+      "oldName": "ཧོ・Allgemeiner Support",
+      "newName": "ཧོ・Allgemeiner Support"
+    },
+    {
+      "id": "1559659275163275336",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 29,
+      "oldName": "ཧོ・Teambeschwerden",
+      "newName": "ཧོ・Teambeschwerden"
+    },
+    {
+      "id": "1559659275163275337",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 30,
+      "oldName": "ཧོ・Highteam Fragen",
+      "newName": "ཧོ・Highteam Fragen"
+    },
+    {
+      "id": "1559659275163275338",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 31,
+      "oldName": "ཧོ・Fehler Report",
+      "newName": "ཧོ・Fehler Report"
+    },
+    {
+      "id": "1559659275163275339",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 32,
+      "oldName": "ཧོ・Entbannungsantrag",
+      "newName": "ཧོ・Entbannungsantrag"
+    },
+    {
+      "id": "1559659275163275340",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 33,
+      "oldName": "ཧོ・Leitungs Fragen",
+      "newName": "ཧོ・Leitungs Fragen"
+    },
+    {
+      "id": "1559659275163275341",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 34,
+      "oldName": "ཧོ・Mündliche Bewerbung",
+      "newName": "ཧོ・Mündliche Bewerbung"
+    },
+    {
+      "id": "1559659275163275342",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 35,
+      "oldName": "ཧོ・Bau Genehmigungen",
+      "newName": "ཧོ・Bau Genehmigungen"
+    },
+    {
+      "id": "1559659275163275343",
+      "type": "Kategorie",
+      "parentId": null,
+      "position": 36,
+      "oldName": "ཧོ・Fraktionen und Waffenscheine",
+      "newName": "ཧོ・Fraktionen und Waffenscheine"
+    },
+    {
+      "id": "1560736136304009260",
+      "type": "Textkanal",
+      "parentId": null,
+      "position": 0,
+      "oldName": "ཧོ・moderator-only",
+      "newName": "ཧོ・moderator-only"
+    },
+    {
+      "id": "1560755261172482079",
+      "type": "Sprachkanal",
+      "parentId": "1559659268175826947",
+      "position": 0,
+      "oldName": "『🧑』・ཧོ・2269 Members",
+      "newName": "『🧑』・ཧོ・2269 Members"
+    },
+    {
+      "id": "1560755267724124271",
+      "type": "Sprachkanal",
+      "parentId": "1559659268175826947",
+      "position": 1,
+      "oldName": "『💎』・ཧོ・28 Boosts",
+      "newName": "『💎』・ཧོ・28 Boosts"
+    },
+    {
+      "id": "1562504027386941450",
+      "type": "Textkanal",
+      "parentId": null,
+      "position": 1,
+      "oldName": "ཧོ・flavibot-updates",
+      "newName": "ཧོ・flavibot-updates"
+    },
+    {
+      "id": "1559659268175826953",
+      "type": "Textkanal",
+      "parentId": "1559659268175826952",
+      "position": 2,
+      "oldName": "『👋』・ཧོ・𝐄𝐢𝐧𝐫𝐞𝐢𝐬𝐞",
+      "newName": "『👋』・ཧོ・𝐄𝐢𝐧𝐫𝐞𝐢𝐬𝐞"
+    },
+    {
+      "id": "1560755275818868866",
+      "type": "Sprachkanal",
+      "parentId": "1559659268175826947",
+      "position": 2,
+      "oldName": "『🤖』・ཧོ・7 Bots",
+      "newName": "『🤖』・ཧོ・7 Bots"
+    },
+    {
+      "id": "1559659268494327929",
+      "type": "Textkanal",
+      "parentId": "1559659268175826952",
+      "position": 3,
+      "oldName": "『👋』・ཧོ・𝐀𝐮𝐬𝐫𝐞𝐢𝐬𝐞",
+      "newName": "『👋』・ཧོ・𝐀𝐮𝐬𝐫𝐞𝐢𝐬𝐞"
+    },
+    {
+      "id": "1561290265589710879",
+      "type": "Sprachkanal",
+      "parentId": "1559659268175826947",
+      "position": 3,
+      "oldName": "『💂』・ཧོ・144 Roles",
+      "newName": "『💂』・ཧོ・144 Roles"
+    },
+    {
+      "id": "1560736136304009257",
+      "type": "Textkanal",
+      "parentId": "1559659268175826952",
+      "position": 4,
+      "oldName": "『📕』・ཧོ・𝐃𝐂-𝐑𝐞𝐠𝐞𝐥𝐧",
+      "newName": "『📕』・ཧོ・𝐃𝐂-𝐑𝐞𝐠𝐞𝐥𝐧"
+    },
+    {
+      "id": "1561392521177727156",
+      "type": "Sprachkanal",
+      "parentId": "1559659268175826947",
+      "position": 4,
+      "oldName": "『🔢』・ཧོ・Code: 83ej67c7",
+      "newName": "『🔢』・ཧོ・Code: 83ej67c7"
+    },
+    {
+      "id": "1559659268494327931",
+      "type": "Textkanal",
+      "parentId": "1559659268175826952",
+      "position": 5,
+      "oldName": "『📘』・ཧོ・𝐈𝐂-𝐑𝐞𝐠𝐞𝐥𝐧",
+      "newName": "『📘』・ཧོ・𝐈𝐂-𝐑𝐞𝐠𝐞𝐥𝐧"
+    },
+    {
+      "id": "1559659269673062451",
+      "type": "Sprachkanal",
+      "parentId": "1559659269190586416",
+      "position": 5,
+      "oldName": "『🎮』・ཧོ・𝐆𝐚𝐦𝐢𝐧𝐠",
+      "newName": "『🎮』・ཧོ・𝐆𝐚𝐦𝐢𝐧𝐠"
+    },
+    {
+      "id": "1559659268494327932",
+      "type": "Textkanal",
+      "parentId": "1559659268175826952",
+      "position": 6,
+      "oldName": "『🛡️』・ཧོ・𝐒𝐚𝐟𝐞𝐳𝐨𝐧𝐞𝐬",
+      "newName": "『🛡️』・ཧོ・𝐒𝐚𝐟𝐞𝐳𝐨𝐧𝐞𝐬"
+    },
+    {
+      "id": "1559659269673062452",
+      "type": "Sprachkanal",
+      "parentId": "1559659269190586416",
+      "position": 6,
+      "oldName": "『🎵』・ཧོ・𝐌𝐮𝐬𝐢𝐤",
+      "newName": "『🎵』・ཧོ・𝐌𝐮𝐬𝐢𝐤"
+    },
+    {
+      "id": "1559659268494327933",
+      "type": "Textkanal",
+      "parentId": "1559659268175826952",
+      "position": 7,
+      "oldName": "『📂』・ཧོ・𝐂𝐨𝐩𝐲𝐫𝐢𝐠𝐡𝐭-𝐇𝐢𝐧𝐰𝐞𝐢𝐬",
+      "newName": "『📂』・ཧོ・𝐂𝐨𝐩𝐲𝐫𝐢𝐠𝐡𝐭-𝐇𝐢𝐧𝐰𝐞𝐢𝐬"
+    },
+    {
+      "id": "1559659269673062454",
+      "type": "Sprachkanal",
+      "parentId": "1559659269673062453",
+      "position": 7,
+      "oldName": "『🛋️』・ཧོ・𝐋𝐨𝐮𝐧𝐠𝐞 𝟏",
+      "newName": "『🛋️』・ཧོ・𝐋𝐨𝐮𝐧𝐠𝐞 𝟏"
+    },
+    {
+      "id": "1559659268494327936",
+      "type": "Textkanal",
+      "parentId": "1559659268494327934",
+      "position": 8,
+      "oldName": "『✅』・ཧོ・𝐕𝐞𝐫𝐢𝐟𝐢𝐤𝐚𝐭𝐢𝐨𝐧",
+      "newName": "『✅』・ཧོ・𝐕𝐞𝐫𝐢𝐟𝐢𝐤𝐚𝐭𝐢𝐨𝐧"
+    },
+    {
+      "id": "1559659269673062455",
+      "type": "Sprachkanal",
+      "parentId": "1559659269673062453",
+      "position": 8,
+      "oldName": "『🛋️』・ཧོ・𝐋𝐨𝐮𝐧𝐠𝐞 𝟐",
+      "newName": "『🛋️』・ཧོ・𝐋𝐨𝐮𝐧𝐠𝐞 𝟐"
+    },
+    {
+      "id": "1559659268494327935",
+      "type": "Textkanal",
+      "parentId": "1559659268494327934",
+      "position": 9,
+      "oldName": "『🔒』・ཧོ・𝐔𝐧𝐯𝐞𝐫𝐢𝐟𝐢𝐞𝐝-𝐂𝐡𝐚𝐭",
+      "newName": "『🔒』・ཧོ・𝐔𝐧𝐯𝐞𝐫𝐢𝐟𝐢𝐞𝐝-𝐂𝐡𝐚𝐭"
+    },
+    {
+      "id": "1559659269673062456",
+      "type": "Sprachkanal",
+      "parentId": "1559659269673062453",
+      "position": 9,
+      "oldName": "『🍕』・ཧོ・𝐄𝐬𝐬𝐞𝐧𝐬-𝐋𝐨𝐮𝐧𝐠𝐞",
+      "newName": "『🍕』・ཧོ・𝐄𝐬𝐬𝐞𝐧𝐬-𝐋𝐨𝐮𝐧𝐠𝐞"
+    },
+    {
+      "id": "1559659268494327938",
+      "type": "Textkanal",
+      "parentId": "1559659268494327937",
+      "position": 10,
+      "oldName": "『❌』・ཧོ・𝐒𝐞𝐫𝐯𝐞𝐫-𝐁𝐥𝐚𝐜𝐤𝐥𝐢𝐬𝐭",
+      "newName": "『❌』・ཧོ・𝐒𝐞𝐫𝐯𝐞𝐫-𝐁𝐥𝐚𝐜𝐤𝐥𝐢𝐬𝐭"
+    },
+    {
+      "id": "1559659269673062457",
+      "type": "Sprachkanal",
+      "parentId": "1559659269673062453",
+      "position": 10,
+      "oldName": "『💤』・ཧོ・𝐀𝐅𝐊-𝐋𝐨𝐮𝐧𝐠𝐞",
+      "newName": "『💤』・ཧོ・𝐀𝐅𝐊-𝐋𝐨𝐮𝐧𝐠𝐞"
+    },
+    {
+      "id": "1559659268834328729",
+      "type": "Textkanal",
+      "parentId": "1559659268494327937",
+      "position": 11,
+      "oldName": "『📜』・ཧོ・𝐒𝐞𝐫𝐯𝐞𝐫-𝐈𝐧𝐟𝐨",
+      "newName": "『📜』・ཧོ・𝐒𝐞𝐫𝐯𝐞𝐫-𝐈𝐧𝐟𝐨"
+    },
+    {
+      "id": "1559659269673062458",
+      "type": "Sprachkanal",
+      "parentId": "1559659269673062453",
+      "position": 11,
+      "oldName": "『💎』・ཧོ・𝐕𝐈𝐏-𝐋𝐨𝐮𝐧𝐠𝐞",
+      "newName": "『💎』・ཧོ・𝐕𝐈𝐏-𝐋𝐨𝐮𝐧𝐠𝐞"
+    },
+    {
+      "id": "1559659268834328730",
+      "type": "Textkanal",
+      "parentId": "1559659268494327937",
+      "position": 12,
+      "oldName": "『📰』・ཧོ・𝐑𝐏-𝐍𝐞𝐰𝐬",
+      "newName": "『📰』・ཧོ・𝐑𝐏-𝐍𝐞𝐰𝐬"
+    },
+    {
+      "id": "1559659269673062459",
+      "type": "Sprachkanal",
+      "parentId": "1559659269673062453",
+      "position": 12,
+      "oldName": "『🚀』・ཧོ・𝐁𝐨𝐨𝐬𝐭𝐞𝐫-𝐋𝐨𝐮𝐧𝐠𝐞",
+      "newName": "『🚀』・ཧོ・𝐁𝐨𝐨𝐬𝐭𝐞𝐫-𝐋𝐨𝐮𝐧𝐠𝐞"
+    },
+    {
+      "id": "1559659268834328731",
+      "type": "Textkanal",
+      "parentId": "1559659268494327937",
+      "position": 13,
+      "oldName": "『🎬』・ཧོ・𝐓𝐢𝐤𝐓𝐨𝐤",
+      "newName": "『🎬』・ཧོ・𝐓𝐢𝐤𝐓𝐨𝐤"
+    },
+    {
+      "id": "1559659270058803377",
+      "type": "Sprachkanal",
+      "parentId": "1559659270058803376",
+      "position": 13,
+      "oldName": "『🏙️』・ཧོ・𝐑𝐏-𝐓𝐚𝐥𝐤",
+      "newName": "『🏙️』・ཧོ・𝐑𝐏-𝐓𝐚𝐥𝐤"
+    },
+    {
+      "id": "1559659268834328732",
+      "type": "Textkanal",
+      "parentId": "1559659268494327937",
+      "position": 14,
+      "oldName": "『📸』・ཧོ・𝐌𝐞𝐝𝐢𝐚",
+      "newName": "『📸』・ཧོ・𝐌𝐞𝐝𝐢𝐚"
+    },
+    {
+      "id": "1559659270058803378",
+      "type": "Sprachkanal",
+      "parentId": "1559659270058803376",
+      "position": 14,
+      "oldName": "『🏙️』・ཧོ・𝐈𝐧𝐧𝐞𝐧𝐬𝐭𝐚𝐝𝐭-𝐓𝐚𝐥𝐤",
+      "newName": "『🏙️』・ཧོ・𝐈𝐧𝐧𝐞𝐧𝐬𝐭𝐚𝐝𝐭-𝐓𝐚𝐥𝐤"
+    },
+    {
+      "id": "1559659268834328733",
+      "type": "Textkanal",
+      "parentId": "1559659268494327937",
+      "position": 15,
+      "oldName": "『📊』・ཧོ・𝐔𝐦𝐟𝐫𝐚𝐠𝐞𝐧",
+      "newName": "『📊』・ཧོ・𝐔𝐦𝐟𝐫𝐚𝐠𝐞𝐧"
+    },
+    {
+      "id": "1559659270058803379",
+      "type": "Sprachkanal",
+      "parentId": "1559659270058803376",
+      "position": 15,
+      "oldName": "『👮』・ཧོ・𝐏𝐨𝐥𝐢𝐳𝐞𝐢-𝐓𝐚𝐥𝐤",
+      "newName": "『👮』・ཧོ・𝐏𝐨𝐥𝐢𝐳𝐞𝐢-𝐓𝐚𝐥𝐤"
+    },
+    {
+      "id": "1559659268834328734",
+      "type": "Textkanal",
+      "parentId": "1559659268494327937",
+      "position": 16,
+      "oldName": "『🏆』・ཧོ・𝐓𝐞𝐚𝐦𝐥𝐞𝐫-𝐝𝐞𝐫-𝐖𝐨𝐜𝐡𝐞",
+      "newName": "『🏆』・ཧོ・𝐓𝐞𝐚𝐦𝐥𝐞𝐫-𝐝𝐞𝐫-𝐖𝐨𝐜𝐡𝐞"
+    },
+    {
+      "id": "1559659270352543744",
+      "type": "Sprachkanal",
+      "parentId": "1559659270058803376",
+      "position": 16,
+      "oldName": "『🚒』・ཧོ・𝐅𝐞𝐮𝐞𝐫𝐰𝐞𝐡𝐫-𝐓𝐚𝐥𝐤",
+      "newName": "『🚒』・ཧོ・𝐅𝐞𝐮𝐞𝐫𝐰𝐞𝐡𝐫-𝐓𝐚𝐥𝐤"
+    },
+    {
+      "id": "1559659268834328735",
+      "type": "Textkanal",
+      "parentId": "1559659268494327937",
+      "position": 17,
+      "oldName": "『📅』・ཧོ・𝐄𝐯𝐞𝐧𝐭𝐬",
+      "newName": "『📅』・ཧོ・𝐄𝐯𝐞𝐧𝐭𝐬"
+    },
+    {
+      "id": "1559659270352543745",
+      "type": "Sprachkanal",
+      "parentId": "1559659270058803376",
+      "position": 17,
+      "oldName": "『🚑』・ཧོ・𝐑𝐞𝐭𝐭𝐮𝐧𝐠-𝐓𝐚𝐥𝐤",
+      "newName": "『🚑』・ཧོ・𝐑𝐞𝐭𝐭𝐮𝐧𝐠-𝐓𝐚𝐥𝐤"
+    },
+    {
+      "id": "1559659268834328736",
+      "type": "Textkanal",
+      "parentId": "1559659268494327937",
+      "position": 18,
+      "oldName": "『🎁』・ཧོ・𝐆𝐢𝐯𝐞𝐚𝐰𝐚𝐲",
+      "newName": "『🎁』・ཧོ・𝐆𝐢𝐯𝐞𝐚𝐰𝐚𝐲"
+    },
+    {
+      "id": "1559659270352543746",
+      "type": "Sprachkanal",
+      "parentId": "1559659270058803376",
+      "position": 18,
+      "oldName": "『🚌』・ཧོ・𝐁𝐮𝐬-𝐓𝐚𝐥𝐤",
+      "newName": "『🚌』・ཧོ・𝐁𝐮𝐬-𝐓𝐚𝐥𝐤"
+    },
+    {
+      "id": "1559659268834328737",
+      "type": "Textkanal",
+      "parentId": "1559659268494327937",
+      "position": 19,
+      "oldName": "『🤖』・ཧོ・bot-status",
+      "newName": "『🤖』・ཧོ・bot-status"
+    },
+    {
+      "id": "1559659270352543747",
+      "type": "Sprachkanal",
+      "parentId": "1559659270058803376",
+      "position": 19,
+      "oldName": "『🚗』・ཧོ・𝐀𝐃𝐀𝐂-𝐓𝐚𝐥𝐤",
+      "newName": "『🚗』・ཧོ・𝐀𝐃𝐀𝐂-𝐓𝐚𝐥𝐤"
+    },
+    {
+      "id": "1559659269190586411",
+      "type": "Textkanal",
+      "parentId": "1559659268834328738",
+      "position": 20,
+      "oldName": "『💻』・ཧོ・𝟏-𝐒𝐞𝐫𝐯𝐞𝐫-𝐒𝐭𝐚𝐭𝐮𝐬",
+      "newName": "『💻』・ཧོ・𝟏-𝐒𝐞𝐫𝐯𝐞𝐫-𝐒𝐭𝐚𝐭𝐮𝐬"
+    },
+    {
+      "id": "1559659270352543748",
+      "type": "Sprachkanal",
+      "parentId": "1559659270058803376",
+      "position": 20,
+      "oldName": "『🚛』・ཧོ・𝐋𝐊𝐖-𝐓𝐚𝐥𝐤",
+      "newName": "『🚛』・ཧོ・𝐋𝐊𝐖-𝐓𝐚𝐥𝐤"
+    },
+    {
+      "id": "1559659269190586413",
+      "type": "Textkanal",
+      "parentId": "1559659268834328738",
+      "position": 21,
+      "oldName": "『🔐』・ཧོ・𝐒𝐞𝐫𝐯𝐞𝐫-𝐂𝐨𝐝𝐞𝐬",
+      "newName": "『🔐』・ཧོ・𝐒𝐞𝐫𝐯𝐞𝐫-𝐂𝐨𝐝𝐞𝐬"
+    },
+    {
+      "id": "1559659271329808421",
+      "type": "Sprachkanal",
+      "parentId": "1559659271329808419",
+      "position": 21,
+      "oldName": "『⏳』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝐖𝐚𝐫𝐭𝐞𝐫𝐚𝐮𝐦",
+      "newName": "『⏳』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝐖𝐚𝐫𝐭𝐞𝐫𝐚𝐮𝐦"
+    },
+    {
+      "id": "1559659269190586414",
+      "type": "Textkanal",
+      "parentId": "1559659268834328738",
+      "position": 22,
+      "oldName": "『🟢』・ཧོ・𝐑𝐏-𝐒𝐭𝐚𝐭𝐮𝐬",
+      "newName": "『🟢』・ཧོ・𝐑𝐏-𝐒𝐭𝐚𝐭𝐮𝐬"
+    },
+    {
+      "id": "1559659271329808422",
+      "type": "Sprachkanal",
+      "parentId": "1559659271329808419",
+      "position": 22,
+      "oldName": "『🎧』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝟏",
+      "newName": "『🎧』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝟏"
+    },
+    {
+      "id": "1559659269190586415",
+      "type": "Textkanal",
+      "parentId": "1559659268834328738",
+      "position": 23,
+      "oldName": "『🔴』・ཧོ・𝐒𝐭𝐨𝐫𝐮𝐧𝐠𝐞𝐧",
+      "newName": "『🔴』・ཧོ・𝐒𝐭𝐨𝐫𝐮𝐧𝐠𝐞𝐧"
+    },
+    {
+      "id": "1559659271329808423",
+      "type": "Sprachkanal",
+      "parentId": "1559659271329808419",
+      "position": 23,
+      "oldName": "『🎧』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝟐",
+      "newName": "『🎧』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝟐"
+    },
+    {
+      "id": "1559659269190586417",
+      "type": "Textkanal",
+      "parentId": "1559659269190586416",
+      "position": 24,
+      "oldName": "『💬』・ཧོ・𝐂𝐡𝐚𝐭",
+      "newName": "『💬』・ཧོ・𝐂𝐡𝐚𝐭"
+    },
+    {
+      "id": "1559659271543726230",
+      "type": "Sprachkanal",
+      "parentId": "1559659271329808419",
+      "position": 24,
+      "oldName": "『🎧』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝟑",
+      "newName": "『🎧』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝟑"
+    },
+    {
+      "id": "1559659269190586418",
+      "type": "Textkanal",
+      "parentId": "1559659269190586416",
+      "position": 25,
+      "oldName": "『😂』・ཧོ・𝐌𝐞𝐦𝐞",
+      "newName": "『😂』・ཧོ・𝐌𝐞𝐦𝐞"
+    },
+    {
+      "id": "1559659271543726231",
+      "type": "Sprachkanal",
+      "parentId": "1559659271329808419",
+      "position": 25,
+      "oldName": "『🎧』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝟒",
+      "newName": "『🎧』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝟒"
+    },
+    {
+      "id": "1559659269190586419",
+      "type": "Textkanal",
+      "parentId": "1559659269190586416",
+      "position": 26,
+      "oldName": "『💡』・ཧོ・𝐈𝐝𝐞𝐞𝐧",
+      "newName": "『💡』・ཧོ・𝐈𝐝𝐞𝐞𝐧"
+    },
+    {
+      "id": "1559659271543726232",
+      "type": "Sprachkanal",
+      "parentId": "1559659271329808419",
+      "position": 26,
+      "oldName": "『🎧』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝟓",
+      "newName": "『🎧』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝟓"
+    },
+    {
+      "id": "1559659269190586420",
+      "type": "Textkanal",
+      "parentId": "1559659269190586416",
+      "position": 27,
+      "oldName": "『📷』・ཧོ・𝐒𝐜𝐫𝐞𝐞𝐧𝐬𝐡𝐨𝐭𝐬",
+      "newName": "『📷』・ཧོ・𝐒𝐜𝐫𝐞𝐞𝐧𝐬𝐡𝐨𝐭𝐬"
+    },
+    {
+      "id": "1559659271543726233",
+      "type": "Sprachkanal",
+      "parentId": "1559659271329808419",
+      "position": 27,
+      "oldName": "『🎧』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝟔",
+      "newName": "『🎧』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝟔"
+    },
+    {
+      "id": "1559659269673062450",
+      "type": "Textkanal",
+      "parentId": "1559659269190586416",
+      "position": 28,
+      "oldName": "『💎』・ཧོ・𝐒𝐞𝐫𝐯𝐞𝐫-𝐁𝐨𝐨𝐬𝐭",
+      "newName": "『💎』・ཧོ・𝐒𝐞𝐫𝐯𝐞𝐫-𝐁𝐨𝐨𝐬𝐭"
+    },
+    {
+      "id": "1559659271543726234",
+      "type": "Sprachkanal",
+      "parentId": "1559659271329808419",
+      "position": 28,
+      "oldName": "『🎧』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝟕",
+      "newName": "『🎧』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝟕"
+    },
+    {
+      "id": "1559659270058803372",
+      "type": "Textkanal",
+      "parentId": "1559659270058803370",
+      "position": 29,
+      "oldName": "『🧠』・ཧོ・𝐀𝐤𝐢𝐧𝐚𝐭𝐨𝐫",
+      "newName": "『🧠』・ཧོ・𝐀𝐤𝐢𝐧𝐚𝐭𝐨𝐫"
+    },
+    {
+      "id": "1559659271543726235",
+      "type": "Sprachkanal",
+      "parentId": "1559659271329808419",
+      "position": 29,
+      "oldName": "『🎧』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝟖",
+      "newName": "『🎧』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝟖"
+    },
+    {
+      "id": "1559659270058803373",
+      "type": "Textkanal",
+      "parentId": "1559659270058803370",
+      "position": 30,
+      "oldName": "『🔢』・ཧོ・𝐂𝐨𝐮𝐧𝐭𝐢𝐧𝐠",
+      "newName": "『🔢』・ཧོ・𝐂𝐨𝐮𝐧𝐭𝐢𝐧𝐠"
+    },
+    {
+      "id": "1559659271543726236",
+      "type": "Sprachkanal",
+      "parentId": "1559659271329808419",
+      "position": 30,
+      "oldName": "『🎧』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝟗",
+      "newName": "『🎧』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝟗"
+    },
+    {
+      "id": "1559659270058803374",
+      "type": "Textkanal",
+      "parentId": "1559659270058803370",
+      "position": 31,
+      "oldName": "『❓』・ཧོ・𝐐𝐮𝐢𝐳",
+      "newName": "『❓』・ཧོ・𝐐𝐮𝐢𝐳"
+    },
+    {
+      "id": "1559659271543726237",
+      "type": "Sprachkanal",
+      "parentId": "1559659271329808419",
+      "position": 31,
+      "oldName": "『🎧』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝟏𝟎",
+      "newName": "『🎧』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝟏𝟎"
+    },
+    {
+      "id": "1559659270058803375",
+      "type": "Textkanal",
+      "parentId": "1559659270058803370",
+      "position": 32,
+      "oldName": "『🏆』・ཧོ・𝐋𝐞𝐚𝐝𝐞𝐫𝐛𝐨𝐚𝐫𝐝",
+      "newName": "『🏆』・ཧོ・𝐋𝐞𝐚𝐝𝐞𝐫𝐛𝐨𝐚𝐫𝐝"
+    },
+    {
+      "id": "1559659272009289804",
+      "type": "Sprachkanal",
+      "parentId": "1559659271543726238",
+      "position": 32,
+      "oldName": "『🟩』・ཧོ・𝐓𝐞𝐚𝐦-𝐅𝐮𝐧𝐤-𝟏",
+      "newName": "『🟩』・ཧོ・𝐓𝐞𝐚𝐦-𝐅𝐮𝐧𝐤-𝟏"
+    },
+    {
+      "id": "1559659270352543750",
+      "type": "Textkanal",
+      "parentId": "1559659270352543749",
+      "position": 33,
+      "oldName": "『📜』・ཧོ・𝐈𝐦𝐦𝐨𝐛𝐢𝐥𝐢𝐞𝐧-𝐑𝐞𝐠𝐞𝐥𝐧",
+      "newName": "『📜』・ཧོ・𝐈𝐦𝐦𝐨𝐛𝐢𝐥𝐢𝐞𝐧-𝐑𝐞𝐠𝐞𝐥𝐧"
+    },
+    {
+      "id": "1559659272009289805",
+      "type": "Sprachkanal",
+      "parentId": "1559659271543726238",
+      "position": 33,
+      "oldName": "『🟩』・ཧོ・𝐓𝐞𝐚𝐦-𝐅𝐮𝐧𝐤-𝟐",
+      "newName": "『🟩』・ཧོ・𝐓𝐞𝐚𝐦-𝐅𝐮𝐧𝐤-𝟐"
+    },
+    {
+      "id": "1559659270352543751",
+      "type": "Textkanal",
+      "parentId": "1559659270352543749",
+      "position": 34,
+      "oldName": "『🏠』・ཧོ・𝐈𝐦𝐦𝐨𝐛𝐢𝐥𝐢𝐞𝐧-𝐀𝐤𝐭𝐢𝐯𝐢𝐭ä𝐭",
+      "newName": "『🏠』・ཧོ・𝐈𝐦𝐦𝐨𝐛𝐢𝐥𝐢𝐞𝐧-𝐀𝐤𝐭𝐢𝐯𝐢𝐭ä𝐭"
+    },
+    {
+      "id": "1559659272009289806",
+      "type": "Sprachkanal",
+      "parentId": "1559659271543726238",
+      "position": 34,
+      "oldName": "『🟩』・ཧོ・𝐓𝐞𝐚𝐦-𝐅𝐮𝐧𝐤-𝟑",
+      "newName": "『🟩』・ཧོ・𝐓𝐞𝐚𝐦-𝐅𝐮𝐧𝐤-𝟑"
+    },
+    {
+      "id": "1559659270352543752",
+      "type": "Textkanal",
+      "parentId": "1559659270352543749",
+      "position": 35,
+      "oldName": "『🏡』・ཧོ・𝐈𝐦𝐦𝐨𝐛𝐢𝐥𝐢𝐞𝐧-𝐋𝐢𝐬𝐭𝐞",
+      "newName": "『🏡』・ཧོ・𝐈𝐦𝐦𝐨𝐛𝐢𝐥𝐢𝐞𝐧-𝐋𝐢𝐬𝐭𝐞"
+    },
+    {
+      "id": "1559659272009289807",
+      "type": "Sprachkanal",
+      "parentId": "1559659271543726238",
+      "position": 35,
+      "oldName": "『🟩』・ཧོ・𝐓𝐞𝐚𝐦-𝐌𝐞𝐞𝐭𝐢𝐧𝐠",
+      "newName": "『🟩』・ཧོ・𝐓𝐞𝐚𝐦-𝐌𝐞𝐞𝐭𝐢𝐧𝐠"
+    },
+    {
+      "id": "1559659270352543753",
+      "type": "Textkanal",
+      "parentId": "1559659270352543749",
+      "position": 36,
+      "oldName": "『🎟️』・ཧོ・𝐈𝐦𝐦𝐨𝐛𝐢𝐥𝐢𝐞𝐧-𝐓𝐢𝐜𝐤𝐞𝐭",
+      "newName": "『🎟️』・ཧོ・𝐈𝐦𝐦𝐨𝐛𝐢𝐥𝐢𝐞𝐧-𝐓𝐢𝐜𝐤𝐞𝐭"
+    },
+    {
+      "id": "1559659273015926898",
+      "type": "Sprachkanal",
+      "parentId": "1559659273015926895",
+      "position": 36,
+      "oldName": "『🟥』・ཧོ・𝙎𝙥𝙞𝙚𝙡𝙚-𝘼𝙗𝙚𝙣𝙙-𝙏𝙖𝙡𝙠",
+      "newName": "『🟥』・ཧོ・𝙎𝙥𝙞𝙚𝙡𝙚-𝘼𝙗𝙚𝙣𝙙-𝙏𝙖𝙡𝙠"
+    },
+    {
+      "id": "1559659270629499063",
+      "type": "Forum",
+      "parentId": "1559659270629499062",
+      "position": 37,
+      "oldName": "『🏙️』・ཧོ・𝐒𝐨𝐧𝐬𝐭𝐢𝐠𝐞-𝐅𝐫𝐚𝐤𝐭𝐢𝐨𝐧",
+      "newName": "『🏙️』・ཧོ・𝐒𝐨𝐧𝐬𝐭𝐢𝐠𝐞-𝐅𝐫𝐚𝐤𝐭𝐢𝐨𝐧"
+    },
+    {
+      "id": "1559659273351602290",
+      "type": "Sprachkanal",
+      "parentId": "1559659273015926899",
+      "position": 37,
+      "oldName": "『⬜』・ཧོ・𝐇𝐢𝐠𝐡-𝐓𝐞𝐚𝐦-𝐅𝐮𝐧𝐤-𝟏",
+      "newName": "『⬜』・ཧོ・𝐇𝐢𝐠𝐡-𝐓𝐞𝐚𝐦-𝐅𝐮𝐧𝐤-𝟏"
+    },
+    {
+      "id": "1559659270629499064",
+      "type": "Forum",
+      "parentId": "1559659270629499062",
+      "position": 38,
+      "oldName": "『🔴』・ཧོ・𝐈𝐥𝐥𝐞𝐠𝐚𝐥𝐞-𝐅𝐫𝐚𝐤𝐭𝐢𝐨𝐧𝐞𝐧",
+      "newName": "『🔴』・ཧོ・𝐈𝐥𝐥𝐞𝐠𝐚𝐥𝐞-𝐅𝐫𝐚𝐤𝐭𝐢𝐨𝐧𝐞𝐧"
+    },
+    {
+      "id": "1559659273351602291",
+      "type": "Sprachkanal",
+      "parentId": "1559659273015926899",
+      "position": 38,
+      "oldName": "『⬜』・ཧོ・𝐇𝐢𝐠𝐡-𝐓𝐞𝐚𝐦-𝐅𝐮𝐧𝐤-𝟐",
+      "newName": "『⬜』・ཧོ・𝐇𝐢𝐠𝐡-𝐓𝐞𝐚𝐦-𝐅𝐮𝐧𝐤-𝟐"
+    },
+    {
+      "id": "1559659270629499065",
+      "type": "Textkanal",
+      "parentId": "1559659270629499062",
+      "position": 39,
+      "oldName": "『👮』・ཧོ・𝐏𝐨𝐥𝐢𝐳𝐞𝐢",
+      "newName": "『👮』・ཧོ・𝐏𝐨𝐥𝐢𝐳𝐞𝐢"
+    },
+    {
+      "id": "1559659273351602292",
+      "type": "Sprachkanal",
+      "parentId": "1559659273015926899",
+      "position": 39,
+      "oldName": "『⬜』・ཧོ・𝐇𝐢𝐠𝐡-𝐓𝐞𝐚𝐦-𝐅𝐮𝐧𝐤-𝟑",
+      "newName": "『⬜』・ཧོ・𝐇𝐢𝐠𝐡-𝐓𝐞𝐚𝐦-𝐅𝐮𝐧𝐤-𝟑"
+    },
+    {
+      "id": "1559659270629499066",
+      "type": "Textkanal",
+      "parentId": "1559659270629499062",
+      "position": 40,
+      "oldName": "『🚑』・ཧོ・𝐑𝐞𝐭𝐭𝐮𝐧𝐠",
+      "newName": "『🚑』・ཧོ・𝐑𝐞𝐭𝐭𝐮𝐧𝐠"
+    },
+    {
+      "id": "1559659273678622731",
+      "type": "Sprachkanal",
+      "parentId": "1559659273351602293",
+      "position": 40,
+      "oldName": "『🔑』・ཧོ・Aleyna -𝐋𝐨𝐮𝐧𝐠𝐞𓍢𖾕𖾝꙼ᩚ𛲕𖾟",
+      "newName": "『🔑』・ཧོ・Aleyna -𝐋𝐨𝐮𝐧𝐠𝐞𓍢𖾕𖾝꙼ᩚ𛲕𖾟"
+    },
+    {
+      "id": "1559659270629499067",
+      "type": "Textkanal",
+      "parentId": "1559659270629499062",
+      "position": 41,
+      "oldName": "『🚒』・ཧོ・𝐅𝐞𝐮𝐞𝐫𝐰𝐞𝐡𝐫",
+      "newName": "『🚒』・ཧོ・𝐅𝐞𝐮𝐞𝐫𝐰𝐞𝐡𝐫"
+    },
+    {
+      "id": "1559659273351602295",
+      "type": "Sprachkanal",
+      "parentId": "1559659273351602293",
+      "position": 41,
+      "oldName": "『🔑』・ཧོ・Spongebobs-𝐋𝐨𝐮𝐧𝐠𝐞♕",
+      "newName": "『🔑』・ཧོ・Spongebobs-𝐋𝐨𝐮𝐧𝐠𝐞♕"
+    },
+    {
+      "id": "1559659270629499068",
+      "type": "Textkanal",
+      "parentId": "1559659270629499062",
+      "position": 42,
+      "oldName": "『🪖』・ཧོ・𝐁𝐮𝐧𝐝𝐞𝐬𝐰𝐞𝐡𝐫",
+      "newName": "『🪖』・ཧོ・𝐁𝐮𝐧𝐝𝐞𝐬𝐰𝐞𝐡𝐫"
+    },
+    {
+      "id": "1559659273678622730",
+      "type": "Sprachkanal",
+      "parentId": "1559659273351602293",
+      "position": 42,
+      "oldName": "『🔑』・ཧོ・𝑷𝒂𝒕𝒓𝒊𝒄𝒌s -𝐋𝐨𝐮𝐧𝐠𝐞♛",
+      "newName": "『🔑』・ཧོ・𝑷𝒂𝒕𝒓𝒊𝒄𝒌s -𝐋𝐨𝐮𝐧𝐠𝐞♛"
+    },
+    {
+      "id": "1559659270629499069",
+      "type": "Textkanal",
+      "parentId": "1559659270629499062",
+      "position": 43,
+      "oldName": "『🚗』・ཧོ・𝐀𝐃𝐀𝐂",
+      "newName": "『🚗』・ཧོ・𝐀𝐃𝐀𝐂"
+    },
+    {
+      "id": "1562170138134839296",
+      "type": "Sprachkanal",
+      "parentId": "1559659273351602293",
+      "position": 43,
+      "oldName": "『🔑』・ཧོ・Lennox -𝐋𝐨𝐮𝐧𝐠𝐞",
+      "newName": "『🔑』・ཧོ・Lennox -𝐋𝐨𝐮𝐧𝐠𝐞"
+    },
+    {
+      "id": "1559659270629499071",
+      "type": "Textkanal",
+      "parentId": "1559659270629499070",
+      "position": 44,
+      "oldName": "『📜』・ཧོ・𝐀𝐧𝐟𝐨𝐫𝐝𝐞𝐫𝐮𝐧𝐠𝐞𝐧",
+      "newName": "『📜』・ཧོ・𝐀𝐧𝐟𝐨𝐫𝐝𝐞𝐫𝐮𝐧𝐠𝐞𝐧"
+    },
+    {
+      "id": "1559659273678622735",
+      "type": "Sprachkanal",
+      "parentId": "1559659273678622732",
+      "position": 44,
+      "oldName": "『🏢』・ཧོ・𝐁ü𝐫𝐨-𝐖𝐚𝐫𝐭𝐞𝐫𝐚𝐮𝐦",
+      "newName": "『🏢』・ཧོ・𝐁ü𝐫𝐨-𝐖𝐚𝐫𝐭𝐞𝐫𝐚𝐮𝐦"
+    },
+    {
+      "id": "1559659270864113734",
+      "type": "Textkanal",
+      "parentId": "1559659270629499070",
+      "position": 45,
+      "oldName": "『🟢』・ཧོ・𝐏𝐚𝐫𝐭𝐧𝐞𝐫𝐬𝐜𝐡𝐚𝐟𝐭-𝐒𝐭𝐚𝐭𝐮𝐬",
+      "newName": "『🟢』・ཧོ・𝐏𝐚𝐫𝐭𝐧𝐞𝐫𝐬𝐜𝐡𝐚𝐟𝐭-𝐒𝐭𝐚𝐭𝐮𝐬"
+    },
+    {
+      "id": "1562473134244765827",
+      "type": "Sprachkanal",
+      "parentId": "1559659273678622732",
+      "position": 45,
+      "oldName": "『💼』・ཧོ・𝐅𝐨𝐮𝐧𝐝𝐞𝐫𝐬-𝐁ü𝐫𝐨",
+      "newName": "『💼』・ཧོ・𝐅𝐨𝐮𝐧𝐝𝐞𝐫𝐬-𝐁ü𝐫𝐨"
+    },
+    {
+      "id": "1559659270864113735",
+      "type": "Textkanal",
+      "parentId": "1559659270629499070",
+      "position": 46,
+      "oldName": "『📺』・ཧོ・𝐖𝐞𝐫𝐛𝐮𝐧𝐠",
+      "newName": "『📺』・ཧོ・𝐖𝐞𝐫𝐛𝐮𝐧𝐠"
+    },
+    {
+      "id": "1559659273678622738",
+      "type": "Sprachkanal",
+      "parentId": "1559659273678622732",
+      "position": 46,
+      "oldName": "『💼』・ཧོ・𝐎𝐰𝐧𝐞𝐫𝐬-𝐁ü𝐫𝐨",
+      "newName": "『💼』・ཧོ・𝐎𝐰𝐧𝐞𝐫𝐬-𝐁ü𝐫𝐨"
+    },
+    {
+      "id": "1559659270864113736",
+      "type": "Forum",
+      "parentId": "1559659270629499070",
+      "position": 47,
+      "oldName": "『🤝』・ཧོ・kleine-𝐏𝐚𝐫𝐭𝐧𝐞𝐫𝐬𝐜𝐡𝐚𝐟𝐭𝐞𝐧",
+      "newName": "『🤝』・ཧོ・kleine-𝐏𝐚𝐫𝐭𝐧𝐞𝐫𝐬𝐜𝐡𝐚𝐟𝐭𝐞𝐧"
+    },
+    {
+      "id": "1559659274018234569",
+      "type": "Sprachkanal",
+      "parentId": "1559659273678622732",
+      "position": 47,
+      "oldName": "『💼』・ཧོ・𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫-𝐁ü𝐫𝐨",
+      "newName": "『💼』・ཧོ・𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫-𝐁ü𝐫𝐨"
+    },
+    {
+      "id": "1559659270864113737",
+      "type": "Forum",
+      "parentId": "1559659270629499070",
+      "position": 48,
+      "oldName": "『🤝』・ཧོ・mittlere-𝐏𝐚𝐫𝐭𝐧𝐞𝐫𝐬𝐜𝐡𝐚𝐟𝐭𝐞𝐧",
+      "newName": "『🤝』・ཧོ・mittlere-𝐏𝐚𝐫𝐭𝐧𝐞𝐫𝐬𝐜𝐡𝐚𝐟𝐭𝐞𝐧"
+    },
+    {
+      "id": "1559659274018234570",
+      "type": "Sprachkanal",
+      "parentId": "1559659273678622732",
+      "position": 48,
+      "oldName": "『💼』・ཧོ・𝐏𝐫𝐨𝐣𝐞𝐤𝐭𝐥𝐞𝐢𝐭𝐮𝐧𝐠-𝐁ü𝐫𝐨",
+      "newName": "『💼』・ཧོ・𝐏𝐫𝐨𝐣𝐞𝐤𝐭𝐥𝐞𝐢𝐭𝐮𝐧𝐠-𝐁ü𝐫𝐨"
+    },
+    {
+      "id": "1559659270864113738",
+      "type": "Forum",
+      "parentId": "1559659270629499070",
+      "position": 49,
+      "oldName": "『🤝』・ཧོ・große-𝐏𝐚𝐫𝐭𝐧𝐞𝐫𝐬𝐜𝐡𝐚𝐟𝐭𝐞𝐧",
+      "newName": "『🤝』・ཧོ・große-𝐏𝐚𝐫𝐭𝐧𝐞𝐫𝐬𝐜𝐡𝐚𝐟𝐭𝐞𝐧"
+    },
+    {
+      "id": "1559659274018234571",
+      "type": "Sprachkanal",
+      "parentId": "1559659273678622732",
+      "position": 49,
+      "oldName": "『💼』・ཧོ・𝐇𝐢𝐠𝐡-𝐀𝐮𝐬𝐛𝐢𝐥𝐝𝐞𝐫-𝐁ü𝐫𝐨",
+      "newName": "『💼』・ཧོ・𝐇𝐢𝐠𝐡-𝐀𝐮𝐬𝐛𝐢𝐥𝐝𝐞𝐫-𝐁ü𝐫𝐨"
+    },
+    {
+      "id": "1559659270864113740",
+      "type": "Textkanal",
+      "parentId": "1559659270864113739",
+      "position": 50,
+      "oldName": "『📜』・ཧོ・𝐀𝐧𝐟𝐨𝐫𝐝𝐞𝐫𝐮𝐧𝐠𝐞𝐧",
+      "newName": "『📜』・ཧོ・𝐀𝐧𝐟𝐨𝐫𝐝𝐞𝐫𝐮𝐧𝐠𝐞𝐧"
+    },
+    {
+      "id": "1559659274018234572",
+      "type": "Sprachkanal",
+      "parentId": "1559659273678622732",
+      "position": 50,
+      "oldName": "『💼』・ཧོ・𝐃𝐢𝐫𝐞𝐤𝐭𝐨𝐫-𝐁ü𝐫𝐨",
+      "newName": "『💼』・ཧོ・𝐃𝐢𝐫𝐞𝐤𝐭𝐨𝐫-𝐁ü𝐫𝐨"
+    },
+    {
+      "id": "1559659270864113741",
+      "type": "Textkanal",
+      "parentId": "1559659270864113739",
+      "position": 51,
+      "oldName": "『🟢』・ཧོ・𝐁𝐞𝐰𝐞𝐫𝐛𝐮𝐧𝐠𝐬-𝐒𝐭𝐚𝐭𝐮𝐬",
+      "newName": "『🟢』・ཧོ・𝐁𝐞𝐰𝐞𝐫𝐛𝐮𝐧𝐠𝐬-𝐒𝐭𝐚𝐭𝐮𝐬"
+    },
+    {
+      "id": "1559659274018234573",
+      "type": "Sprachkanal",
+      "parentId": "1559659273678622732",
+      "position": 51,
+      "oldName": "『💼』・ཧོ・𝐌𝐚𝐧𝐚𝐠𝐞𝐦𝐞𝐧𝐭-𝐁ü𝐫𝐨",
+      "newName": "『💼』・ཧོ・𝐌𝐚𝐧𝐚𝐠𝐞𝐦𝐞𝐧𝐭-𝐁ü𝐫𝐨"
+    },
+    {
+      "id": "1559659270864113742",
+      "type": "Textkanal",
+      "parentId": "1559659270864113739",
+      "position": 52,
+      "oldName": "『📝』・ཧོ・𝐓𝐞𝐚𝐦-𝐁𝐞𝐰𝐞𝐫𝐛𝐮𝐧𝐠",
+      "newName": "『📝』・ཧོ・𝐓𝐞𝐚𝐦-𝐁𝐞𝐰𝐞𝐫𝐛𝐮𝐧𝐠"
+    },
+    {
+      "id": "1559659274018234574",
+      "type": "Sprachkanal",
+      "parentId": "1559659273678622732",
+      "position": 52,
+      "oldName": "『💼』・ཧོ・𝐒𝐮𝐩𝐞𝐫𝐯𝐢𝐬𝐨𝐫-𝐁ü𝐫𝐨",
+      "newName": "『💼』・ཧོ・𝐒𝐮𝐩𝐞𝐫𝐯𝐢𝐬𝐨𝐫-𝐁ü𝐫𝐨"
+    },
+    {
+      "id": "1559659271111839754",
+      "type": "Textkanal",
+      "parentId": "1559659270864113743",
+      "position": 53,
+      "oldName": "『🎥』・ཧོ・𝐂𝐫𝐞𝐚𝐭𝐨𝐫-𝐈𝐧𝐟𝐨𝐬",
+      "newName": "『🎥』・ཧོ・𝐂𝐫𝐞𝐚𝐭𝐨𝐫-𝐈𝐧𝐟𝐨𝐬"
+    },
+    {
+      "id": "1559659274018234575",
+      "type": "Sprachkanal",
+      "parentId": "1559659273678622732",
+      "position": 53,
+      "oldName": "『💼』・ཧོ・𝐓𝐞𝐚𝐦𝐥𝐞𝐢𝐭𝐮𝐧𝐠-𝐁ü𝐫𝐨",
+      "newName": "『💼』・ཧོ・𝐓𝐞𝐚𝐦𝐥𝐞𝐢𝐭𝐮𝐧𝐠-𝐁ü𝐫𝐨"
+    },
+    {
+      "id": "1559659271111839755",
+      "type": "Textkanal",
+      "parentId": "1559659270864113743",
+      "position": 54,
+      "oldName": "『🎥』・ཧོ・𝐂𝐫𝐞𝐚𝐭𝐨𝐫-𝐁𝐞𝐰𝐞𝐫𝐛𝐮𝐧𝐠",
+      "newName": "『🎥』・ཧོ・𝐂𝐫𝐞𝐚𝐭𝐨𝐫-𝐁𝐞𝐰𝐞𝐫𝐛𝐮𝐧𝐠"
+    },
+    {
+      "id": "1559659274530062336",
+      "type": "Sprachkanal",
+      "parentId": "1559659273678622732",
+      "position": 54,
+      "oldName": "『💼』・ཧོ・𝐋𝐨𝐰-𝐀𝐮𝐬𝐛𝐢𝐥𝐝𝐞𝐫-𝐁ü𝐫𝐨",
+      "newName": "『💼』・ཧོ・𝐋𝐨𝐰-𝐀𝐮𝐬𝐛𝐢𝐥𝐝𝐞𝐫-𝐁ü𝐫𝐨"
+    },
+    {
+      "id": "1559659271111839756",
+      "type": "Textkanal",
+      "parentId": "1559659270864113743",
+      "position": 55,
+      "oldName": "『🎥』・ཧོ・𝐔𝐧𝐬𝐞𝐫-𝐓𝐢𝐤𝐓𝐨𝐤",
+      "newName": "『🎥』・ཧོ・𝐔𝐧𝐬𝐞𝐫-𝐓𝐢𝐤𝐓𝐨𝐤"
+    },
+    {
+      "id": "1559659274530062337",
+      "type": "Sprachkanal",
+      "parentId": "1559659273678622732",
+      "position": 55,
+      "oldName": "『💼』・ཧོ・𝐅𝐫𝐚𝐤𝐭𝐢𝐨𝐧𝐬𝐯𝐞𝐫𝐰𝐚𝐥𝐭𝐮𝐧𝐠-𝐁ü𝐫𝐨",
+      "newName": "『💼』・ཧོ・𝐅𝐫𝐚𝐤𝐭𝐢𝐨𝐧𝐬𝐯𝐞𝐫𝐰𝐚𝐥𝐭𝐮𝐧𝐠-𝐁ü𝐫𝐨"
+    },
+    {
+      "id": "1559659274530062338",
+      "type": "Sprachkanal",
+      "parentId": "1559659273678622732",
+      "position": 56,
+      "oldName": "『💼』・ཧོ・𝐄𝐯𝐞𝐧𝐭𝐥𝐞𝐢𝐭𝐮𝐧𝐠-𝐁ü𝐫𝐨",
+      "newName": "『💼』・ཧོ・𝐄𝐯𝐞𝐧𝐭𝐥𝐞𝐢𝐭𝐮𝐧𝐠-𝐁ü𝐫𝐨"
+    },
+    {
+      "id": "1561109430794330122",
+      "type": "Textkanal",
+      "parentId": "1559659271111839757",
+      "position": 56,
+      "oldName": "『🆙』・ཧོ・𝐓𝐞𝐚𝐦-updates",
+      "newName": "『🆙』・ཧོ・𝐓𝐞𝐚𝐦-updates"
+    },
+    {
+      "id": "1559659271111839763",
+      "type": "Textkanal",
+      "parentId": "1559659271111839757",
+      "position": 57,
+      "oldName": "『⚒️』・ཧོ・𝐓𝐞𝐚𝐦-𝐋𝐢𝐬𝐭𝐞",
+      "newName": "『⚒️』・ཧོ・𝐓𝐞𝐚𝐦-𝐋𝐢𝐬𝐭𝐞"
+    },
+    {
+      "id": "1559659271329808415",
+      "type": "Textkanal",
+      "parentId": "1559659271329808414",
+      "position": 58,
+      "oldName": "『❤️』・ཧོ・𝐅𝐞𝐞𝐝𝐛𝐚𝐜𝐤",
+      "newName": "『❤️』・ཧོ・𝐅𝐞𝐞𝐝𝐛𝐚𝐜𝐤"
+    },
+    {
+      "id": "1559659271329808416",
+      "type": "Textkanal",
+      "parentId": "1559659271329808414",
+      "position": 59,
+      "oldName": "『🆘』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝐂𝐡𝐚𝐭",
+      "newName": "『🆘』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝐂𝐡𝐚𝐭"
+    },
+    {
+      "id": "1559659271329808417",
+      "type": "Textkanal",
+      "parentId": "1559659271329808414",
+      "position": 60,
+      "oldName": "『🎫』・ཧོ・𝐓𝐢𝐜𝐤𝐞𝐭-𝐒𝐮𝐩𝐩𝐨𝐫𝐭",
+      "newName": "『🎫』・ཧོ・𝐓𝐢𝐜𝐤𝐞𝐭-𝐒𝐮𝐩𝐩𝐨𝐫𝐭"
+    },
+    {
+      "id": "1559659271329808420",
+      "type": "Textkanal",
+      "parentId": "1559659271329808419",
+      "position": 61,
+      "oldName": "『🔴』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝐏𝐢𝐧𝐠𝐬",
+      "newName": "『🔴』・ཧོ・𝐒𝐮𝐩𝐩𝐨𝐫𝐭-𝐏𝐢𝐧𝐠𝐬"
+    },
+    {
+      "id": "1559659271543726239",
+      "type": "Textkanal",
+      "parentId": "1559659271543726238",
+      "position": 62,
+      "oldName": "『🟩』・ཧོ・𝐓𝐞𝐚𝐦-𝐑𝐞𝐠𝐞𝐥𝐧",
+      "newName": "『🟩』・ཧོ・𝐓𝐞𝐚𝐦-𝐑𝐞𝐠𝐞𝐥𝐧"
+    },
+    {
+      "id": "1559659271744917634",
+      "type": "Textkanal",
+      "parentId": "1559659271543726238",
+      "position": 63,
+      "oldName": "『🟩』・ཧོ・𝐈𝐧𝐠𝐚𝐦𝐞-𝐈𝐧𝐟𝐨𝐬",
+      "newName": "『🟩』・ཧོ・𝐈𝐧𝐠𝐚𝐦𝐞-𝐈𝐧𝐟𝐨𝐬"
+    },
+    {
+      "id": "1559659271744917635",
+      "type": "Textkanal",
+      "parentId": "1559659271543726238",
+      "position": 64,
+      "oldName": "『🟩』・ཧོ・𝐀𝐝𝐦𝐢𝐧-𝐅𝐚𝐡𝐫𝐳𝐞𝐮𝐠-𝐑𝐞𝐠𝐞𝐥𝐰𝐞𝐫𝐤",
+      "newName": "『🟩』・ཧོ・𝐀𝐝𝐦𝐢𝐧-𝐅𝐚𝐡𝐫𝐳𝐞𝐮𝐠-𝐑𝐞𝐠𝐞𝐥𝐰𝐞𝐫𝐤"
+    },
+    {
+      "id": "1559659271744917636",
+      "type": "Textkanal",
+      "parentId": "1559659271543726238",
+      "position": 65,
+      "oldName": "『🟩』・ཧོ・𝐓𝐞𝐚𝐦-𝐀𝐧𝐤ü𝐧𝐝𝐢𝐠𝐮𝐧𝐠𝐞𝐧",
+      "newName": "『🟩』・ཧོ・𝐓𝐞𝐚𝐦-𝐀𝐧𝐤ü𝐧𝐝𝐢𝐠𝐮𝐧𝐠𝐞𝐧"
+    },
+    {
+      "id": "1559659271744917637",
+      "type": "Textkanal",
+      "parentId": "1559659271543726238",
+      "position": 66,
+      "oldName": "『🟩』・ཧོ・𝐓𝐞𝐫𝐦𝐢𝐧𝐞",
+      "newName": "『🟩』・ཧོ・𝐓𝐞𝐫𝐦𝐢𝐧𝐞"
+    },
+    {
+      "id": "1559659271744917638",
+      "type": "Textkanal",
+      "parentId": "1559659271543726238",
+      "position": 67,
+      "oldName": "『🟩』・ཧོ・𝐓𝐞𝐚𝐦-𝐂𝐡𝐚𝐭",
+      "newName": "『🟩』・ཧོ・𝐓𝐞𝐚𝐦-𝐂𝐡𝐚𝐭"
+    },
+    {
+      "id": "1559659271744917639",
+      "type": "Textkanal",
+      "parentId": "1559659271543726238",
+      "position": 68,
+      "oldName": "『🟩』・ཧོ・𝐓𝐞𝐚𝐦-𝐀𝐛𝐬𝐭𝐢𝐦𝐦𝐮𝐧𝐠𝐞𝐧",
+      "newName": "『🟩』・ཧོ・𝐓𝐞𝐚𝐦-𝐀𝐛𝐬𝐭𝐢𝐦𝐦𝐮𝐧𝐠𝐞𝐧"
+    },
+    {
+      "id": "1559659271744917640",
+      "type": "Textkanal",
+      "parentId": "1559659271543726238",
+      "position": 69,
+      "oldName": "『🟩』・ཧོ・𝐓𝐞𝐚𝐦-𝐀𝐮𝐟𝐠𝐚𝐛𝐞𝐧",
+      "newName": "『🟩』・ཧོ・𝐓𝐞𝐚𝐦-𝐀𝐮𝐟𝐠𝐚𝐛𝐞𝐧"
+    },
+    {
+      "id": "1559659271744917641",
+      "type": "Textkanal",
+      "parentId": "1559659271543726238",
+      "position": 70,
+      "oldName": "『🟩』・ཧོ・𝐏𝐫𝐨𝐟𝐢𝐥𝐛𝐢𝐥𝐝𝐞𝐫",
+      "newName": "『🟩』・ཧོ・𝐏𝐫𝐨𝐟𝐢𝐥𝐛𝐢𝐥𝐝𝐞𝐫"
+    },
+    {
+      "id": "1559659271744917642",
+      "type": "Textkanal",
+      "parentId": "1559659271543726238",
+      "position": 71,
+      "oldName": "『🟩』・ཧོ・𝐊𝐞𝐧𝐧𝐳𝐞𝐢𝐜𝐡𝐞𝐧",
+      "newName": "『🟩』・ཧོ・𝐊𝐞𝐧𝐧𝐳𝐞𝐢𝐜𝐡𝐞𝐧"
+    },
+    {
+      "id": "1559659271744917643",
+      "type": "Textkanal",
+      "parentId": "1559659271543726238",
+      "position": 72,
+      "oldName": "『🟩』・ཧོ・support-leaderboard",
+      "newName": "『🟩』・ཧོ・support-leaderboard"
+    },
+    {
+      "id": "1559659272009289798",
+      "type": "Textkanal",
+      "parentId": "1559659271543726238",
+      "position": 73,
+      "oldName": "『🟩』・ཧོ・𝐀𝐜𝐭𝐢𝐯𝐢𝐭𝐲-𝐂𝐡𝐞𝐜𝐤",
+      "newName": "『🟩』・ཧོ・𝐀𝐜𝐭𝐢𝐯𝐢𝐭𝐲-𝐂𝐡𝐞𝐜𝐤"
+    },
+    {
+      "id": "1559659272009289799",
+      "type": "Textkanal",
+      "parentId": "1559659271543726238",
+      "position": 74,
+      "oldName": "『🟩』・ཧོ・𝐈𝐂-𝐂𝐨𝐦𝐦𝐮𝐧𝐢𝐭𝐲",
+      "newName": "『🟩』・ཧོ・𝐈𝐂-𝐂𝐨𝐦𝐦𝐮𝐧𝐢𝐭𝐲"
+    },
+    {
+      "id": "1559659272009289800",
+      "type": "Textkanal",
+      "parentId": "1559659271543726238",
+      "position": 75,
+      "oldName": "『🟩』・ཧོ・robloxnamen",
+      "newName": "『🟩』・ཧོ・robloxnamen"
+    },
+    {
+      "id": "1559659272009289801",
+      "type": "Textkanal",
+      "parentId": "1559659273015926899",
+      "position": 76,
+      "oldName": "『◻️』・ཧོ・teampanel",
+      "newName": "『◻️』・ཧོ・teampanel"
+    },
+    {
+      "id": "1559659272009289802",
+      "type": "Textkanal",
+      "parentId": "1559659271543726238",
+      "position": 77,
+      "oldName": "『🟩』・ཧོ・𝐃𝐢𝐬𝐜𝐨𝐫𝐝-𝐍𝐚𝐦𝐞𝐭𝐚𝐠𝐬",
+      "newName": "『🟩』・ཧོ・𝐃𝐢𝐬𝐜𝐨𝐫𝐝-𝐍𝐚𝐦𝐞𝐭𝐚𝐠𝐬"
+    },
+    {
+      "id": "1559659272009289803",
+      "type": "Textkanal",
+      "parentId": "1559659271543726238",
+      "position": 78,
+      "oldName": "『🟩』・ཧོ・𝐈𝐧𝐠𝐚𝐦𝐞-𝐍𝐚𝐦𝐞𝐭𝐚𝐠𝐬",
+      "newName": "『🟩』・ཧོ・𝐈𝐧𝐠𝐚𝐦𝐞-𝐍𝐚𝐦𝐞𝐭𝐚𝐠𝐬"
+    },
+    {
+      "id": "1559659272478924922",
+      "type": "Forum",
+      "parentId": "1559659272478924920",
+      "position": 79,
+      "oldName": "『🟨』・ཧོ・𝐇𝐢𝐠𝐡-𝐓𝐞𝐚𝐦-𝐕𝐨𝐫𝐥𝐚𝐠𝐞𝐧",
+      "newName": "『🟨』・ཧོ・𝐇𝐢𝐠𝐡-𝐓𝐞𝐚𝐦-𝐕𝐨𝐫𝐥𝐚𝐠𝐞𝐧"
+    },
+    {
+      "id": "1559659272478924923",
+      "type": "Forum",
+      "parentId": "1559659272478924920",
+      "position": 80,
+      "oldName": "『🟨』・ཧོ・𝐓𝐢𝐜𝐤𝐞𝐭-𝐕𝐨𝐫𝐥𝐚𝐠𝐞𝐧",
+      "newName": "『🟨』・ཧོ・𝐓𝐢𝐜𝐤𝐞𝐭-𝐕𝐨𝐫𝐥𝐚𝐠𝐞𝐧"
+    },
+    {
+      "id": "1559659272478924924",
+      "type": "Forum",
+      "parentId": "1559659272478924920",
+      "position": 81,
+      "oldName": "『🟨』・ཧོ・𝐁𝐞𝐰𝐞𝐫𝐛𝐮𝐧𝐠𝐬-𝐕𝐨𝐫𝐥𝐚𝐠𝐞𝐧",
+      "newName": "『🟨』・ཧོ・𝐁𝐞𝐰𝐞𝐫𝐛𝐮𝐧𝐠𝐬-𝐕𝐨𝐫𝐥𝐚𝐠𝐞𝐧"
+    },
+    {
+      "id": "1559659272478924926",
+      "type": "Textkanal",
+      "parentId": "1559659272478924925",
+      "position": 82,
+      "oldName": "『🟪』・ཧོ・𝐁𝐨𝐭𝐭𝐞𝐧-𝐓𝐮𝐭𝐨𝐫𝐢𝐚𝐥",
+      "newName": "『🟪』・ཧོ・𝐁𝐨𝐭𝐭𝐞𝐧-𝐓𝐮𝐭𝐨𝐫𝐢𝐚𝐥"
+    },
+    {
+      "id": "1559659272478924927",
+      "type": "Textkanal",
+      "parentId": "1559659272478924925",
+      "position": 83,
+      "oldName": "『🟪』・ཧོ・𝐌𝐞𝐥𝐨𝐧𝐥𝐲-𝐓𝐮𝐭𝐨𝐫𝐢𝐚𝐥",
+      "newName": "『🟪』・ཧོ・𝐌𝐞𝐥𝐨𝐧𝐥𝐲-𝐓𝐮𝐭𝐨𝐫𝐢𝐚𝐥"
+    },
+    {
+      "id": "1559659273015926894",
+      "type": "Textkanal",
+      "parentId": "1559659272478924925",
+      "position": 84,
+      "oldName": "『🟪』・ཧོ・𝐂𝐨𝐦𝐦𝐮𝐧𝐢𝐭𝐲-𝐓𝐮𝐭𝐨𝐫𝐢𝐚𝐥",
+      "newName": "『🟪』・ཧོ・𝐂𝐨𝐦𝐦𝐮𝐧𝐢𝐭𝐲-𝐓𝐮𝐭𝐨𝐫𝐢𝐚𝐥"
+    },
+    {
+      "id": "1559659273015926896",
+      "type": "Textkanal",
+      "parentId": "1559659273015926895",
+      "position": 85,
+      "oldName": "『🟥』・ཧོ・𝙎𝙥𝙞𝙚𝙡𝙚-𝘼𝙗𝙚𝙣𝙙-𝘼𝙗𝙨𝙩𝙞𝙢𝙢𝙪𝙣𝙜𝙚𝙣",
+      "newName": "『🟥』・ཧོ・𝙎𝙥𝙞𝙚𝙡𝙚-𝘼𝙗𝙚𝙣𝙙-𝘼𝙗𝙨𝙩𝙞𝙢𝙢𝙪𝙣𝙜𝙚𝙣"
+    },
+    {
+      "id": "1559659273015926897",
+      "type": "Textkanal",
+      "parentId": "1559659273015926895",
+      "position": 86,
+      "oldName": "『🟥』・ཧོ・𝙎𝙥𝙞𝙚𝙡𝙚-𝘼𝙗𝙚𝙣𝙙-𝘾𝙝𝙖𝙩",
+      "newName": "『🟥』・ཧོ・𝙎𝙥𝙞𝙚𝙡𝙚-𝘼𝙗𝙚𝙣𝙙-𝘾𝙝𝙖𝙩"
+    },
+    {
+      "id": "1559659273015926900",
+      "type": "Textkanal",
+      "parentId": "1559659273015926899",
+      "position": 87,
+      "oldName": "『⬜』・ཧོ・𝐇𝐢𝐠𝐡-𝐓𝐞𝐚𝐦-𝐑𝐞𝐠𝐞𝐥𝐰𝐞𝐫𝐤",
+      "newName": "『⬜』・ཧོ・𝐇𝐢𝐠𝐡-𝐓𝐞𝐚𝐦-𝐑𝐞𝐠𝐞𝐥𝐰𝐞𝐫𝐤"
+    },
+    {
+      "id": "1559659273015926901",
+      "type": "Textkanal",
+      "parentId": "1559659273015926899",
+      "position": 88,
+      "oldName": "『⬜』・ཧོ・𝐓𝐞𝐚𝐦𝐦𝐞𝐞𝐭𝐢𝐧𝐠-𝐏𝐥𝐚𝐧",
+      "newName": "『⬜』・ཧོ・𝐓𝐞𝐚𝐦𝐦𝐞𝐞𝐭𝐢𝐧𝐠-𝐏𝐥𝐚𝐧"
+    },
+    {
+      "id": "1559659273015926902",
+      "type": "Textkanal",
+      "parentId": "1559659273015926899",
+      "position": 89,
+      "oldName": "『⬜』・ཧོ・𝐇𝐢𝐠𝐡-𝐓𝐞𝐚𝐦-𝐂𝐡𝐚𝐭",
+      "newName": "『⬜』・ཧོ・𝐇𝐢𝐠𝐡-𝐓𝐞𝐚𝐦-𝐂𝐡𝐚𝐭"
+    },
+    {
+      "id": "1559659273015926903",
+      "type": "Textkanal",
+      "parentId": "1559659273015926899",
+      "position": 90,
+      "oldName": "『⬜』・ཧོ・𝐁𝐞𝐰𝐞𝐫𝐛𝐮𝐧𝐠𝐬-𝐅𝐨𝐫𝐦𝐮𝐥𝐚𝐫",
+      "newName": "『⬜』・ཧོ・𝐁𝐞𝐰𝐞𝐫𝐛𝐮𝐧𝐠𝐬-𝐅𝐨𝐫𝐦𝐮𝐥𝐚𝐫"
+    },
+    {
+      "id": "1559659273351602286",
+      "type": "Textkanal",
+      "parentId": "1559659273015926899",
+      "position": 91,
+      "oldName": "『⬜』・ཧོ・𝐔𝐩𝐫𝐚𝐧𝐤-𝐒𝐲𝐬𝐭𝐞𝐦",
+      "newName": "『⬜』・ཧོ・𝐔𝐩𝐫𝐚𝐧𝐤-𝐒𝐲𝐬𝐭𝐞𝐦"
+    },
+    {
+      "id": "1559659273351602287",
+      "type": "Textkanal",
+      "parentId": "1559659273015926899",
+      "position": 92,
+      "oldName": "『⬜』・ཧོ・𝐓𝐞𝐚𝐦-𝐁𝐞𝐰𝐞𝐫𝐛𝐮𝐧𝐠",
+      "newName": "『⬜』・ཧོ・𝐓𝐞𝐚𝐦-𝐁𝐞𝐰𝐞𝐫𝐛𝐮𝐧𝐠"
+    },
+    {
+      "id": "1559659273351602288",
+      "type": "Textkanal",
+      "parentId": "1559659273015926899",
+      "position": 93,
+      "oldName": "『⬜』・ཧོ・𝐓𝐞𝐚𝐦𝐬𝐩𝐞𝐫𝐫𝐞",
+      "newName": "『⬜』・ཧོ・𝐓𝐞𝐚𝐦𝐬𝐩𝐞𝐫𝐫𝐞"
+    },
+    {
+      "id": "1559659273351602289",
+      "type": "Textkanal",
+      "parentId": "1559659273015926899",
+      "position": 94,
+      "oldName": "『⬜』・ཧོ・𝐑𝐏-𝐒𝐭𝐚𝐫𝐭-𝐒𝐭𝐨𝐩",
+      "newName": "『⬜』・ཧོ・𝐑𝐏-𝐒𝐭𝐚𝐫𝐭-𝐒𝐭𝐨𝐩"
+    },
+    {
+      "id": "1559659273678622733",
+      "type": "Textkanal",
+      "parentId": "1559659273678622732",
+      "position": 95,
+      "oldName": "『📅』・ཧོ・𝐁ü𝐫𝐨-𝐓𝐞𝐫𝐦𝐢𝐧𝐞",
+      "newName": "『📅』・ཧོ・𝐁ü𝐫𝐨-𝐓𝐞𝐫𝐦𝐢𝐧𝐞"
+    },
+    {
+      "id": "1559659273678622734",
+      "type": "Textkanal",
+      "parentId": "1559659273678622732",
+      "position": 96,
+      "oldName": "『📅』・ཧོ・𝐁ü𝐫𝐨-𝐏𝐢𝐧𝐠𝐬",
+      "newName": "『📅』・ཧོ・𝐁ü𝐫𝐨-𝐏𝐢𝐧𝐠𝐬"
+    },
+    {
+      "id": "1559659274530062340",
+      "type": "Textkanal",
+      "parentId": "1559659274530062339",
+      "position": 97,
+      "oldName": "『🔰』・ཧོ・𝐃𝐄𝐕-𝐂𝐨𝐦𝐦𝐚𝐧𝐝𝐬",
+      "newName": "『🔰』・ཧོ・𝐃𝐄𝐕-𝐂𝐨𝐦𝐦𝐚𝐧𝐝𝐬"
+    },
+    {
+      "id": "1559659274530062341",
+      "type": "Textkanal",
+      "parentId": "1559659274530062339",
+      "position": 98,
+      "oldName": "『🔰』・ཧོ・𝐈𝐧𝐠𝐚𝐦𝐞-𝐋𝐨𝐠𝐬",
+      "newName": "『🔰』・ཧོ・𝐈𝐧𝐠𝐚𝐦𝐞-𝐋𝐨𝐠𝐬"
+    },
+    {
+      "id": "1559659274530062342",
+      "type": "Textkanal",
+      "parentId": "1559659274530062339",
+      "position": 99,
+      "oldName": "『🔰』・ཧོ・𝐒𝐡𝐢𝐟𝐭𝐬",
+      "newName": "『🔰』・ཧོ・𝐒𝐡𝐢𝐟𝐭𝐬"
+    },
+    {
+      "id": "1559659274530062343",
+      "type": "Textkanal",
+      "parentId": "1559659274530062339",
+      "position": 100,
+      "oldName": "『🔰』・ཧོ・𝐀𝐮𝐝𝐢𝐭-𝐋𝐨𝐠𝐬",
+      "newName": "『🔰』・ཧོ・𝐀𝐮𝐝𝐢𝐭-𝐋𝐨𝐠𝐬"
+    },
+    {
+      "id": "1559659274530062344",
+      "type": "Textkanal",
+      "parentId": "1559659274530062339",
+      "position": 101,
+      "oldName": "『🔰』・ཧོ・𝐓𝐢𝐜𝐤𝐞𝐭-𝐋𝐨𝐠𝐬",
+      "newName": "『🔰』・ཧོ・𝐓𝐢𝐜𝐤𝐞𝐭-𝐋𝐨𝐠𝐬"
+    },
+    {
+      "id": "1561733568710049893",
+      "type": "Textkanal",
+      "parentId": "1559659274530062339",
+      "position": 102,
+      "oldName": "『🔰』・ཧོ・secruity-𝐋𝐨𝐠𝐬",
+      "newName": "『🔰』・ཧོ・secruity-𝐋𝐨𝐠𝐬"
+    },
+    {
+      "id": "1562485006226559038",
+      "type": "Textkanal",
+      "parentId": "1559659274530062339",
+      "position": 103,
+      "oldName": "『🔰』・ཧོ・bot-status",
+      "newName": "『🔰』・ཧོ・bot-status"
+    },
+    {
+      "id": "1559659274530062345",
+      "type": "Textkanal",
+      "parentId": "1559659274530062339",
+      "position": 104,
+      "oldName": "『🔰』・ཧོ・𝐀𝐧𝐭𝐢-𝐍𝐮𝐤𝐞-𝐋𝐨𝐠𝐬",
+      "newName": "『🔰』・ཧོ・𝐀𝐧𝐭𝐢-𝐍𝐮𝐤𝐞-𝐋𝐨𝐠𝐬"
+    },
+    {
+      "id": "1562499265333305435",
+      "type": "Textkanal",
+      "parentId": "1559659274530062339",
+      "position": 105,
+      "oldName": "ཧོ・logs-support",
+      "newName": "ཧོ・logs-support"
+    },
+    {
+      "id": "1559659274827866244",
+      "type": "Textkanal",
+      "parentId": "1559659274827866243",
+      "position": 106,
+      "oldName": "『⬇️』・ཧོ・content-creator-bewerbungen⬇️",
+      "newName": "『⬇️』・ཧོ・content-creator-bewerbungen⬇️"
+    },
+    {
+      "id": "1559659274827866245",
+      "type": "Textkanal",
+      "parentId": "1559659274827866243",
+      "position": 107,
+      "oldName": "『⬛』・ཧོ・𝐂𝐂-𝐀𝐮𝐬𝐭𝐞𝐡𝐞𝐧𝐝",
+      "newName": "『⬛』・ཧོ・𝐂𝐂-𝐀𝐮𝐬𝐭𝐞𝐡𝐞𝐧𝐝"
+    },
+    {
+      "id": "1559659274827866246",
+      "type": "Textkanal",
+      "parentId": "1559659274827866243",
+      "position": 108,
+      "oldName": "『⬛』・ཧོ・𝐂𝐂-𝐀𝐧𝐠𝐞𝐧𝐨𝐦𝐦𝐞𝐧",
+      "newName": "『⬛』・ཧོ・𝐂𝐂-𝐀𝐧𝐠𝐞𝐧𝐨𝐦𝐦𝐞𝐧"
+    },
+    {
+      "id": "1559659274827866247",
+      "type": "Textkanal",
+      "parentId": "1559659274827866243",
+      "position": 109,
+      "oldName": "『⬛』・ཧོ・𝐂𝐂-𝐀𝐛𝐠𝐞𝐥𝐞𝐡𝐧𝐭",
+      "newName": "『⬛』・ཧོ・𝐂𝐂-𝐀𝐛𝐠𝐞𝐥𝐞𝐡𝐧𝐭"
+    },
+    {
+      "id": "1559659274827866248",
+      "type": "Textkanal",
+      "parentId": "1559659274827866243",
+      "position": 110,
+      "oldName": "『⬇️』・ཧོ・teamler-bewerbungen⬇️",
+      "newName": "『⬇️』・ཧོ・teamler-bewerbungen⬇️"
+    },
+    {
+      "id": "1559659274827866249",
+      "type": "Textkanal",
+      "parentId": "1559659274827866243",
+      "position": 111,
+      "oldName": "『⬛』・ཧོ・𝐓𝐞𝐚𝐦𝐥𝐞𝐫-𝐀𝐮𝐬𝐭𝐞𝐡𝐞𝐧𝐝",
+      "newName": "『⬛』・ཧོ・𝐓𝐞𝐚𝐦𝐥𝐞𝐫-𝐀𝐮𝐬𝐭𝐞𝐡𝐞𝐧𝐝"
+    },
+    {
+      "id": "1559659274827866250",
+      "type": "Textkanal",
+      "parentId": "1559659274827866243",
+      "position": 112,
+      "oldName": "『⬛』・ཧོ・𝐓𝐞𝐚𝐦𝐥𝐞𝐫-𝐀𝐧𝐠𝐞𝐧𝐨𝐦𝐦𝐞𝐧",
+      "newName": "『⬛』・ཧོ・𝐓𝐞𝐚𝐦𝐥𝐞𝐫-𝐀𝐧𝐠𝐞𝐧𝐨𝐦𝐦𝐞𝐧"
+    },
+    {
+      "id": "1559659274827866251",
+      "type": "Textkanal",
+      "parentId": "1559659274827866243",
+      "position": 113,
+      "oldName": "『⬛』・ཧོ・𝐓𝐞𝐚𝐦𝐥𝐞𝐫-𝐀𝐛𝐠𝐞𝐥𝐞𝐡𝐧𝐭",
+      "newName": "『⬛』・ཧོ・𝐓𝐞𝐚𝐦𝐥𝐞𝐫-𝐀𝐛𝐠𝐞𝐥𝐞𝐡𝐧𝐭"
+    }
+  ]
+}

@@ -1,26 +1,34 @@
+
+"use strict";
+
 // =====================================================
-// 🤖 KI-CHAT
-// Datei: KI-Chat.js
+// 🤖 VEXO RP – KI-CHAT
+// Datei: KI-Chatbot/KI-Chat.js
+// Mit integrierter KI-Bildanimation
 // =====================================================
 
 const { AttachmentBuilder } = require("discord.js");
-const { handleCodeMessage, registerCodeInteractions } = require("./KI-Code-Manager");
+
+const {
+    handleCodeMessage,
+    registerCodeInteractions
+} = require("./KI-Code-Manager");
 
 const {
     isKIChatChannel,
     getKIChatChannelId
 } = require("./KI-Chat-Setup");
 
+// WICHTIG: KI-Animation.js liegt im selben Ordner.
+const {
+    handleAnimationMessage
+} = require("./KI-Animation");
+
 // =====================================================
 // STATUS
 // =====================================================
 
 let initialized = false;
-
-// =====================================================
-// CLIENT SPEICHERN
-// =====================================================
-
 let discordClient = null;
 
 // =====================================================
@@ -32,54 +40,64 @@ function setClient(client) {
 }
 
 // =====================================================
-// LANGE ANTWORTEN AUFTEILEN (Code-Blöcke bleiben intakt)
+// LANGE ANTWORTEN AUFTEILEN
 // =====================================================
 
-const CHUNK_LIMIT = 1900;      // Discord erlaubt 2000
-const MAX_CHUNKS = 5;          // darüber hinaus als Datei senden
+const CHUNK_LIMIT = 1900;
+const MAX_CHUNKS = 5;
 
 function splitMessage(text, max = CHUNK_LIMIT) {
-
     const chunks = [];
 
     let current = "";
-    let openFence = null; // z. B. "```js"
+    let openFence = null;
 
     const lines = text.split("\n");
     const pieceSize = max - 20;
 
     for (const rawLine of lines) {
-
-        // Extrem lange Einzelzeilen zerlegen
         const pieces =
             rawLine.length > pieceSize
-                ? rawLine.match(new RegExp(`[\\s\\S]{1,${pieceSize}}`, "g"))
+                ? rawLine.match(
+                    new RegExp(`[\\s\\S]{1,${pieceSize}}`, "g")
+                )
                 : [rawLine];
 
         for (const line of pieces) {
+            const reserve = openFence ? 4 : 0;
 
-            const reserve = openFence ? 4 : 0; // "\n```" zum Schließen
-
-            if (current.length + line.length + 1 + reserve > max) {
-
+            if (
+                current.length +
+                line.length +
+                1 +
+                reserve > max
+            ) {
                 if (openFence) {
                     current += "\n```";
                 }
 
                 chunks.push(current);
 
-                current = openFence ? openFence + "\n" : "";
+                current = openFence
+                    ? openFence + "\n"
+                    : "";
             }
 
-            if (current && !current.endsWith("\n")) {
+            if (
+                current &&
+                !current.endsWith("\n")
+            ) {
                 current += "\n";
             }
 
             current += line;
 
-            // Code-Block-Status verfolgen
-            if (line.trim().startsWith("```")) {
-                openFence = openFence ? null : line.trim();
+            if (
+                line.trim().startsWith("```")
+            ) {
+                openFence = openFence
+                    ? null
+                    : line.trim();
             }
         }
     }
@@ -96,35 +114,24 @@ function splitMessage(text, max = CHUNK_LIMIT) {
 // =====================================================
 
 async function handleKIChatMessage(message) {
-
     let typingInterval = null;
 
     try {
-
-        if (!discordClient) {
+        if (!discordClient || !message) {
             return;
         }
 
-        if (!message) {
-            return;
-        }
-
-        // Bots ignorieren
+        // Bot-Nachrichten ignorieren
         if (message.author?.bot) {
             return;
         }
 
-        // Nur Server
+        // Nur Discord-Server
         if (!message.guild) {
             return;
         }
 
-        // Keine Textnachricht
-        if (!message.content) {
-            return;
-        }
-
-        // Nur im eingestellten KI-Kanal antworten
+        // Nur im eingestellten KI-Chat-Kanal
         if (
             !isKIChatChannel(
                 message.guild.id,
@@ -134,40 +141,75 @@ async function handleKIChatMessage(message) {
             return;
         }
 
-        if (await handleCodeMessage(message)) return;
+        // =============================================
+        // 🎬 KI-BILDANIMATION
+        // =============================================
 
-        const userMessage = message.content.trim();
+        // Wichtig: Vor der Prüfung auf Textinhalt,
+        // damit auch Bilder ohne Nachrichtentext
+        // erkannt werden.
+        if (
+            typeof handleAnimationMessage === "function"
+        ) {
+            const handled =
+                await handleAnimationMessage(message);
+
+            if (handled) {
+                return;
+            }
+        }
+
+        // =============================================
+        // 💻 KI-CODE-MANAGER
+        // =============================================
+
+        if (
+            await handleCodeMessage(message)
+        ) {
+            return;
+        }
+
+        // =============================================
+        // 💬 NORMALER KI-CHAT
+        // =============================================
+
+        if (!message.content) {
+            return;
+        }
+
+        const userMessage =
+            message.content.trim();
 
         if (!userMessage) {
             return;
         }
 
-        // KI-Technik laden
         const {
             generateAIResponse
         } = require("./KI-Chat-Technik");
 
-        // Tippen anzeigen (bei langen Code-Antworten regelmäßig erneuern)
         try {
             await message.channel.sendTyping();
         } catch (_) {}
 
         typingInterval = setInterval(() => {
-            message.channel.sendTyping().catch(() => {});
+            message.channel
+                .sendTyping()
+                .catch(() => {});
         }, 8000);
 
-        // KI-Antwort erzeugen
-        const response = await generateAIResponse(
-            userMessage,
-            {
-                guildId: message.guild.id,
-                channelId: message.channel.id,
-                userId: message.author.id,
-                username: message.author.username,
-                guild: message.guild,
-                member: message.member
-            }
-        );
+        const response =
+            await generateAIResponse(
+                userMessage,
+                {
+                    guildId: message.guild.id,
+                    channelId: message.channel.id,
+                    userId: message.author.id,
+                    username: message.author.username,
+                    guild: message.guild,
+                    member: message.member
+                }
+            );
 
         clearInterval(typingInterval);
         typingInterval = null;
@@ -176,11 +218,15 @@ async function handleKIChatMessage(message) {
             return;
         }
 
-        // Kurze Antwort
-        if (response.length <= 2000) {
+        const answer = String(response);
 
+        // =============================================
+        // KURZE ANTWORT
+        // =============================================
+
+        if (answer.length <= 2000) {
             await message.reply({
-                content: response,
+                content: answer,
                 allowedMentions: {
                     repliedUser: false
                 }
@@ -189,20 +235,24 @@ async function handleKIChatMessage(message) {
             return;
         }
 
-        // Lange Antwort aufteilen
-        const chunks = splitMessage(response);
+        // =============================================
+        // LANGE ANTWORT
+        // =============================================
 
-        // Sehr lange Antworten (z. B. ganze Dateien) als Datei senden
+        const chunks = splitMessage(answer);
+
         if (chunks.length > MAX_CHUNKS) {
-
             const file = new AttachmentBuilder(
-                Buffer.from(response, "utf8"),
-                { name: "antwort.md" }
+                Buffer.from(answer, "utf8"),
+                {
+                    name: "antwort.md"
+                }
             );
 
             await message.reply({
                 content:
-                    "📄 Die Antwort ist sehr lang, deshalb habe ich sie als Datei angehängt.",
+                    "📄 Die Antwort ist sehr lang, " +
+                    "deshalb habe ich sie als Datei angehängt.",
                 files: [file],
                 allowedMentions: {
                     repliedUser: false
@@ -212,7 +262,6 @@ async function handleKIChatMessage(message) {
             return;
         }
 
-        // Erste Nachricht als Antwort
         await message.reply({
             content: chunks[0],
             allowedMentions: {
@@ -220,7 +269,6 @@ async function handleKIChatMessage(message) {
             }
         });
 
-        // Restliche Nachrichten
         for (
             let i = 1;
             i < chunks.length;
@@ -235,26 +283,23 @@ async function handleKIChatMessage(message) {
         }
 
     } catch (error) {
-
         console.error(
             "❌ Fehler im KI-Chat:",
             error
         );
 
         try {
-
             await message.reply({
                 content:
-                    "❌ Die KI konnte gerade keine Antwort erstellen.",
+                    "❌ Die KI konnte gerade keine Antwort erstellen. " +
+                    "Bitte prüfe die Bot-Konsole.",
                 allowedMentions: {
                     repliedUser: false
                 }
             });
-
         } catch (_) {}
 
     } finally {
-
         if (typingInterval) {
             clearInterval(typingInterval);
         }
@@ -266,7 +311,6 @@ async function handleKIChatMessage(message) {
 // =====================================================
 
 function initializeKIChat(client) {
-
     if (initialized) {
         return;
     }
@@ -278,6 +322,7 @@ function initializeKIChat(client) {
     }
 
     discordClient = client;
+
     registerCodeInteractions(client);
 
     client.on(
@@ -288,7 +333,7 @@ function initializeKIChat(client) {
     initialized = true;
 
     console.log(
-        "🤖 KI-Chat-Modul wurde aktiviert."
+        "🤖 KI-Chat mit Bildanimations-Anbindung aktiviert."
     );
 }
 
@@ -305,11 +350,9 @@ function isInitialized() {
 // =====================================================
 
 module.exports = {
-
     initializeKIChat,
     handleKIChatMessage,
     setClient,
     isInitialized,
     getKIChatChannelId
-
 };

@@ -1,0 +1,43 @@
+{
+  "serverName": "Vexo RP",
+  "statisticsByGuild": {
+    "1512081907175657513": {
+      "channelId": "1544349918377025557",
+      "messageId": "1544413963473657918"
+    },
+    "1510593847972073653": {
+      "channelId": "1545817191067295774",
+      "messageId": "1545842839462748211"
+    },
+    "1549437482586869762": {
+      "channelId": "1549437483513552998",
+      "messageId": "1549438948768616461"
+    },
+    "1559659266737176699": {
+      "channelId": null,
+      "messageId": null
+    }
+  },
+  "teamManagementByGuild": {
+    "1510593847972073653": {
+      "rankChannelId": "1545746740181999636",
+      "warnChannelId": "1545747180264886342",
+      "teamKickChannelId": "1545747411941466112"
+    },
+    "1559659266737176699": {
+      "rankChannelId": "1561109430794330122",
+      "warnChannelId": "1561109430794330122",
+      "teamKickChannelId": "1561109430794330122"
+    }
+  },
+  "verificationTexts": {
+    "TITLE": "🔐 Bestätige, dass du ein Mensch bist",
+    "DESCRIPTION": "Um zu überprüfen, dass du kein Roboter bist, löse bitte dieses Captcha, um vollen Zugriff auf den Server zu erhalten.",
+    "SELECT_PLACEHOLDER": "Bitte wähle das richtige Captcha aus.",
+    "SUCCESS": "✅ Du wurdest erfolgreich verifiziert!",
+    "WRONG_CAPTCHA": "❌ Falsches Captcha! Bitte versuche es erneut.",
+    "EXPIRED_CAPTCHA": "❌ **Captcha abgelaufen**\n\nBitte starte die Verifizierung erneut.",
+    "ALREADY_VERIFIED": "**ℹ️ Bereits verifiziert**\n\nDu bist bereits verifiziert und kannst diesen Vorgang nicht erneut durchführen.",
+    "NO_VERIFICATION_ROLE": "**❌ Keine Verifizierung möglich**\n\nDu hast nicht die benötigte Rolle für die Verifizierung oder bist bereits verifiziert."
+  }
+}

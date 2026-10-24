@@ -1,0 +1,127 @@
+{
+  "1545759630414848042": {
+    "guildId": "1510593847972073653",
+    "channelId": "1545711184844562544",
+    "messageId": "1545759630414848042",
+    "prize": "test",
+    "description": "test",
+    "requirements": "muss aktiv sein",
+    "winnerCount": 1,
+    "maxParticipants": 200,
+    "participants": [
+      "1322191083303731201"
+    ],
+    "hostId": "1322191083303731201",
+    "hostTag": "lennox01266",
+    "createdAt": 1788608214611,
+    "endsAt": 1788694614611,
+    "ended": true,
+    "winners": [
+      "1322191083303731201"
+    ],
+    "endedAt": 1788694614617
+  },
+  "1545762673361293313": {
+    "guildId": "1510593847972073653",
+    "channelId": "1545711184844562544",
+    "messageId": "1545762673361293313",
+    "prize": "test",
+    "description": "Test",
+    "requirements": null,
+    "winnerCount": 1,
+    "maxParticipants": null,
+    "pingRoleId": "1539991224071491584",
+    "participants": [
+      "1331661518424768523",
+      "1322191083303731201"
+    ],
+    "hostId": "1322191083303731201",
+    "hostTag": "lennox01266",
+    "createdAt": 1788608940045,
+    "endsAt": 1788695340044,
+    "ended": true,
+    "winners": [
+      "1331661518424768523"
+    ],
+    "endedAt": 1788695340050
+  },
+  "1545817794124316753": {
+    "guildId": "1510593847972073653",
+    "channelId": "1545763477560369202",
+    "messageId": "1545817794124316753",
+    "prize": "admin",
+    "description": "leck eier",
+    "requirements": "du musst lennox heisen",
+    "winnerCount": 50,
+    "maxParticipants": 2000,
+    "pingRoleId": "1539991220787609681",
+    "participants": [
+      "1322191083303731201",
+      "1331661518424768523"
+    ],
+    "hostId": "1322191083303731201",
+    "hostTag": "lennox01266",
+    "createdAt": 1788622081873,
+    "endsAt": 1788708481873,
+    "ended": true,
+    "winners": [
+      "1322191083303731201",
+      "1331661518424768523"
+    ],
+    "endedAt": 1788708481885
+  },
+  "1562513129185873921": {
+    "guildId": "1559659266737176699",
+    "channelId": "1559659268834328736",
+    "messageId": "1562513129185873921",
+    "prize": "VIP",
+    "description": "Seid aktiv \nDann bekommt ihr Vip",
+    "requirements": null,
+    "winnerCount": 2,
+    "maxParticipants": null,
+    "pingRoleId": "1559659266737176699",
+    "participants": [
+      "867724933392236576",
+      "1322191083303731201",
+      "1523314222451130459",
+      "1277630079374987396",
+      "1321409178325225493",
+      "1325150138406010994"
+    ],
+    "hostId": "1322191083303731201",
+    "hostTag": "lennox.dev",
+    "createdAt": 1792602559966,
+    "endsAt": 1792775359966,
+    "ended": true,
+    "winners": [
+      "1321409178325225493",
+      "1277630079374987396"
+    ],
+    "endedAt": 1792775359978
+  },
+  "1563238738870411265": {
+    "guildId": "1559659266737176699",
+    "channelId": "1559659268834328736",
+    "messageId": "1563238738870411265",
+    "prize": "VIP",
+    "description": "Noch mal",
+    "requirements": null,
+    "winnerCount": 1,
+    "maxParticipants": null,
+    "pingRoleId": "1559659266737176699",
+    "participants": [
+      "1322191083303731201",
+      "1490385032987017397",
+      "1523314222451130459",
+      "1325150138406010994",
+      "867724933392236576",
+      "1562095671153262655"
+    ],
+    "hostId": "1322191083303731201",
+    "hostTag": "lennox.dev",
+    "createdAt": 1792775558818,
+    "endsAt": 1792861958818,
+    "ended": false,
+    "winners": []
+  }
+}
