@@ -121,7 +121,10 @@
     "hostTag": "lennox.dev",
     "createdAt": 1792775558818,
     "endsAt": 1792861958818,
-    "ended": false,
-    "winners": []
+    "ended": true,
+    "winners": [
+      "1562095671153262655"
+    ],
+    "endedAt": 1792866620678
   }
 }

@@ -25,3 +25,14 @@ node_modules/
 .ki-code-backups/
 backups/
 *.log
+
+.env
+.env.*
+!.env.example
+node_modules/
+.cursor/
+.vscode/
+cookies.txt
+*.log
+backups/
+.ki-code-backups/
