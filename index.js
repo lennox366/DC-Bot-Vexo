@@ -2315,7 +2315,7 @@ const client = new Client({
 
 const {
     initializeTicketSystem
-} = require("./Ticket-System.js");
+} = require("./ticket.System.js");
 
 initializeTicketSystem(client);
 
