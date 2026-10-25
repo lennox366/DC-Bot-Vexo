@@ -15,7 +15,7 @@ const {
 // KONFIGURATION
 // =====================================================
 
-const LOG_CHANNEL_ID = process.env.BOT_LOG_CHANNEL_ID || null;
+const LOG_CHANNEL_ID = "1563981252565147880";
 const BOT_USER_ID = process.env.DISCORD_CLIENT_ID || null;
 
 // Symbole für verschiedene Log-Typen
