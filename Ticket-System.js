@@ -53,15 +53,15 @@ const FEEDBACK_FILE = path.join(__dirname, "Ticket-Feedback.json");
 // =====================================================
 
 const DISCORD_CATEGORIES = {
-    allgemeinerSupport: "1559659275163275335",
-    teambeschwerden: "1559659275163275336",
-    highteamFragen: "1559659275163275337",
-    fehlerReport: "1559659275163275338",
-    entbannungsantrag: "1559659275163275339",
-    leitungsFragen: "1559659275163275340",
-    muendlicheBewerbung: "1559659275163275341",
-    bauGenehmigungen: "1559659275163275342",
-    fraktionenWaffenscheine: "1559659275163275343"
+    allgemeinerSupport: "1563966823936823306",
+    teambeschwerden: "1563966827325952202",
+    highteamFragen: "1563966832451256512",
+    fehlerReport: "1563966823936823306",
+    entbannungsantrag: "1563966824964427820",
+    leitungsFragen: "1563966831390097459",
+    muendlicheBewerbung: "1563966839136985308",
+    bauGenehmigungen: "1563966837828354170",
+    fraktionenWaffenscheine: "1563966828454223883"
 };
 
 // =====================================================
