@@ -1,53 +1,13 @@
 {
   "tickets": {
-    "1564637076937379932": {
-      "guildId": "1559659266737176699",
-      "userId": "1544465896242675825",
-      "type": "entbannung",
-      "categoryId": "1564307540089765942",
-      "createdAt": 1793108948973,
-      "claimedBy": null,
-      "lastReminder": null,
-      "source": "panel"
-    },
-    "1564651331665535089": {
-      "guildId": "1559659266737176699",
-      "userId": "1543370140069142639",
-      "type": "anliegen",
-      "categoryId": "1564307538881675355",
-      "createdAt": 1793112347661,
-      "claimedBy": null,
-      "lastReminder": null,
-      "source": "panel"
-    },
-    "1564658487659856102": {
-      "guildId": "1559659266737176699",
-      "userId": "1277630079374987396",
-      "type": "serverwechsel",
-      "categoryId": "1564307546129301617",
-      "createdAt": 1793114053657,
-      "claimedBy": null,
-      "lastReminder": null,
-      "source": "panel"
-    },
-    "1564662952731353118": {
-      "guildId": "1559659266737176699",
-      "userId": "1393314961769627751",
-      "type": "fraktion",
-      "categoryId": "1564307543315058821",
-      "createdAt": 1793115118184,
-      "claimedBy": null,
-      "lastReminder": null,
-      "source": "panel"
-    },
-    "1564667245370675301": {
-      "guildId": "1559659266737176699",
-      "userId": "1519041307949928692",
+    "1571184119780483253": {
+      "guildId": "1510593847972073653",
+      "userId": "1536061418699489330",
       "type": "fragen",
-      "categoryId": "1564307538881675355",
-      "createdAt": 1793116141672,
+      "categoryId": "1569408682662297610",
+      "createdAt": 1794669886654,
       "claimedBy": null,
-      "lastReminder": null,
+      "lastReminder": 1794670085026,
       "source": "panel"
     }
   }

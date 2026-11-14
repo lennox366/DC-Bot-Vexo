@@ -1,0 +1,17 @@
+{
+  "auftragId": "amwf9haae",
+  "projectRoot": "C:\\Users\\User\\Desktop\\tasten\\Neuer bott MBY Lennox",
+  "createdAt": "2026-11-13T17:40:55.266Z",
+  "commands": [
+    {
+      "id": "amwf9haae-auto1",
+      "auftragId": "amwf9haae",
+      "command": "node --check \"src/agent-test.js\"",
+      "code": 0,
+      "auto": true,
+      "stdout": "",
+      "stderr": "",
+      "ts": 1794591655263
+    }
+  ]
+}

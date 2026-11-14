@@ -1,0 +1,179 @@
+{
+  "description": "Novex RP Nametag-Konfiguration - Alle Rollen und ihre Nickname-Labels",
+  "format": "[RANG] Anzeigename",
+  "roles": {
+    "team_leitung": {
+      "description": "Leitungsebene",
+      "roles": {
+        "1564307136069111848": "[Founder]",
+        "1564307142893240490": "[Owner]",
+        "1564307143962923108": "[Co.Owner]",
+        "1564307145359368355": "[Owner Assistent]"
+      }
+    },
+    "discord_leitung": {
+      "description": "Discord-Leitung",
+      "roles": {
+        "1564307160618377257": "[Discord Leitung]"
+      }
+    },
+    "dev_ebene": {
+      "description": "Developer Ebene",
+      "roles": {
+        "1564307163092881489": "[Developer]"
+      }
+    },
+    "projekt_ebene": {
+      "description": "Projektleitung",
+      "roles": {
+        "1564307167144575087": "[LPL]",
+        "1564307168063131679": "[PL]",
+        "1564307169946509313": "[Stv.PL]"
+      }
+    },
+    "haupt_ebene": {
+      "description": "Hauptleitung",
+      "roles": {
+        "1564307175634112634": "[HPT]",
+        "1564307176938541236": "[Stv.HPT]"
+      }
+    },
+    "gesamtleitung": {
+      "description": "Gesamtleitung",
+      "roles": {
+        "1564307181023527152": "[GSM]",
+        "1564307181803671673": "[Stv.GSM]"
+      }
+    },
+    "highteamleitung": {
+      "description": "Highteamleitung",
+      "roles": {
+        "1564307185469497504": "[HTL]",
+        "1564307186450960465": "[Stv.HTL]"
+      }
+    },
+    "serverleitung": {
+      "description": "Serverleitung",
+      "roles": {
+        "1564307189072535583": "[SRV]",
+        "1564307191475736638": "[Stv.SRV]"
+      }
+    },
+    "direktion": {
+      "description": "Direktion",
+      "roles": {
+        "1564307194822795295": "[LDT]",
+        "1564307196181881032": "[DT]",
+        "1564307197893017652": "[Stv.DT]"
+      }
+    },
+    "management": {
+      "description": "Management",
+      "roles": {
+        "1564307205417730050": "[LMA]",
+        "1564307206655049969": "[MA]",
+        "1564307210455224485": "[Stv.MA]"
+      }
+    },
+    "teamleitung": {
+      "description": "Teamleitung",
+      "roles": {
+        "1564307216331448437": "[LTL]",
+        "1564307216947744802": "[TL]",
+        "1564307218541711472": "[Stv.TL]"
+      }
+    },
+    "regelverwaltung": {
+      "description": "Regelverwaltung",
+      "roles": {
+        "1564307223549579417": "[RGL]",
+        "1564307224959000607": "[Stv.RGL]"
+      }
+    },
+    "abteilungsleitung": {
+      "description": "Abteilungsleitung",
+      "roles": {
+        "1564307228079431941": "[Admin-Leitung]",
+        "1564307229262221413": "[Mod-Leitung]",
+        "1564307230839275710": "[Supportleitung]",
+        "1564307231955226767": "[Stv.Supportleitung]"
+      }
+    },
+    "highteam": {
+      "description": "High-Team",
+      "roles": {
+        "1564307236413505738": "[HIGH-TEAM]",
+        "1564307237697101894": "[Highteam Anwärter]"
+      }
+    },
+    "eventleitung": {
+      "description": "Event-Leitung",
+      "roles": {
+        "1564307239995580596": "[Event-Leitung]",
+        "1564307241119645697": "[Stv.Event-Leitung]"
+      }
+    },
+    "fraktionsverwaltung": {
+      "description": "Fraktionsverwaltung",
+      "roles": {
+        "1564307243829043300": "[Fraktionsverwaltung]",
+        "1564307245406097508": "[Stv.Fraktionsverwaltung]"
+      }
+    },
+    "ausbilder": {
+      "description": "Ausbilder",
+      "roles": {
+        "1564307248027537429": "[Ausbilder]",
+        "1564307248996556823": "[Low Ausbilder]"
+      }
+    },
+    "admin_ebene": {
+      "description": "Admin Ebene",
+      "roles": {
+        "1564307253429932163": "[Sr.Admin]",
+        "1564307254801469572": "[Admin]",
+        "1564307256257024102": "[Jr.Admin]",
+        "1564307257464725664": "[Test.Admin]"
+      }
+    },
+    "mod_ebene": {
+      "description": "Moderator Ebene",
+      "roles": {
+        "1564307262690828394": "[Sr.Mod]",
+        "1564307263634669732": "[Mod]",
+        "1564307265350140026": "[Jr.Mod]",
+        "1564307266805698721": "[Test.Mod]"
+      }
+    },
+    "support_ebene": {
+      "description": "Supporter Ebene",
+      "roles": {
+        "1564307270270058648": "[Sr-Sup]",
+        "1564307271759171684": "[Sup]",
+        "1564307272476135536": "[Jr-Sup]",
+        "1564307283704545320": "[Test-Sup]"
+      }
+    },
+    "team_verwaltung": {
+      "description": "Team-Verwaltung",
+      "roles": {
+        "1564307335302611136": "[Team Freund]",
+        "1564307336678481973": "[PA]"
+      }
+    },
+    "bürger_ebene": {
+      "description": "Bürger Ebene",
+      "roles": {
+        "1569408304780681216": "[Bürger]"
+      }
+    },
+    "sonstige": {
+      "description": "Sonstige Rollen",
+      "roles": {
+        "1564307339454980229": "[ContentCreator]",
+        "1564307340784697375": "[Stadtlegende]",
+        "1569408297394511973": "[VIP]"
+      }
+    }
+  }
+}

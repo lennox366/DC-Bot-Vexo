@@ -1,0 +1,20 @@
+{
+  "auftragId": "amwg602c2",
+  "projectRoot": "C:\\Users\\User\\Desktop\\tasten\\Neuer bott MBY Lennox",
+  "createdAt": "2026-11-14T08:52:52.064Z",
+  "commands": [
+    {
+      "id": "amwg602c2-c1",
+      "auftragId": "amwg602c2",
+      "command": "node src/feedback-config.js",
+      "code": 1,
+      "killed": false,
+      "timedOut": false,
+      "expect": "Feedback kanal-ID erfolgreich eingestellt",
+      "expectMet": false,
+      "stdout": "",
+      "stderr": "node:internal/modules/cjs/loader:1607\r\n  throw err;\r\n  ^\r\n\r\nError: Cannot find module 'C:\\Users\\User\\Desktop\\tasten\\Neuer bott MBY Lennox\\src\\feedback-config.js'\r\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1603:15)\r\n    at wrapResolveFilename (node:internal/modules/cjs/loader:1145:27)\r\n    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1169:10)\r\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1196:12)\r\n    at Module._load (node:internal/modules/cjs/loader:1370:5)\r\n    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)\r\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)\r\n    at node:internal/main/run_main_module:33:47 {\r\n  code: 'MODULE_NOT_FOUND',\r\n  requireStack: []\r\n}\r\n\r\nNode.js v26.13.0\r\n",
+      "ts": 1794646346333
+    }
+  ]
+}

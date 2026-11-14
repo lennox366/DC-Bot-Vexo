@@ -1,0 +1,82 @@
+{
+  "ticketsystem": {
+    "name": "Ticket-System Logs",
+    "channel_id": "",
+    "description": "Hier die Kanal-ID für Ticket-Logs eintragen"
+  },
+  "discordlogger": {
+    "name": "Discord-Logger Logs",
+    "channel_id": "",
+    "description": "Hier die Kanal-ID für Discord-Logger eintragen"
+  },
+  "groupmanagement": {
+    "name": "Group-Management Logs",
+    "channel_id": "",
+    "description": "Hier die Kanal-ID für Group-Management eintragen"
+  },
+  "gangsystem": {
+    "name": "Gang-System Logs",
+    "channel_id": "",
+    "description": "Hier die Kanal-ID für Gang-System eintragen"
+  },
+  "rpsystem": {
+    "name": "RP-System Logs",
+    "channel_id": "",
+    "description": "Hier die Kanal-ID für RP-System eintragen"
+  },
+  "teamsystem": {
+    "name": "Team-System Logs",
+    "channel_id": "",
+    "description": "Hier die Kanal-ID für Team-System eintragen"
+  },
+  "supportsystem": {
+    "name": "Support-System Logs",
+    "channel_id": "",
+    "description": "Hier die Kanal-ID für Support-System eintragen"
+  },
+  "verifypanel": {
+    "name": "Verify-Panel Logs",
+    "channel_id": "",
+    "description": "Hier die Kanal-ID für Verify-Panel eintragen"
+  },
+  "icpanel": {
+    "name": "IC-Panel Logs",
+    "channel_id": "",
+    "description": "Hier die Kanal-ID für IC-Panel eintragen"
+  },
+  "botstatus": {
+    "name": "Bot-Status Logs",
+    "channel_id": "",
+    "description": "Hier die Kanal-ID für Bot-Status eintragen"
+  },
+  "adminaktionen": {
+    "name": "Admin-Aktionen Logs",
+    "channel_id": "",
+    "description": "Hier die Kanal-ID für Admin-Aktionen eintragen"
+  },
+  "warnsystem": {
+    "name": "Warn-System Logs",
+    "channel_id": "",
+    "description": "Hier die Kanal-ID für Warn-System eintragen"
+  },
+  "modlogs": {
+    "name": "Mod-Logs",
+    "channel_id": "",
+    "description": "Hier die Kanal-ID für Mod-Logs eintragen"
+  },
+  "audits": {
+    "name": "Audit-Logs",
+    "channel_id": "",
+    "description": "Hier die Kanal-ID für Audit-Logs eintragen"
+  },
+  "errorlogs": {
+    "name": "Error-Logs",
+    "channel_id": "",
+    "description": "Hier die Kanal-ID für Error-Logs eintragen"
+  },
+  "debuglogs": {
+    "name": "Debug-Logs",
+    "channel_id": "",
+    "description": "Hier die Kanal-ID für Debug-Logs eintragen"
+  }
+}

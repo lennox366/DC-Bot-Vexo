@@ -1,0 +1,79 @@
+{
+  "groupId": "WEX-1794140188277-Q7VHSS",
+  "members": {
+    "1322191083303731201": {
+      "discordId": "1322191083303731201",
+      "robloxId": null,
+      "rankNumber": 20,
+      "rankName": "IC-Rechte",
+      "joinDate": "2026-11-08T12:18:54.233Z",
+      "lastRankChange": "2026-11-08T12:18:54.233Z",
+      "hasICRights": true,
+      "status": "active",
+      "notes": ""
+    }
+  },
+  "ranks": {
+    "10": {
+      "name": "Mitglied",
+      "description": "Gruppenmitglied",
+      "category": "Basis"
+    },
+    "20": {
+      "name": "IC-Rechte",
+      "description": "IC-Rechte-Besitzer",
+      "category": "Ingame"
+    },
+    "30": {
+      "name": "Supporter",
+      "description": "Supporter",
+      "category": "Support"
+    },
+    "40": {
+      "name": "Moderator",
+      "description": "Moderator",
+      "category": "Moderation"
+    },
+    "50": {
+      "name": "Administrator",
+      "description": "Administrator",
+      "category": "Moderation"
+    },
+    "60": {
+      "name": "Teamleitung",
+      "description": "Team-Leitung",
+      "category": "Teamführung"
+    },
+    "70": {
+      "name": "Management",
+      "description": "Management-Ebene",
+      "category": "Leitung"
+    },
+    "80": {
+      "name": "Leitung",
+      "description": "Server-Leitung",
+      "category": "Leitung"
+    },
+    "90": {
+      "name": "Owner",
+      "description": "Server-Besitzer",
+      "category": "Höchste Ebene"
+    },
+    "100": {
+      "name": "Founder",
+      "description": "Server-Gründer",
+      "category": "Höchste Ebene"
+    }
+  },
+  "settings": {
+    "GROUP_NAME": "Novex RP",
+    "GROUP_ID_PREFIX": "WEX",
+    "DEFAULT_RANK": 20,
+    "AUTO_IC_SYNC": true,
+    "ENABLE_LOGGING": true,
+    "CONFIRM_CRITICAL_ACTIONS": true,
+    "DESIGN_COLOR": 4886754,
+    "DESIGN_DARK": 855056,
+    "DESIGN_LIGHT": 1381401
+  }
+}

@@ -3,6 +3,8 @@ const fs=require("fs"),path=require("path");
 const {EmbedBuilder,ActionRowBuilder,ButtonBuilder,ButtonStyle,StringSelectMenuBuilder,ChannelType,PermissionFlagsBits,AttachmentBuilder,ModalBuilder,TextInputBuilder,TextInputStyle,SlashCommandBuilder}=require("discord.js");
 const SERVER_NAME="💫 NOVEX RP",TIMEZONE="Europe/Berlin",COLOR=0x8052ff;
 const CONFIG_FILE=path.join(__dirname,"Ticket-System.json"),DATA_FILE=path.join(__dirname,"Ticket-Daten.json"),FEEDBACK_FILE=path.join(__dirname,"Ticket-Feedback.json");
+const TICKET_CONFIG_FILE=path.join(__dirname,"ticket-config.json");
+const TICKET_FILE_CFG=(()=>{try{return fs.existsSync(TICKET_CONFIG_FILE)?JSON.parse(fs.readFileSync(TICKET_CONFIG_FILE,"utf8")):{};}catch(e){console.error("[TICKET] ticket-config.json konnte nicht gelesen werden:",e);return {};}})();
 const BOT_OWNER_USER_IDS=["1322191083303731201"];
 const REMINDER_INTERVAL=5*60*60*1000,TICKET_MAX_AGE=48*60*60*1000,REMINDER_CHECK_INTERVAL=5*60*1000;
 const DISCORD_CATEGORIES={
@@ -11,7 +13,8 @@ const DISCORD_CATEGORIES={
  leitungsFragen:"1564307546129301617",muendlicheBewerbung:"1564307552194535605",
  bauGenehmigungen:"1564307549816098916",fraktionenWaffenscheine:"1564307543315058821",
  partner:"1564307548490829935",immobilien:"1564307549816098916",waffenschein:"1564307544917151785",
- contentcreator:"1564307546129301617",coowner:"1564323457209204848"
+ contentcreator:"1564307546129301617",coowner:"1564323457209204848",
+ ...(TICKET_FILE_CFG.categories||{})
 };
 
 const ROLES = {
@@ -82,7 +85,8 @@ const ROLES = {
   juniorSup: "1564307272476135536",
   testSup: "1564307283704545320",
 
-  serverTeam: "1564307288053784706"
+  serverTeam: "1564307288053784706",
+  ...(TICKET_FILE_CFG.roles||{})
 };
   
 const ids=(...keys)=>keys.map(k=>ROLES[k]).filter(Boolean);
@@ -101,7 +105,7 @@ ROLE_GROUPS.highteam=[...ids("highTeam","highteamleitung","stvHighteamleitung"),
 ROLE_GROUPS.leitungsebene=[...ids("projektDirektor","direktor","stvDirektor"),...ROLE_GROUPS.highteam];
 ROLE_GROUPS.staff=[...ROLE_GROUPS.support,...ROLE_GROUPS.moderation,...ROLE_GROUPS.administration];
 const GLOBAL_ACCESS_ROLES=ids("founder","owner","coowner","ownerAssistent","discordLeitung","developer");
-const TICKET_TYPES=[
+const TICKET_TYPES=(Array.isArray(TICKET_FILE_CFG.ticketTypes)&&TICKET_FILE_CFG.ticketTypes.length)?TICKET_FILE_CFG.ticketTypes:[
  {id:"fragen",label:"Fragen",emoji:"❓",description:"Allgemeine Fragen",categoryId:DISCORD_CATEGORIES.allgemeinerSupport,roleIds:[...ROLE_GROUPS.staff]},
  {id:"entbannung",label:"Entbannung",emoji:"🔓",description:"Antrag auf Entbannung",categoryId:DISCORD_CATEGORIES.entbannungsantrag,roleIds:[...ROLE_GROUPS.moderation,...ROLE_GROUPS.administration,...ROLE_GROUPS.event,ROLES.ausbilder]},
  {id:"anliegen",label:"Anliegen",emoji:"📝",description:"Allgemeine Anliegen",categoryId:DISCORD_CATEGORIES.allgemeinerSupport,roleIds:[ROLES.highTeam,...ROLE_GROUPS.teamleitung,...ROLE_GROUPS.management]},

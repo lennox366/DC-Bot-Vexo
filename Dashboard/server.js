@@ -273,6 +273,49 @@ app.get("/api/team/stats", checkAuth, (req, res) => {
     }
 });
 
+// Novex RP Group Management API
+app.get("/api/novex/group/overview", checkAuth, (req, res) => {
+    try {
+        const groupSystem = require("../Novex-Group-Management/Novex-Group-Management");
+        const groupData = groupSystem.getGroupData();
+        const members = groupSystem.getAllMembers();
+        const ranks = groupSystem.getAllRanks();
+        
+        res.json({
+            groupId: groupData.groupId,
+            groupName: groupData.settings.GROUP_NAME,
+            totalMembers: members.length,
+            activeMembers: members.filter(m => m.status === "active").length,
+            icRightsMembers: members.filter(m => m.hasICRights).length,
+            totalRanks: Object.keys(ranks).length
+        });
+    } catch (error) {
+        res.status(500).json({ error: "Group-Daten konnten nicht geladen werden" });
+    }
+});
+
+app.get("/api/novex/group/members", checkAuth, (req, res) => {
+    try {
+        const groupSystem = require("../Novex-Group-Management/Novex-Group-Management");
+        const members = groupSystem.getAllMembers();
+        
+        res.json({ members });
+    } catch (error) {
+        res.status(500).json({ error: "Mitglieder konnten nicht geladen werden" });
+    }
+});
+
+app.get("/api/novex/group/ranks", checkAuth, (req, res) => {
+    try {
+        const groupSystem = require("../Novex-Group-Management/Novex-Group-Management");
+        const ranks = groupSystem.getAllRanks();
+        
+        res.json({ ranks });
+    } catch (error) {
+        res.status(500).json({ error: "Ränge konnten nicht geladen werden" });
+    }
+});
+
 app.get("/api/status", (req, res) => {
     const client = global.dashboardClient;
     res.json({

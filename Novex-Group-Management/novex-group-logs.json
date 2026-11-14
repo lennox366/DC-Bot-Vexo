@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1794140334235,
+    "timestamp": "2026-11-08T12:18:54.235Z",
+    "action": "MEMBER_ADDED",
+    "target": "1322191083303731201",
+    "oldData": null,
+    "newData": {
+      "discordId": "1322191083303731201",
+      "robloxId": null,
+      "rankNumber": 20,
+      "rankName": "IC-Rechte",
+      "joinDate": "2026-11-08T12:18:54.233Z",
+      "lastRankChange": "2026-11-08T12:18:54.233Z",
+      "hasICRights": true,
+      "status": "active",
+      "notes": ""
+    },
+    "executor": "SYSTEM",
+    "reason": "Neues Mitglied"
+  }
+]

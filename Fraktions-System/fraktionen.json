@@ -1,0 +1,74 @@
+{
+  "guilds": {
+    "1510593847972073653": {
+      "announceChannelId": "1569408797347287100",
+      "listChannelId": "1569408799025143838",
+      "listMessageIds": [
+        "1570688966477479940"
+      ],
+      "warnLimit": 3,
+      "categories": [
+        "Staatliche Fraktion",
+        "Illegale Fraktion",
+        "Unternehmen",
+        "Sonstige"
+      ]
+    }
+  },
+  "factions": {
+    "1510593847972073653_1794550269952_6z690": {
+      "id": "1510593847972073653_1794550269952_6z690",
+      "guildId": "1510593847972073653",
+      "name": "vvvv",
+      "leaderId": "1322191083303731201",
+      "leader2Id": null,
+      "invite": null,
+      "location": "23",
+      "category": "adwadadawd",
+      "members": null,
+      "description": null,
+      "logo": null,
+      "foundedAt": 1794550269952,
+      "protectionUntil": null,
+      "protectionExpired": false,
+      "status": "aktiv",
+      "warns": [
+        {
+          "reason": "tyest",
+          "by": "1322191083303731201",
+          "at": 1794550359787
+        }
+      ],
+      "createdAt": 1794550269952,
+      "createdBy": "1322191083303731201",
+      "updatedAt": 1794550359787,
+      "dissolvedAt": null,
+      "dissolvedBy": null,
+      "dissolveReason": null
+    },
+    "1510593847972073653_1794551647829_cyxm8": {
+      "id": "1510593847972073653_1794551647829_cyxm8",
+      "guildId": "1510593847972073653",
+      "name": "Black The Santos",
+      "leaderId": "1491692206057328670",
+      "leader2Id": null,
+      "invite": "https://discord.gg/nmGtd2H4c",
+      "location": "45",
+      "category": "Black The Santos",
+      "members": null,
+      "description": null,
+      "logo": null,
+      "foundedAt": 1794551647829,
+      "protectionUntil": null,
+      "protectionExpired": false,
+      "status": "aktiv",
+      "warns": [],
+      "createdAt": 1794551647829,
+      "createdBy": "1491692206057328670",
+      "updatedAt": 1794551647829,
+      "dissolvedAt": null,
+      "dissolvedBy": null,
+      "dissolveReason": null
+    }
+  }
+}

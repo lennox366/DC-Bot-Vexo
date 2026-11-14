@@ -17,6 +17,26 @@ const {
 } = require("./Vorlagen-System");
 
 // =====================================================
+// 🏛️ FRAKTIONS-SYSTEM
+// =====================================================
+
+const {
+    command: fraktionCommand
+} = require("./Fraktions-System/Fraktions-System");
+
+const {
+    commands: schichtCommands
+} = require("./Schicht-System/Schicht-System");
+
+const {
+    command: teamStatistikCommand
+} = require("./Team-Statistik/Team-Statistik");
+
+const {
+    supportSetupCommand
+} = require("./Support-System/Support-System");
+
+// =====================================================
 // SLASH COMMAND DEFINITIONEN
 // =====================================================
 
@@ -27,6 +47,30 @@ const slashCommands = [
     // =====================================================
 
     vorlageCommand,
+
+    // =====================================================
+    // FRAKTIONS-SYSTEM
+    // =====================================================
+
+    fraktionCommand,
+
+    // =====================================================
+    // SCHICHT-SYSTEM
+    // =====================================================
+
+    ...schichtCommands,
+
+    // =====================================================
+    // TEAM-STATISTIK
+    // =====================================================
+
+    teamStatistikCommand,
+
+    // =====================================================
+    // SUPPORT-SETUP
+    // =====================================================
+
+    supportSetupCommand,
 
     // =====================================================
     // TICKET-SYSTEM

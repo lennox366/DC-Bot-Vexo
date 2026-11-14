@@ -1,0 +1,182 @@
+{
+  "ticketsystem": {
+    "name": "Ticket-System Logs",
+    "channel_id": "1569408985398780027",
+    "description": "Hier die Kanal-ID für Ticket-Logs eintragen"
+  },
+  "discordlogger": {
+    "name": "Discord-Logger Logs",
+    "channel_id": "1569427221083590677",
+    "description": "Hier die Kanal-ID für Discord-Logger eintragen"
+  },
+  "groupmanagement": {
+    "name": "Group-Management Logs",
+    "channel_id": "1569742578520293558",
+    "description": "Hier die Kanal-ID für Group-Management eintragen"
+  },
+  "gangsystem": {
+    "name": "Gang-System Logs",
+    "channel_id": "1569742607842676736",
+    "description": "Hier die Kanal-ID für Gang-System eintragen"
+  },
+  "rpsystem": {
+    "name": "RP-System Logs",
+    "channel_id": "1569742634556064027",
+    "description": "Hier die Kanal-ID für RP-System eintragen"
+  },
+  "teamsystem": {
+    "name": "Team-System Logs",
+    "channel_id": "1569408836329148558",
+    "description": "Hier die Kanal-ID für Team-System eintragen"
+  },
+  "supportsystem": {
+    "name": "Support-System Logs",
+    "channel_id": "1569408838250270722",
+    "description": "Hier die Kanal-ID für Support-System eintragen"
+  },
+  "verifypanel": {
+    "name": "Verify-Panel Logs",
+    "channel_id": "1569408713247162516",
+    "description": "Hier die Kanal-ID für Verify-Panel eintragen"
+  },
+  "icpanel": {
+    "name": "IC-Panel Logs",
+    "channel_id": "1569408871896981716",
+    "description": "Hier die Kanal-ID für IC-Panel eintragen"
+  },
+  "botstatus": {
+    "name": "Bot-Status Logs",
+    "channel_id": "1569408720952098876",
+    "description": "Hier die Kanal-ID für Bot-Status eintragen"
+  },
+  "adminaktionen": {
+    "name": "Admin-Aktionen Logs",
+    "channel_id": "1569408991082188881",
+    "description": "Hier die Kanal-ID für Admin-Aktionen eintragen"
+  },
+  "warnsystem": {
+    "name": "Warn-System Logs",
+    "channel_id": "1569408898350317609",
+    "description": "Hier die Kanal-ID für Warn-System eintragen"
+  },
+  "modlogs": {
+    "name": "Mod-Logs",
+    "channel_id": "1569408899872858232",
+    "description": "Hier die Kanal-ID für Mod-Logs eintragen"
+  },
+  "audits": {
+    "name": "Audit-Logs",
+    "channel_id": "1569408991082188881",
+    "description": "Hier die Kanal-ID für Audit-Logs eintragen"
+  },
+  "errorlogs": {
+    "name": "Error-Logs",
+    "channel_id": "1569408993133338745",
+    "description": "Hier die Kanal-ID für Error-Logs eintragen"
+  },
+  "debuglogs": {
+    "name": "Debug-Logs",
+    "channel_id": "1569408997885349928",
+    "description": "Hier die Kanal-ID für Debug-Logs eintragen"
+  },
+  "willkommenkanal": {
+    "name": "Willkommen-Kanal",
+    "channel_id": "1569408707689717851",
+    "description": "Hier die Kanal-ID für Willkommen-Nachrichten eintragen"
+  },
+  "leavekanal": {
+    "name": "Leave-Kanal",
+    "channel_id": "1569408708956524755",
+    "description": "Hier die Kanal-ID für Leave-Nachrichten eintragen"
+  },
+  "supportpingkanal": {
+    "name": "Support-Ping Kanal",
+    "channel_id": "1569408844440797335",
+    "description": "Hier die Kanal-ID für Support-Ping eintragen"
+  },
+  "wartezimmerkanal": {
+    "name": "Wartezimmer Kanal",
+    "channel_id": "1569408948719845468",
+    "description": "Hier die Kanal-ID für Wartezimmer eintragen"
+  },
+  "teamuprankkanal": {
+    "name": "Team-Uprank Kanal",
+    "channel_id": "1569408821934170112",
+    "description": "Hier die Kanal-ID für Team-Uprank eintragen"
+  },
+  "statskanal": {
+    "name": "Stats-Kanal",
+    "channel_id": "1569408700911714379",
+    "description": "Hier die Kanal-ID für Server-Stats eintragen"
+  },
+  "auditlogkanal": {
+    "name": "Audit-Log Kanal",
+    "channel_id": "1569408991082188881",
+    "description": "Hier die Kanal-ID für Audit-Logs eintragen"
+  },
+  "botlogkanal": {
+    "name": "Bot-Log Kanal",
+    "channel_id": "1569408993133338745",
+    "description": "Hier die Kanal-ID für Bot-Logs eintragen"
+  },
+  "teamlistkanal": {
+    "name": "Team-Liste Kanal",
+    "channel_id": "1569408829999939614",
+    "description": "Hier die Kanal-ID für Team-Liste eintragen"
+  },
+  "teambewerbungkanal": {
+    "name": "Team-Bewerbung Kanal",
+    "channel_id": "1569408920731254834",
+    "description": "Hier die Kanal-ID für Team-Bewerbungen eintragen"
+  },
+  "feedbackkanal": {
+    "name": "Feedback Kanal",
+    "channel_id": "1569408831300042793",
+    "description": "Hier die Kanal-ID für Feedback eintragen"
+  },
+  "buergervorschlagkanal": {
+    "name": "Bürger-Vorschlag Kanal",
+    "channel_id": "1569408819522699459",
+    "description": "Hier die Kanal-ID für Bürger-Vorschläge eintragen"
+  },
+  "devaufgabenkanal": {
+    "name": "Dev-Aufgaben Kanal",
+    "channel_id": "1569408989320450229",
+    "description": "Hier die Kanal-ID für Dev-Aufgaben eintragen"
+  },
+  "ganglogkanal": {
+    "name": "Gang-Log Kanal",
+    "channel_id": "1569742607842676736",
+    "description": "Hier die Kanal-ID für Gang-Logs eintragen"
+  },
+  "musikkanal": {
+    "name": "Musik Kanal",
+    "channel_id": "1569408768805183570",
+    "description": "Hier die Kanal-ID für Musik eintragen"
+  },
+  "entertainmentkanal": {
+    "name": "Entertainment Kanal",
+    "channel_id": "1569408763465568367",
+    "description": "Hier die Kanal-ID für Entertainment eintragen"
+  },
+  "rplogkanal": {
+    "name": "RP-Log Kanal",
+    "channel_id": "1569742634556064027",
+    "description": "Hier die Kanal-ID für RP-Logs eintragen"
+  },
+  "giveawaykanal": {
+    "name": "Giveaway Kanal",
+    "channel_id": "1569408771153731654",
+    "description": "Hier die Kanal-ID für Giveaways eintragen"
+  },
+  "ticketfeedbackkanal": {
+    "name": "Ticket-Feedback Kanal",
+    "channel_id": "1569408833015652402",
+    "description": "Hier die Kanal-ID für Ticket-Feedback eintragen"
+  },
+  "ticketlogkanal": {
+    "name": "Ticket-Log Kanal",
+    "channel_id": "1569716439374372894",
+    "description": "Hier die Kanal-ID für Ticket-Logs eintragen"
+  }
+}

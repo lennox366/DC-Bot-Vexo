@@ -71,7 +71,7 @@ function canManageTeam(member) {
     if (!member) return false;
     if (member.permissions?.has(PermissionFlagsBits.Administrator)) return true;
 
-    const authorizedRoleName = /founder|owner|developer|projektleitung|teamleitung|admin/i;
+    const authorizedRoleName = /founder|owner|besitzer|developer|𝐝𝐞𝐯|projektleitung|teamleitung|server ?leitung|admin/i;
     return (teamRolesConfig?.roleHierarchy || []).some(category =>
         (category.roles || []).some(role =>
             !role.name.includes("━") &&
@@ -100,7 +100,7 @@ async function applyRoleChange(interaction, member, newRole, action) {
 
         const teamRolesToRemove = getAllRoles()
             .filter(role =>
-                role.id !== "1559659267257270313" &&
+                role.id !== teamRolesConfig?.staffRoleId &&
                 role.id !== assignableRole.id &&
                 member.roles.cache.has(role.id)
             )

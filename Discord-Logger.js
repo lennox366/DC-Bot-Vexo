@@ -14,7 +14,7 @@ const {
 // =====================================================
 
 const CONFIG = {
-    logChannelId: "1563981252565147880",
+    logChannelId: "1569408993133338745",
     footer: "Vexo RP • Discord Logging",
     queueDelay: 600,
     maxQueue: 500,
@@ -1444,5 +1444,6 @@ function registerDiscordLogger(client) {
 }
 
 module.exports = {
-    registerDiscordLogger
+    registerDiscordLogger,
+    CONFIG
 };

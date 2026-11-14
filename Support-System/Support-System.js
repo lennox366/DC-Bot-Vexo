@@ -6,15 +6,45 @@ const {
     ButtonStyle,
     EmbedBuilder,
     MessageFlags,
-    PermissionFlagsBits
+    PermissionFlagsBits,
+    SlashCommandBuilder,
+    ChannelType
 } = require("discord.js");
 
-const WAITING_VOICE_CHANNEL_ID = "1563966885635035176";
-const SUPPORT_PINGS_CHANNEL_ID = "1563980823030407188";
-const SUPPORT_LOG_CHANNEL_ID = process.env.SUPPORT_LOG_CHANNEL_ID?.trim() || "1559659271329808420";
-const SUPPORT_PING_ROLE_ID = "1559659267219390595";
+let WAITING_VOICE_CHANNEL_ID = "1563966885635035176";
+let SUPPORT_PINGS_CHANNEL_ID = "1563980823030407188";
+let SUPPORT_LOG_CHANNEL_ID = process.env.SUPPORT_LOG_CHANNEL_ID?.trim() || "1559659271329808420";
+let SUPPORT_PING_ROLE_ID = "1559659267219390595";
 const SUPPORT_STATE_FILE = path.join(__dirname, "..", "support-tickets.json");
+const SUPPORT_CONFIG_FILE = path.join(__dirname, "..", "support-config.json");
 const TEAM_ROLES_CONFIG_FILE = path.join(__dirname, "..", "team-roles-config.json");
+
+function loadSupportConfig() {
+    try {
+        if (fs.existsSync(SUPPORT_CONFIG_FILE)) {
+            const c = JSON.parse(fs.readFileSync(SUPPORT_CONFIG_FILE, "utf8"));
+            if (c.waitingVoiceChannelId) WAITING_VOICE_CHANNEL_ID = c.waitingVoiceChannelId;
+            if (c.pingsChannelId) SUPPORT_PINGS_CHANNEL_ID = c.pingsChannelId;
+            if (c.logChannelId) SUPPORT_LOG_CHANNEL_ID = c.logChannelId;
+            if (c.pingRoleId) SUPPORT_PING_ROLE_ID = c.pingRoleId;
+        }
+    } catch (e) {
+        console.error("❌ Support-Config konnte nicht gelesen werden:", e);
+    }
+}
+
+function saveSupportConfig() {
+    try {
+        fs.writeFileSync(SUPPORT_CONFIG_FILE, JSON.stringify({
+            waitingVoiceChannelId: WAITING_VOICE_CHANNEL_ID,
+            pingsChannelId: SUPPORT_PINGS_CHANNEL_ID,
+            logChannelId: SUPPORT_LOG_CHANNEL_ID,
+            pingRoleId: SUPPORT_PING_ROLE_ID
+        }, null, 2), "utf8");
+    } catch (e) {
+        console.error("❌ Support-Config konnte nicht gespeichert werden:", e);
+    }
+}
 
 function loadSupportRoles() {
     try {
@@ -188,7 +218,23 @@ function createTicketComponents(ticket) {
     return [];
 }
 
+const supportSetupCommand = new SlashCommandBuilder()
+    .setName("supportsetup")
+    .setDescription("Konfiguriert den Support-Warteraum und Support-Pings")
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+    .addStringOption(o => o.setName("aktion").setDescription("Aktion").setRequired(true)
+        .addChoices(
+            { name: "Wartekanal (Voice) setzen", value: "wartekanal" },
+            { name: "Ping-Kanal setzen", value: "pingkanal" },
+            { name: "Ping-Rolle setzen", value: "pingrolle" },
+            { name: "Log-Kanal setzen", value: "logkanal" },
+            { name: "Status anzeigen", value: "status" }
+        ))
+    .addChannelOption(o => o.setName("kanal").setDescription("Kanal").addChannelTypes(ChannelType.GuildVoice, ChannelType.GuildText))
+    .addRoleOption(o => o.setName("rolle").setDescription("Rolle (für pingrolle)"));
+
 function initializeSupportSystem(client) {
+    loadSupportConfig();
     const supporterRoleIds = loadSupportRoles();
     const tickets = loadSupportTickets();
 
@@ -341,9 +387,55 @@ function initializeSupportSystem(client) {
 
     client.once("clientReady", () => {
         void syncWaitingMembers();
+        void (async () => {
+            for (const guild of client.guilds.cache.values()) {
+                try { await guild.commands.create(supportSetupCommand.toJSON()); }
+                catch (e) { console.error("[SUPPORT] setup-Registrierung:", e.message); }
+            }
+        })();
+    });
+
+    client.on("guildCreate", async g => {
+        try { await g.commands.create(supportSetupCommand.toJSON()); }
+        catch (e) { console.error("[SUPPORT] guildCreate:", e.message); }
     });
 
     client.on("interactionCreate", async interaction => {
+        if (interaction.isChatInputCommand() && interaction.commandName === "supportsetup") {
+            if (!interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild)) {
+                return interaction.reply({ content: "🔒 Du benötigst die Berechtigung „Server verwalten“.", flags: MessageFlags.Ephemeral });
+            }
+            const aktion = interaction.options.getString("aktion", true);
+            const kanal = interaction.options.getChannel("kanal");
+            const rolle = interaction.options.getRole("rolle");
+            if (aktion === "status") {
+                return interaction.reply({
+                    content: `**Support-Setup**\n• Wartekanal: <#${WAITING_VOICE_CHANNEL_ID}>\n• Ping-Kanal: <#${SUPPORT_PINGS_CHANNEL_ID}>\n• Ping-Rolle: <@&${SUPPORT_PING_ROLE_ID}>\n• Log-Kanal: <#${SUPPORT_LOG_CHANNEL_ID}>`,
+                    flags: MessageFlags.Ephemeral
+                });
+            }
+            if (aktion === "wartekanal") {
+                if (!kanal || kanal.type !== ChannelType.GuildVoice) return interaction.reply({ content: "❌ Bitte einen Sprachkanal angeben.", flags: MessageFlags.Ephemeral });
+                WAITING_VOICE_CHANNEL_ID = kanal.id; saveSupportConfig();
+                return interaction.reply({ content: `✅ Wartekanal auf ${kanal} gesetzt.`, flags: MessageFlags.Ephemeral });
+            }
+            if (aktion === "pingkanal") {
+                if (!kanal || !kanal.isTextBased()) return interaction.reply({ content: "❌ Bitte einen Textkanal angeben.", flags: MessageFlags.Ephemeral });
+                SUPPORT_PINGS_CHANNEL_ID = kanal.id; saveSupportConfig();
+                return interaction.reply({ content: `✅ Ping-Kanal auf <#${kanal.id}> gesetzt.`, flags: MessageFlags.Ephemeral });
+            }
+            if (aktion === "pingrolle") {
+                if (!rolle) return interaction.reply({ content: "❌ Bitte eine Rolle angeben.", flags: MessageFlags.Ephemeral });
+                SUPPORT_PING_ROLE_ID = rolle.id; saveSupportConfig();
+                return interaction.reply({ content: `✅ Ping-Rolle auf ${rolle} gesetzt.`, flags: MessageFlags.Ephemeral });
+            }
+            if (aktion === "logkanal") {
+                if (!kanal || !kanal.isTextBased()) return interaction.reply({ content: "❌ Bitte einen Textkanal angeben.", flags: MessageFlags.Ephemeral });
+                SUPPORT_LOG_CHANNEL_ID = kanal.id; saveSupportConfig();
+                return interaction.reply({ content: `✅ Log-Kanal auf <#${kanal.id}> gesetzt.`, flags: MessageFlags.Ephemeral });
+            }
+            return interaction.reply({ content: "❌ Unbekannte Aktion.", flags: MessageFlags.Ephemeral });
+        }
         if (!interaction.isButton() || !interaction.customId.startsWith("support:")) {
             return;
         }
@@ -369,6 +461,17 @@ function initializeSupportSystem(client) {
                 content: "❌ Nur Mitglieder mit der Support-Ping-Rolle oder einer Support-Team-Rolle können diesen Fall übernehmen oder schließen.",
                 flags: MessageFlags.Ephemeral
             });
+        }
+
+        // Schicht-Pflicht: Wenn das Schicht-System auf diesem Server Einträge hat,
+        // darf nur übernommen werden, wer aktuell auf Schicht ist.
+        if (action === "accept" && typeof global.isOnShiftActive === "function" && global.isOnShiftActive(guildId)) {
+            if (!global.isOnShift(guildId, interaction.user.id)) {
+                return interaction.reply({
+                    content: "❌ Du bist nicht auf Schicht. Tritt zuerst über das Schicht-Panel bei, um Support-Pings anzunehmen.",
+                    flags: MessageFlags.Ephemeral
+                });
+            }
         }
 
         await interaction.deferUpdate();
@@ -482,4 +585,4 @@ function initializeSupportSystem(client) {
     console.log("✅ Support-Warteschlange initialisiert.");
 }
 
-module.exports = { initializeSupportSystem };
+module.exports = { initializeSupportSystem, supportSetupCommand };

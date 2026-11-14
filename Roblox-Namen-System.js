@@ -49,7 +49,7 @@ function guildData(db, guildId) {
 function escapeText(value) {
   return String(value ?? '').replace(/([\\*_~`|>])/g, '\\$1').replace(/@/g, '@\u200b').slice(0, 150);
 }
-function listEmbed(guild) {
+function listEmbeds(guild) {
   const db = readDb();
   const data = guildData(db, guild.id);
   const entries = Object.entries(data.users || {}).sort((a, b) =>
@@ -60,29 +60,63 @@ function listEmbed(guild) {
     `Roblox-Username: @${escapeText(user.username)}\n` +
     `Roblox-ID: \`${user.robloxId}\`\n` +
     `Discord: <@${discordId}>`);
-  let description = entries.length ? '' : 'Noch niemand hat einen Roblox-Namen eingetragen.';
-  let shown = 0;
+  const descriptions = [];
+  if (!blocks.length) descriptions.push('Noch niemand hat einen Roblox-Namen eingetragen.');
   for (const block of blocks) {
-    if (description.length + block.length + 2 > 3900) break;
-    description += (description ? '\n\n' : '') + block;
-    shown++;
+    const lastIndex = descriptions.length - 1;
+    if (lastIndex < 0 || descriptions[lastIndex].length + block.length + 2 > 3900) {
+      descriptions.push(block);
+    } else {
+      descriptions[lastIndex] += `\n\n${block}`;
+    }
   }
-  if (shown < entries.length) description += `\n\n… und ${entries.length - shown} weitere Einträge.`;
-  return new EmbedBuilder().setColor(0x5865F2)
+  return descriptions.map((description, index) => new EmbedBuilder().setColor(0x5865F2)
     .setTitle('🎮 Novex RP | Roblox-Namen-Liste')
     .setDescription(description)
-    .setFooter({ text: `${entries.length} registrierte Mitglieder • Automatische Aktualisierung` })
-    .setTimestamp();
+    .setFooter({
+      text: `${entries.length} registrierte Mitglieder${descriptions.length > 1 ? ` • Seite ${index + 1}/${descriptions.length}` : ''} • Automatische Aktualisierung`
+    })
+    .setTimestamp());
 }
 async function updateList(guild) {
   const db = readDb();
   const data = guildData(db, guild.id);
-  if (!data.listChannelId || !data.listMessageId) return;
+  if (!data.listChannelId || (!data.listMessageId && !data.listMessageIds?.length)) return;
   try {
     const channel = await guild.channels.fetch(data.listChannelId);
     if (!channel?.isTextBased()) return;
-    const message = await channel.messages.fetch(data.listMessageId);
-    await message.edit({ embeds: [listEmbed(guild)], allowedMentions: { parse: [] } });
+    const embeds = listEmbeds(guild);
+    const messageIds = data.listMessageIds?.length ? [...data.listMessageIds] : [data.listMessageId];
+    for (let index = 0; index < embeds.length; index++) {
+      const message = messageIds[index]
+        ? await channel.messages.fetch(messageIds[index]).catch(error => {
+          console.error('[ROBLOX] Listen-Seite konnte nicht geladen werden:', error.message);
+          return null;
+        })
+        : null;
+      const payload = { embeds: [embeds[index]], allowedMentions: { parse: [] } };
+      if (message) {
+        await message.edit(payload);
+      } else {
+        const created = await channel.send(payload);
+        messageIds[index] = created.id;
+        data.listMessageIds = messageIds;
+        data.listMessageId = messageIds[0];
+        saveDb(db);
+      }
+    }
+    for (const messageId of messageIds.slice(embeds.length)) {
+      const message = await channel.messages.fetch(messageId).catch(error => {
+        console.error('[ROBLOX] Alte Listen-Seite konnte nicht geladen werden:', error.message);
+        return null;
+      });
+      if (message) await message.delete().catch(error => {
+        console.error('[ROBLOX] Alte Listen-Seite konnte nicht gelöscht werden:', error.message);
+      });
+    }
+    data.listMessageIds = messageIds.slice(0, embeds.length);
+    data.listMessageId = data.listMessageIds[0];
+    saveDb(db);
   } catch (error) {
     console.error('[ROBLOX] Liste konnte nicht aktualisiert werden:', error.message);
   }
@@ -134,11 +168,15 @@ function registerRobloxSystem(client) {
           return;
         }
         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-        const msg = await interaction.channel.send({ embeds: [listEmbed(interaction.guild)], allowedMentions: { parse: [] } });
+        const messages = [];
+        for (const embed of listEmbeds(interaction.guild)) {
+          messages.push(await interaction.channel.send({ embeds: [embed], allowedMentions: { parse: [] } }));
+        }
         const db = readDb();
         const data = guildData(db, interaction.guildId);
-        data.listChannelId = msg.channel.id;
-        data.listMessageId = msg.id;
+        data.listChannelId = messages[0].channel.id;
+        data.listMessageId = messages[0].id;
+        data.listMessageIds = messages.map(message => message.id);
         saveDb(db);
         return interaction.editReply('✅ Roblox-Liste erstellt. Sie aktualisiert sich bei neuen Einträgen automatisch.');
       }
