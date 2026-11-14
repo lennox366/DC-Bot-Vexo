@@ -4001,6 +4001,18 @@ async function syncNickname(member, onError) {
     if (!member?.guild || !member.user || nicknameSyncInProgress.has(member.id)) return false;
     nicknameSyncInProgress.add(member.id);
     try {
+        // Vorab prüfen, ob der Bot das Nickname- Recht hat und in der
+        // Rollenhierarchie über dem Mitglied steht – verhindert 50013-Fehler.
+        const me = member.guild.members.me ||
+            await member.guild.members.fetchMe().catch(() => null);
+        const canEditNickname = Boolean(
+            me &&
+            member.id !== member.guild.ownerId &&
+            me.permissions.has(PermissionsBitField.Flags.ChangeNickname) &&
+            member.roles.highest.position < me.roles.highest.position
+        );
+        if (!canEditNickname) return false;
+
         const teamEntry = getAllTeamNicknameRoles().find(entry => member.roles.cache.has(entry.roleId));
         const currentName = member.nickname || member.user.username;
         // Verwende globalName falls vorhanden, sonst username

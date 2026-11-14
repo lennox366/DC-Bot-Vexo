@@ -23,36 +23,34 @@
     "1510593847972073653:1322191083303731201": {
       "guildId": "1510593847972073653",
       "userId": "1322191083303731201",
-      "teamApplicationPanelChannelId": "1545746531640934410",
+      "teamApplicationPanelChannelId": "1570783320072134777",
       "status": "submitted",
       "currentQuestion": 20,
       "answers": [
-        "NUKE",
         "awd",
         "awd",
-        "aw",
+        "awd",
+        "awd",
         "d",
-        "awd",
-        "awd",
-        "awd",
-        "wda",
-        "w",
-        "ad",
-        "wad",
-        "a",
-        "wd",
-        "awd",
-        "wad",
-        "wa",
         "d",
-        "awd",
-        "wa"
+        "d",
+        "d",
+        "d",
+        "d",
+        "d",
+        "d",
+        "d",
+        "d",
+        "d",
+        "d",
+        "d",
+        "d",
+        "d",
+        "d"
       ],
-      "startedAt": "2026-09-05T18:32:43.599Z",
-      "submittedAt": "2026-09-13T14:34:45.374Z",
-      "decision": null,
-      "reviewChannelId": "1545763477560369202",
-      "reviewMessageId": "1548703511842267147"
+      "startedAt": "2026-11-14T16:02:59.454Z",
+      "submittedAt": "2026-11-14T16:03:46.922Z",
+      "decision": null
     },
     "1510593847972073653:1268493835592400991": {
       "guildId": "1510593847972073653",
@@ -264,6 +262,10 @@
       {
         "channelId": "1545746531640934410",
         "messageId": "1545788376223973508"
+      },
+      {
+        "channelId": "1570783320072134777",
+        "messageId": "1571193724518535179"
       }
     ],
     "1542996845922361405": [

@@ -9,6 +9,16 @@
       "claimedBy": null,
       "lastReminder": 1794670085026,
       "source": "panel"
+    },
+    "1571194446178029712": {
+      "guildId": "1510593847972073653",
+      "userId": "1463849860133421153",
+      "type": "fragen",
+      "categoryId": "1569408682662297610",
+      "createdAt": 1794672348755,
+      "claimedBy": "1393315251587645460",
+      "lastReminder": null,
+      "source": "panel"
     }
   }
 }
